@@ -1,15 +1,21 @@
 package com.ichtus.hotelmanagementsystem.repository;
 
-import com.ichtus.hotelmanagementsystem.domain.Room;
+import com.ichtus.hotelmanagementsystem.model.dao.Location;
+import com.ichtus.hotelmanagementsystem.model.dao.Room;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
 public interface RoomRepository extends CrudRepository<Room, Long> {
 
-    Optional<Room> findByTitle(String title);
+//    @Query("select r from Room r where r.location = ?1")
+//    Iterable<Room> searchRoomsBy(Location location);
 
-    Iterable<Room> findAllByHotelId(Long hotelId);
+//    @Transactional
+//    @Modifying(clearAutomatically = true)
+//    @Query("delete from Room r where r.location = ?1")
+//    void deleteAllBy(Location location);
 
-    Optional<Room> updateRoomBy(Long id);
 }

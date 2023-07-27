@@ -1,4 +1,4 @@
-package com.ichtus.hotelmanagementsystem.configuration;
+package com.ichtus.hotelmanagementsystem.model.dict;
 
 public enum RoomOrderStatus {
 
