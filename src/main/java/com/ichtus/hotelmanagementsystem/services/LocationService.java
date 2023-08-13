@@ -1,9 +1,11 @@
 package com.ichtus.hotelmanagementsystem.services;
 
-import com.ichtus.hotelmanagementsystem.exceptions.ResourceNotFoundException;
+import com.ichtus.hotelmanagementsystem.exceptions.LocationNotFoundException;
 import com.ichtus.hotelmanagementsystem.model.dao.Location;
 import com.ichtus.hotelmanagementsystem.model.dao.Room;
 import com.ichtus.hotelmanagementsystem.model.dto.location.CreateLocationRequestDto;
+import com.ichtus.hotelmanagementsystem.model.dto.location.GetLocationInfoResponseDto;
+import com.ichtus.hotelmanagementsystem.model.dto.location.GetLocationsResponseDto;
 import com.ichtus.hotelmanagementsystem.model.dto.room.CreateRoomRequestDto;
 import com.ichtus.hotelmanagementsystem.model.dto.room.GetRoomsResponseDto;
 import com.ichtus.hotelmanagementsystem.model.dto.location.UpdateLocationRequestDto;
@@ -13,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -22,8 +25,10 @@ public class LocationService {
 
     private final LocationRepository locationRepository;
 
-    public Iterable<Location> getLocationsList() {
-        return locationRepository.findAll();
+    public Iterable<GetLocationsResponseDto> getLocationsList() {
+        return locationRepository.findAll().stream()
+                .map(GetLocationsResponseDto::of)
+                .collect(Collectors.toList());
     }
 
     public Location addLocation(CreateLocationRequestDto locationDto) {
@@ -33,14 +38,19 @@ public class LocationService {
         return locationRepository.save(newLocation);
     }
 
-    public Location getLocationInfo(Long id) throws ResourceNotFoundException {
+    private Location findLocationById(Long id) throws LocationNotFoundException {
         return locationRepository
                 .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+                .orElseThrow(() -> new LocationNotFoundException(id));
+    }
+
+    public GetLocationInfoResponseDto getLocationInfo(Long id) {
+        Location currentLocation = findLocationById(id);
+        return GetLocationInfoResponseDto.of(currentLocation);
     }
 
     public void updateLocationInfo(Long id, UpdateLocationRequestDto newLocationDto) {
-        Location currentLocation = getLocationInfo(id);
+        Location currentLocation = findLocationById(id);
         currentLocation
                 .setLocationName(
                         newLocationDto.getLocationName() == null
@@ -57,27 +67,20 @@ public class LocationService {
         locationRepository.deleteById(id);
     }
 
-    /**/
-    public List<GetRoomsResponseDto> getRoomsList(Location location) {
-        Location currentLocation = getLocationInfo(location.getId());
+    public List<GetRoomsResponseDto> getRoomsList(Long locationId) {
+        Location currentLocation = findLocationById(locationId);
         return currentLocation.getRoomsList().stream()
-                        .map(room -> new GetRoomsResponseDto(
-                                room.getId(),
-                                room.getRoomName(),
-                                room.getRoomPrice(),
-                                room.getRoomCapacity(),
-                                location.getId()
-                        ))
+                        .map(GetRoomsResponseDto::of)
                         .toList();
     }
 
-    public Location addRoomToLocation(Long id, CreateRoomRequestDto roomRequestDto) {
-        Location currentLocation = getLocationInfo(id);
+    public GetLocationsResponseDto addRoomToLocation(Long id, CreateRoomRequestDto roomRequestDto) {
+        Location currentLocation = findLocationById(id);
         Room newRoom = new Room()
                         .setRoomName(roomRequestDto.getRoomName())
                         .setRoomPrice(roomRequestDto.getRoomPrice())
                         .setRoomCapacity(roomRequestDto.getRoomMaxCapacity());
         currentLocation.getRoomsList().add(newRoom);
-        return locationRepository.save(currentLocation);
+        return GetLocationsResponseDto.of(locationRepository.save(currentLocation));
     }
 }

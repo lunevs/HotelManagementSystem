@@ -32,4 +32,5 @@ public class Booking {
     private Account account;
 
     private boolean deleted;
+
 }

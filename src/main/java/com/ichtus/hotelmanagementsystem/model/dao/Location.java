@@ -28,8 +28,7 @@ public class Location {
     @Column(name = "description")
     private String locationDescription;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "location_id")
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
     private Set<Room> roomsList;
 
     @OneToMany

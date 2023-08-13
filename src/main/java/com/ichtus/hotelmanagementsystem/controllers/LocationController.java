@@ -2,6 +2,7 @@ package com.ichtus.hotelmanagementsystem.controllers;
 
 import com.ichtus.hotelmanagementsystem.model.dao.Location;
 import com.ichtus.hotelmanagementsystem.model.dto.location.CreateLocationRequestDto;
+import com.ichtus.hotelmanagementsystem.model.dto.location.GetLocationsResponseDto;
 import com.ichtus.hotelmanagementsystem.model.dto.room.CreateRoomRequestDto;
 import com.ichtus.hotelmanagementsystem.model.dto.room.GetRoomsResponseDto;
 import com.ichtus.hotelmanagementsystem.model.dto.location.UpdateLocationRequestDto;
@@ -26,7 +27,7 @@ public class LocationController {
     private final LocationService locationService;
 
     @GetMapping
-    ResponseEntity<Iterable<Location>> getLocationsList() {
+    ResponseEntity<Iterable<GetLocationsResponseDto>> getLocationsList() {
         return new ResponseEntity<>(locationService.getLocationsList(), HttpStatus.OK);
     }
 
@@ -62,8 +63,7 @@ public class LocationController {
 
     @GetMapping("/{id}/rooms")
     ResponseEntity<Iterable<GetRoomsResponseDto>> getLocationRoomsList(@PathVariable Long id) {
-        Location currentLocation = locationService.getLocationInfo(id);
-        return new ResponseEntity<>(locationService.getRoomsList(currentLocation), HttpStatus.OK);
+        return new ResponseEntity<>(locationService.getRoomsList(id), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/rooms")

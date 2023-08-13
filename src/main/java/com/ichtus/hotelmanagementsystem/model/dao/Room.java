@@ -33,8 +33,14 @@ public class Room {
     @Column(name = "capacity")
     private int roomCapacity;
 
-    private boolean deleted;
-
     @OneToMany
     private Set<Amenity> amenities;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "location_id")
+    private Location location;
+
+
+    private boolean deleted;
+
 }

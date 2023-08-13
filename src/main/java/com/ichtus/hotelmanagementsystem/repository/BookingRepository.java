@@ -1,4 +1,7 @@
 package com.ichtus.hotelmanagementsystem.repository;
 
-public interface BookingRepository {
+import com.ichtus.hotelmanagementsystem.model.dao.Booking;
+import org.springframework.data.repository.CrudRepository;
+
+public interface BookingRepository extends CrudRepository<Booking, Long> {
 }

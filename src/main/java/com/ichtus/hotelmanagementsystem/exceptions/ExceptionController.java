@@ -28,7 +28,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     private final MessageSource messageSource;
 
     @ExceptionHandler
-    public ResponseEntity<?> locationNotFound(ResourceNotFoundException exception) {
+    public ResponseEntity<?> locationNotFound(LocationNotFoundException exception) {
         return ResponseEntity.badRequest()
                 .body(
                         new ErrorDetail()
