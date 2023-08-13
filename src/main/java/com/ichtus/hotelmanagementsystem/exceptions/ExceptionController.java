@@ -2,9 +2,9 @@ package com.ichtus.hotelmanagementsystem.exceptions;
 
 import com.ichtus.hotelmanagementsystem.model.dto.error.ErrorDetail;
 import com.ichtus.hotelmanagementsystem.model.dto.error.ValidationError;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -34,6 +34,19 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
                         new ErrorDetail()
                                 .setTitle("Location not found")
                                 .setStatus(HttpStatus.NOT_FOUND.value())
+                                .setTimeStamp(new Date().getTime())
+                                .setDetail(exception.getMessage())
+                                .setDeveloperMessage(exception.getClass().getName())
+                );
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> notUniqField(DataIntegrityViolationException exception) {
+        return ResponseEntity.badRequest()
+                .body(
+                        new ErrorDetail()
+                                .setTitle("Duplicate name found")
+                                .setStatus(HttpStatus.BAD_REQUEST.value())
                                 .setTimeStamp(new Date().getTime())
                                 .setDetail(exception.getMessage())
                                 .setDeveloperMessage(exception.getClass().getName())

@@ -1,4 +1,4 @@
-package com.ichtus.hotelmanagementsystem.model.dto;
+package com.ichtus.hotelmanagementsystem.model.dto.room;
 
 import lombok.Value;
 import lombok.experimental.Accessors;

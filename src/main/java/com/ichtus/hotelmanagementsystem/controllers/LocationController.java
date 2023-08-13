@@ -1,10 +1,10 @@
 package com.ichtus.hotelmanagementsystem.controllers;
 
 import com.ichtus.hotelmanagementsystem.model.dao.Location;
-import com.ichtus.hotelmanagementsystem.model.dto.CreateLocationRequestDto;
-import com.ichtus.hotelmanagementsystem.model.dto.CreateRoomRequestDto;
-import com.ichtus.hotelmanagementsystem.model.dto.GetRoomsResponseDto;
-import com.ichtus.hotelmanagementsystem.model.dto.UpdateLocationRequestDto;
+import com.ichtus.hotelmanagementsystem.model.dto.location.CreateLocationRequestDto;
+import com.ichtus.hotelmanagementsystem.model.dto.room.CreateRoomRequestDto;
+import com.ichtus.hotelmanagementsystem.model.dto.room.GetRoomsResponseDto;
+import com.ichtus.hotelmanagementsystem.model.dto.location.UpdateLocationRequestDto;
 import com.ichtus.hotelmanagementsystem.services.LocationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +49,7 @@ public class LocationController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<?> updateLocationRoomList(@PathVariable Long id, @RequestBody UpdateLocationRequestDto locationRequestDto) {
+    ResponseEntity<?> updateLocationInfo(@PathVariable Long id, @RequestBody UpdateLocationRequestDto locationRequestDto) {
         locationService.updateLocationInfo(id, locationRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -3,10 +3,10 @@ package com.ichtus.hotelmanagementsystem.services;
 import com.ichtus.hotelmanagementsystem.exceptions.ResourceNotFoundException;
 import com.ichtus.hotelmanagementsystem.model.dao.Location;
 import com.ichtus.hotelmanagementsystem.model.dao.Room;
-import com.ichtus.hotelmanagementsystem.model.dto.CreateLocationRequestDto;
-import com.ichtus.hotelmanagementsystem.model.dto.CreateRoomRequestDto;
-import com.ichtus.hotelmanagementsystem.model.dto.GetRoomsResponseDto;
-import com.ichtus.hotelmanagementsystem.model.dto.UpdateLocationRequestDto;
+import com.ichtus.hotelmanagementsystem.model.dto.location.CreateLocationRequestDto;
+import com.ichtus.hotelmanagementsystem.model.dto.room.CreateRoomRequestDto;
+import com.ichtus.hotelmanagementsystem.model.dto.room.GetRoomsResponseDto;
+import com.ichtus.hotelmanagementsystem.model.dto.location.UpdateLocationRequestDto;
 import com.ichtus.hotelmanagementsystem.repository.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +60,7 @@ public class LocationService {
     /**/
     public List<GetRoomsResponseDto> getRoomsList(Location location) {
         Location currentLocation = getLocationInfo(location.getId());
-        return currentLocation.getRoomList().stream()
+        return currentLocation.getRoomsList().stream()
                         .map(room -> new GetRoomsResponseDto(
                                 room.getId(),
                                 room.getRoomName(),
@@ -77,7 +77,7 @@ public class LocationService {
                         .setRoomName(roomRequestDto.getRoomName())
                         .setRoomPrice(roomRequestDto.getRoomPrice())
                         .setRoomCapacity(roomRequestDto.getRoomMaxCapacity());
-        currentLocation.getRoomList().add(newRoom);
+        currentLocation.getRoomsList().add(newRoom);
         return locationRepository.save(currentLocation);
     }
 }

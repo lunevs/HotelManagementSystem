@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Entity
 @Data
@@ -23,7 +24,7 @@ public class Room {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String roomName;
 
     @Column(name = "price")
@@ -32,8 +33,8 @@ public class Room {
     @Column(name = "capacity")
     private int roomCapacity;
 
-//    @ManyToOne
-//    private Location location;
+    private boolean deleted;
 
-    //List amenities
+    @OneToMany
+    private Set<Amenity> amenities;
 }

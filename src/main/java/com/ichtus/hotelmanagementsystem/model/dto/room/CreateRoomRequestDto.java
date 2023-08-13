@@ -1,4 +1,4 @@
-package com.ichtus.hotelmanagementsystem.model.dto;
+package com.ichtus.hotelmanagementsystem.model.dto.room;
 
 import com.ichtus.hotelmanagementsystem.model.anotations.ValidRoomCapacity;
 import jakarta.validation.constraints.NotEmpty;

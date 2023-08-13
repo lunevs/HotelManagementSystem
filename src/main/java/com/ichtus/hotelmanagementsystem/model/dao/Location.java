@@ -1,14 +1,12 @@
 package com.ichtus.hotelmanagementsystem.model.dao;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -24,7 +22,7 @@ public class Location {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String locationName;
 
     @Column(name = "description")
@@ -32,6 +30,13 @@ public class Location {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id")
-    private List<Room> roomList;
+    private Set<Room> roomsList;
 
+    @OneToMany
+    private Set<Amenity> amenities;
+
+    @ManyToOne
+    private Account locationAdmin;
+
+    private boolean deleted;
 }
