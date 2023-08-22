@@ -1,13 +1,10 @@
 package com.ichtus.hotelmanagementsystem.repository;
 
-import com.ichtus.hotelmanagementsystem.model.dao.Location;
-import com.ichtus.hotelmanagementsystem.model.dao.Room;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import com.ichtus.hotelmanagementsystem.model.entities.Room;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
 public interface RoomRepository extends CrudRepository<Room, Long> {
 
 //    @Query("select r from Room r where r.location = ?1")

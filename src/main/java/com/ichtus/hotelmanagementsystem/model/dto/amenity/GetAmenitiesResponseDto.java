@@ -1,7 +1,7 @@
 package com.ichtus.hotelmanagementsystem.model.dto.amenity;
 
-import com.ichtus.hotelmanagementsystem.model.dao.Amenity;
-import com.ichtus.hotelmanagementsystem.model.dict.AmenityType;
+import com.ichtus.hotelmanagementsystem.model.entities.Amenity;
+import com.ichtus.hotelmanagementsystem.model.dictionaries.AmenityType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

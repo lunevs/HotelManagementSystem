@@ -1,7 +1,7 @@
 package com.ichtus.hotelmanagementsystem.model.dto.booking;
 
-import com.ichtus.hotelmanagementsystem.model.dao.Booking;
-import com.ichtus.hotelmanagementsystem.model.dict.BookingStatus;
+import com.ichtus.hotelmanagementsystem.model.entities.Booking;
+import com.ichtus.hotelmanagementsystem.model.dictionaries.BookingStatus;
 import com.ichtus.hotelmanagementsystem.model.dto.room.GetRoomShortIntroResponseDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;

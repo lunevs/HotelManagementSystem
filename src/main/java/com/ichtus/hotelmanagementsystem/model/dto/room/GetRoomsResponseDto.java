@@ -1,6 +1,6 @@
 package com.ichtus.hotelmanagementsystem.model.dto.room;
 
-import com.ichtus.hotelmanagementsystem.model.dao.Room;
+import com.ichtus.hotelmanagementsystem.model.entities.Room;
 import com.ichtus.hotelmanagementsystem.model.dto.amenity.GetRoomAmenitiesResponseDto;
 import lombok.Data;
 import lombok.experimental.Accessors;

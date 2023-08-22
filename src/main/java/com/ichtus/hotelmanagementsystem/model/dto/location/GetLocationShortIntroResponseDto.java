@@ -1,6 +1,6 @@
 package com.ichtus.hotelmanagementsystem.model.dto.location;
 
-import com.ichtus.hotelmanagementsystem.model.dao.Location;
+import com.ichtus.hotelmanagementsystem.model.entities.Location;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

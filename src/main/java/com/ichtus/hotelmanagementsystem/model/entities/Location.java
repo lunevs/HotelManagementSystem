@@ -1,4 +1,4 @@
-package com.ichtus.hotelmanagementsystem.model.dao;
+package com.ichtus.hotelmanagementsystem.model.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

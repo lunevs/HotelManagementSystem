@@ -1,6 +1,6 @@
 package com.ichtus.hotelmanagementsystem.controllers;
 
-import com.ichtus.hotelmanagementsystem.model.dao.Location;
+import com.ichtus.hotelmanagementsystem.model.entities.Location;
 import com.ichtus.hotelmanagementsystem.model.dto.location.CreateLocationRequestDto;
 import com.ichtus.hotelmanagementsystem.model.dto.location.GetLocationsResponseDto;
 import com.ichtus.hotelmanagementsystem.model.dto.room.CreateRoomRequestDto;
@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -55,6 +56,7 @@ public class LocationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteLocation(@PathVariable Long id) {
         locationService.deleteLocation(id);
@@ -67,6 +69,7 @@ public class LocationController {
     }
 
     @PostMapping("/{id}/rooms")
+    @PreAuthorize("@authorizeService.checkPermission(authentication, {@permissionHelper.getDefault()})")
     ResponseEntity<?> addRoomToLocation(@PathVariable Long id, @Valid @RequestBody CreateRoomRequestDto roomRequestDto) {
         return new ResponseEntity<>(locationService.addRoomToLocation(id, roomRequestDto), HttpStatus.OK);
     }

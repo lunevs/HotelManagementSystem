@@ -1,8 +1,8 @@
 package com.ichtus.hotelmanagementsystem.model.dto.location;
 
-import com.ichtus.hotelmanagementsystem.model.dao.Amenity;
-import com.ichtus.hotelmanagementsystem.model.dao.Location;
-import com.ichtus.hotelmanagementsystem.model.dao.Room;
+import com.ichtus.hotelmanagementsystem.model.entities.Amenity;
+import com.ichtus.hotelmanagementsystem.model.entities.Location;
+import com.ichtus.hotelmanagementsystem.model.entities.Room;
 import lombok.*;
 import lombok.experimental.Accessors;
 

@@ -1,6 +1,6 @@
-package com.ichtus.hotelmanagementsystem.model.dao;
+package com.ichtus.hotelmanagementsystem.model.entities;
 
-import com.ichtus.hotelmanagementsystem.model.dict.BookingStatus;
+import com.ichtus.hotelmanagementsystem.model.dictionaries.BookingStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

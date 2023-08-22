@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,29 +29,38 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     private final MessageSource messageSource;
 
     @ExceptionHandler
+    public ResponseEntity<?> accessDenied(AccessDeniedException exception) {
+        return badRequestTemplateResponse("Access Denied", exception, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<?> locationNotFound(LocationNotFoundException exception) {
-        return ResponseEntity.badRequest()
-                .body(
-                        new ErrorDetail()
-                                .setTitle("Location not found")
-                                .setStatus(HttpStatus.NOT_FOUND.value())
-                                .setTimeStamp(new Date().getTime())
-                                .setDetail(exception.getMessage())
-                                .setDeveloperMessage(exception.getClass().getName())
-                );
+        return badRequestTemplateResponse("Location not found", exception, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> roleNotFound(RoleNotFoundException exception) {
+        return badRequestTemplateResponse("Role not found", exception, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> accountNotFound(AccountNotFoundException exception) {
+        return badRequestTemplateResponse("User not found", exception, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> notUniqField(DataIntegrityViolationException exception) {
-        return ResponseEntity.badRequest()
-                .body(
-                        new ErrorDetail()
-                                .setTitle("Duplicate name found")
-                                .setStatus(HttpStatus.BAD_REQUEST.value())
-                                .setTimeStamp(new Date().getTime())
-                                .setDetail(exception.getMessage())
-                                .setDeveloperMessage(exception.getClass().getName())
-                );
+        return badRequestTemplateResponse("Duplicate name found", exception, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> badAuth(BadAuthException exception) {
+        return badRequestTemplateResponse("Incorrect login or password", exception, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> userAlreadyExists(AccountAlreadyExists exception) {
+        return badRequestTemplateResponse("User with such name already exists", exception, HttpStatus.BAD_REQUEST);
     }
 
     @Override
@@ -85,6 +95,18 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, errorDetail, headers, status, request);
     }
 
+
+    private ResponseEntity<?> badRequestTemplateResponse(String message, Exception exception, HttpStatus status) {
+        return ResponseEntity.badRequest()
+                .body(
+                        new ErrorDetail()
+                                .setTitle(message)
+                                .setStatus(status.value())
+                                .setTimeStamp(new Date().getTime())
+                                .setDetail(exception.getMessage())
+                                .setDeveloperMessage(exception.getClass().getName())
+                );
+    }
 
 
 }

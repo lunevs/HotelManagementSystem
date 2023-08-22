@@ -1,4 +1,4 @@
-package com.ichtus.hotelmanagementsystem.model.dict;
+package com.ichtus.hotelmanagementsystem.model.dictionaries;
 
 public enum AccountRole {
 

@@ -1,6 +1,6 @@
 package com.ichtus.hotelmanagementsystem.model.dto.booking;
 
-import com.ichtus.hotelmanagementsystem.model.dao.Booking;
+import com.ichtus.hotelmanagementsystem.model.entities.Booking;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

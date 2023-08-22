@@ -1,6 +1,6 @@
 package com.ichtus.hotelmanagementsystem.model.dto.amenity;
 
-import com.ichtus.hotelmanagementsystem.model.dao.Amenity;
+import com.ichtus.hotelmanagementsystem.model.entities.Amenity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

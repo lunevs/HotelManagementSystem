@@ -1,14 +1,14 @@
 package com.ichtus.hotelmanagementsystem.repository;
 
-import com.ichtus.hotelmanagementsystem.model.entities.Account;
+import com.ichtus.hotelmanagementsystem.model.entities.Role;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-
 @Repository
-public interface AccountRepository extends CrudRepository<Account, Long> {
+public interface RoleRepository extends CrudRepository<Role, Integer> {
 
-    Optional<Account> findByAccountName(String name);
+    Optional<Role> findByName(String name);
+
 }

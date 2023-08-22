@@ -3,10 +3,9 @@ package com.ichtus.hotelmanagementsystem.model.dto.account;
 import lombok.Value;
 
 @Value
-public class CreateAccountRequestDto {
+public class RegistrationResponse {
 
-    String name;
-    String password;
+    Long id;
+    String username;
     String email;
-    String description;
 }

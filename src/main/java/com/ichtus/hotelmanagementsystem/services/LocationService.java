@@ -1,8 +1,8 @@
 package com.ichtus.hotelmanagementsystem.services;
 
 import com.ichtus.hotelmanagementsystem.exceptions.LocationNotFoundException;
-import com.ichtus.hotelmanagementsystem.model.dao.Location;
-import com.ichtus.hotelmanagementsystem.model.dao.Room;
+import com.ichtus.hotelmanagementsystem.model.entities.Location;
+import com.ichtus.hotelmanagementsystem.model.entities.Room;
 import com.ichtus.hotelmanagementsystem.model.dto.location.CreateLocationRequestDto;
 import com.ichtus.hotelmanagementsystem.model.dto.location.GetLocationInfoResponseDto;
 import com.ichtus.hotelmanagementsystem.model.dto.location.GetLocationsResponseDto;
