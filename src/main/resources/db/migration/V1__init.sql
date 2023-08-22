@@ -20,6 +20,9 @@ CREATE TABLE accounts_roles (
                              foreign key (role_id) references roles (id)
 );
 
+select * from ACCOUNTS;
+
+
 insert into roles (name)
 values
     ('ROLE_USER'), ('ROLE_ADMIN');

@@ -7,8 +7,9 @@ import com.ichtus.hotelmanagementsystem.model.dto.account.RegistrationResponse;
 import com.ichtus.hotelmanagementsystem.model.dto.auth.AuthRequest;
 import com.ichtus.hotelmanagementsystem.model.dto.auth.AuthResponse;
 import com.ichtus.hotelmanagementsystem.model.entities.Account;
-import com.ichtus.hotelmanagementsystem.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,14 +17,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthService {
 
     private final AccountService accountService;
-    private final JwtTokenUtils jwtTokenUtils;
+    private final JwtTokenService jwtTokenService;
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse createNewToken(AuthRequest authRequest) {
+        log.info("try to createNewToken: " + authRequest);
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -36,7 +39,7 @@ public class AuthService {
         }
 
         UserDetails userDetails = accountService.loadUserByUsername(authRequest.getUsername());
-        String token = jwtTokenUtils.generateToken(userDetails);
+        String token = jwtTokenService.generateToken(userDetails);
         return new AuthResponse(token);
     }
 
