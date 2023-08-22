@@ -3,6 +3,7 @@ package com.ichtus.hotelmanagementsystem.exceptions;
 import com.ichtus.hotelmanagementsystem.model.dto.error.ErrorDetail;
 import com.ichtus.hotelmanagementsystem.model.dto.error.ValidationError;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -24,42 +25,50 @@ import java.util.List;
 
 @ControllerAdvice
 @RequiredArgsConstructor
+@Slf4j
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
     private final MessageSource messageSource;
 
     @ExceptionHandler
     public ResponseEntity<?> accessDenied(AccessDeniedException exception) {
+        log.info("AccessDeniedException");
         return badRequestTemplateResponse("Access Denied", exception, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> locationNotFound(LocationNotFoundException exception) {
+        log.info("LocationNotFoundException");
         return badRequestTemplateResponse("Location not found", exception, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> roleNotFound(RoleNotFoundException exception) {
+        log.info("RoleNotFoundException");
         return badRequestTemplateResponse("Role not found", exception, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> accountNotFound(AccountNotFoundException exception) {
+        log.info("AccountNotFoundException");
         return badRequestTemplateResponse("User not found", exception, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> notUniqField(DataIntegrityViolationException exception) {
+        log.info("DataIntegrityViolationException");
         return badRequestTemplateResponse("Duplicate name found", exception, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> badAuth(BadAuthException exception) {
+        log.info("BadAuthException");
         return badRequestTemplateResponse("Incorrect login or password", exception, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> userAlreadyExists(AccountAlreadyExists exception) {
+        log.info("AccountAlreadyExists");
         return badRequestTemplateResponse("User with such name already exists", exception, HttpStatus.BAD_REQUEST);
     }
 
@@ -97,7 +106,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
 
     private ResponseEntity<?> badRequestTemplateResponse(String message, Exception exception, HttpStatus status) {
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(status.value())
                 .body(
                         new ErrorDetail()
                                 .setTitle(message)

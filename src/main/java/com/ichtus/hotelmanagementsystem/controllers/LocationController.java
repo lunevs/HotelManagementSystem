@@ -1,5 +1,7 @@
 package com.ichtus.hotelmanagementsystem.controllers;
 
+import com.ichtus.hotelmanagementsystem.model.anotations.IsModerator;
+import com.ichtus.hotelmanagementsystem.model.anotations.IsUser;
 import com.ichtus.hotelmanagementsystem.model.entities.Location;
 import com.ichtus.hotelmanagementsystem.model.dto.location.CreateLocationRequestDto;
 import com.ichtus.hotelmanagementsystem.model.dto.location.GetLocationsResponseDto;
@@ -13,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -28,11 +29,13 @@ public class LocationController {
     private final LocationService locationService;
 
     @GetMapping
+    @IsUser
     ResponseEntity<Iterable<GetLocationsResponseDto>> getLocationsList() {
         return new ResponseEntity<>(locationService.getLocationsList(), HttpStatus.OK);
     }
 
     @PostMapping
+    @IsModerator
     ResponseEntity<?> createLocation(@Valid @RequestBody CreateLocationRequestDto locationDto) {
         Location savedLocation = locationService.addLocation(locationDto);
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -46,30 +49,33 @@ public class LocationController {
     }
 
     @GetMapping("/{id}")
+    @IsUser
     ResponseEntity<?> getLocationInfo(@PathVariable Long id) {
         return new ResponseEntity<>(locationService.getLocationInfo(id), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
+    @IsModerator
     ResponseEntity<?> updateLocationInfo(@PathVariable Long id, @RequestBody UpdateLocationRequestDto locationRequestDto) {
         locationService.updateLocationInfo(id, locationRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
+    @IsModerator
     ResponseEntity<?> deleteLocation(@PathVariable Long id) {
         locationService.deleteLocation(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{id}/rooms")
+    @IsUser
     ResponseEntity<Iterable<GetRoomsResponseDto>> getLocationRoomsList(@PathVariable Long id) {
         return new ResponseEntity<>(locationService.getRoomsList(id), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/rooms")
-    @PreAuthorize("@authorizeService.checkPermission(authentication, {@permissionHelper.getDefault()})")
+    @IsModerator
     ResponseEntity<?> addRoomToLocation(@PathVariable Long id, @Valid @RequestBody CreateRoomRequestDto roomRequestDto) {
         return new ResponseEntity<>(locationService.addRoomToLocation(id, roomRequestDto), HttpStatus.OK);
     }
