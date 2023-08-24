@@ -2,6 +2,7 @@ package com.ichtus.hotelmanagementsystem.controllers;
 
 import com.ichtus.hotelmanagementsystem.model.dto.account.RegistrationRequest;
 import com.ichtus.hotelmanagementsystem.model.dto.auth.AuthRequest;
+import com.ichtus.hotelmanagementsystem.services.AccountService;
 import com.ichtus.hotelmanagementsystem.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final AccountService accountService;
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUserAndReturnToken(@RequestBody AuthRequest authRequest) {
@@ -25,6 +27,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerNewUser(@RequestBody RegistrationRequest registrationRequest) {
-        return ResponseEntity.ok(authService.createNewAccount(registrationRequest));
+        return ResponseEntity.ok(accountService.createNewAccount(registrationRequest));
     }
 }

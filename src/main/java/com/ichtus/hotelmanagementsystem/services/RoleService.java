@@ -16,19 +16,19 @@ public class RoleService {
     private final RoleRepository roleRepository;
 
     public Role getUserRole() {
-        return getRoleByName("ROLE_" + AccountRole.USER.name());
+        return getRoleByName(AccountRole.USER.name());
     }
 
     public Role getModeratorRole() {
-        return getRoleByName("ROLE_" + AccountRole.MODERATOR.name());
+        return getRoleByName(AccountRole.MODERATOR.name());
     }
 
     public Role getAdminRole() {
-        return getRoleByName("ROLE_" + AccountRole.ADMIN.name());
+        return getRoleByName(AccountRole.ADMIN.name());
     }
 
-    private Role getRoleByName(String name) {
-        Optional<Role> role = roleRepository.findByName(name);
+    public Role getRoleByName(String name) {
+        Optional<Role> role = roleRepository.findByName("ROLE_" + name);
         if (role.isPresent()) {
             return role.get();
         } else {

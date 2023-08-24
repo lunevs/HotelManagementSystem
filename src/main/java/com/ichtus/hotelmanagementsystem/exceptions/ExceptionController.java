@@ -1,5 +1,6 @@
 package com.ichtus.hotelmanagementsystem.exceptions;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.ichtus.hotelmanagementsystem.model.dto.error.ErrorDetail;
 import com.ichtus.hotelmanagementsystem.model.dto.error.ValidationError;
 import lombok.RequiredArgsConstructor;
@@ -32,44 +33,42 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<?> accessDenied(AccessDeniedException exception) {
-        log.info("AccessDeniedException");
         return badRequestTemplateResponse("Access Denied", exception, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> locationNotFound(LocationNotFoundException exception) {
-        log.info("LocationNotFoundException");
         return badRequestTemplateResponse("Location not found", exception, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> roleNotFound(RoleNotFoundException exception) {
-        log.info("RoleNotFoundException");
         return badRequestTemplateResponse("Role not found", exception, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> accountNotFound(AccountNotFoundException exception) {
-        log.info("AccountNotFoundException");
         return badRequestTemplateResponse("User not found", exception, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> notUniqField(DataIntegrityViolationException exception) {
-        log.info("DataIntegrityViolationException");
         return badRequestTemplateResponse("Duplicate name found", exception, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> badAuth(BadAuthException exception) {
-        log.info("BadAuthException");
         return badRequestTemplateResponse("Incorrect login or password", exception, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> userAlreadyExists(AccountAlreadyExists exception) {
-        log.info("AccountAlreadyExists");
         return badRequestTemplateResponse("User with such name already exists", exception, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> incorrectTokenVerification(JWTVerificationException exception) {
+        return badRequestTemplateResponse("Token verification problem", exception, HttpStatus.BAD_REQUEST);
     }
 
     @Override

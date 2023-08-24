@@ -43,8 +43,7 @@ public class JwtTokenService {
         try {
             return verifier.verify(token).getSubject();
         } catch (JWTVerificationException jwtVerificationException) {
-            log.warn("token invalid: {}", jwtVerificationException.getMessage());
-            return null;
+            throw new JWTVerificationException(token);
         }
     }
 }

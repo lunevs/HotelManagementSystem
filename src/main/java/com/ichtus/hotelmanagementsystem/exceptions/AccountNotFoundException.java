@@ -9,7 +9,10 @@ public class AccountNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public AccountNotFoundException(String name) {
-        super("ResourceNotFoundException: User with name " + name + " not found!");
+        super("AccountNotFoundException: User with name " + name + " not found!");
     }
 
+    public AccountNotFoundException(Long id) {
+        super("AccountNotFoundException: User with id " + id + " not found!");
+    }
 }
