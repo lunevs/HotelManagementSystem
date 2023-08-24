@@ -3,6 +3,7 @@ package com.ichtus.hotelmanagementsystem.controllers;
 
 import com.ichtus.hotelmanagementsystem.exceptions.AccountNotFoundException;
 import com.ichtus.hotelmanagementsystem.model.anotations.IsAdministrator;
+import com.ichtus.hotelmanagementsystem.model.anotations.IsUser;
 import com.ichtus.hotelmanagementsystem.model.dictionaries.AccountRole;
 import com.ichtus.hotelmanagementsystem.model.dictionaries.RoleUpdateActionType;
 import com.ichtus.hotelmanagementsystem.model.dto.account.AccountDetailResponse;
@@ -14,7 +15,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/accounts")
@@ -23,6 +27,12 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 
     private final AccountService accountService;
+
+    @GetMapping("/userinfo")
+    @IsAdministrator
+    public ResponseEntity<?> userInfo(Principal principal) {
+        return ResponseEntity.ok(accountService.loadUserByUsername(principal.getName()));
+    }
 
 
     @PostMapping

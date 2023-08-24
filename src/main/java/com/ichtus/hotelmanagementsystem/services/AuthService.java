@@ -34,6 +34,8 @@ public class AuthService {
         }
 
         UserDetails userDetails = accountService.loadUserByUsername(authRequest.getUsername());
+        userDetails.getAuthorities().forEach(el -> log.info(authRequest.getUsername() + " roles= " + el.getAuthority()));
+
         String token = jwtTokenService.generateToken(userDetails);
         return new AuthResponse(token);
     }

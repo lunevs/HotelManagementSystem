@@ -30,14 +30,21 @@ public class LocationServiceTest {
                 .andExpect(status().isForbidden());
     }
 
-    @WithMockUser(authorities = "ADMIN")
+    @WithMockUser(roles = {"ADMIN"})
     @Test
     void testWithAdminRole() throws Exception {
-        mockMvc.perform(get("/locations"))
+        mockMvc.perform(get("/accounts"))
                 .andExpect(status().isOk());
     }
 
-    @WithMockUser(roles = {"ADMIN"})
+    @WithMockUser(roles = {"USER"})
+    @Test
+    void testAdminZoneWithUserRole() throws Exception {
+        mockMvc.perform(get("/accounts"))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(roles = {"USER"})
     @Test
     void testWithUserRole() throws Exception {
         mockMvc.perform(get("/locations"))
