@@ -7,6 +7,8 @@ import com.ichtus.hotelmanagementsystem.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,6 +16,10 @@ import java.util.Optional;
 public class RoleService {
 
     private final RoleRepository roleRepository;
+
+    public List<Role> getAllRoles() {
+        return roleRepository.findAll();
+    }
 
     public Role getUserRole() {
         return getRoleByName(AccountRole.USER.name());

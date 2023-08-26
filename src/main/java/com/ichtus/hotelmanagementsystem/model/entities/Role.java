@@ -19,6 +19,7 @@ public class Role {
     @Column(name = "name")
     private String name;
 
+
 //    @Column(name = "granted_date")
 //    private LocalDate grantedDate;
 //

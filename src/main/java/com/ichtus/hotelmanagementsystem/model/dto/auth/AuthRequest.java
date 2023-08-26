@@ -1,9 +1,14 @@
 package com.ichtus.hotelmanagementsystem.model.dto.auth;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class AuthRequest {
-    private String username;
-    private String password;
+
+    @NotBlank
+    private String accountName;
+
+    @NotBlank
+    private String accountPassword;
 }

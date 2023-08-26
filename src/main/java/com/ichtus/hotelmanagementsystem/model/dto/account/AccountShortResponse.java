@@ -18,8 +18,7 @@ public class AccountShortResponse {
     Long id;
     String accountName;
     String accountEmail;
-
-    Collection<Role> roles;
+    Role role;
 
 
     public static AccountShortResponse of(Account account) {
@@ -27,6 +26,6 @@ public class AccountShortResponse {
                 .setId(account.getId())
                 .setAccountName(account.getAccountName())
                 .setAccountEmail(account.getAccountEmail())
-                .setRoles(account.getRoles());
+                .setRole(account.getRole());
     }
 }

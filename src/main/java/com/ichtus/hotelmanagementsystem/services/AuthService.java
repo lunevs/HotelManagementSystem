@@ -25,16 +25,16 @@ public class AuthService {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            authRequest.getUsername(),
-                            authRequest.getPassword()
+                            authRequest.getAccountName(),
+                            authRequest.getAccountPassword()
                     )
             );
         }  catch (BadCredentialsException exception) {
             throw new BadAuthException();
         }
 
-        UserDetails userDetails = accountService.loadUserByUsername(authRequest.getUsername());
-        userDetails.getAuthorities().forEach(el -> log.info(authRequest.getUsername() + " roles= " + el.getAuthority()));
+        UserDetails userDetails = accountService.loadUserByUsername(authRequest.getAccountName());
+        userDetails.getAuthorities().forEach(el -> log.info(authRequest.getAccountName() + " roles= " + el.getAuthority()));
 
         String token = jwtTokenService.generateToken(userDetails);
         return new AuthResponse(token);

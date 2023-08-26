@@ -10,25 +10,32 @@ import com.ichtus.hotelmanagementsystem.model.entities.Account;
 import com.ichtus.hotelmanagementsystem.model.entities.Role;
 import com.ichtus.hotelmanagementsystem.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AccountService implements UserDetailsService  {
 
     private final AccountRepository accountRepository;
     private final RoleService roleService;
+
 
     public List<AccountShortResponse> findAll() {
         return accountRepository.findAllByDeleted(false).stream().map(AccountShortResponse::of).toList();
@@ -44,39 +51,27 @@ public class AccountService implements UserDetailsService  {
 
     public AccountDetailResponse accountUpdateInfo(Long id, AccountUpdateRequest updateRequest) {
         Account accountToUpdate = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
-        if (!updateRequest.getUsername().isBlank()) {
-            accountToUpdate.setAccountName(updateRequest.getUsername());
+        if (updateRequest.getAccountName() != null && !updateRequest.getAccountName().isBlank()) {
+            accountToUpdate.setAccountName(updateRequest.getAccountName());
         }
-        if (!updateRequest.getPassword().isBlank()) {
-            accountToUpdate.setAccountPassword(updateRequest.getPassword());
+        if (updateRequest.getAccountPassword() != null && !updateRequest.getAccountPassword().isBlank()) {
+            accountToUpdate.setAccountPassword(updateRequest.getAccountPassword());
         }
-        if (!updateRequest.getEmail().isBlank()) {
-            accountToUpdate.setAccountEmail(updateRequest.getEmail());
+        if (updateRequest.getAccountEmail() != null && !updateRequest.getAccountEmail().isBlank()) {
+            accountToUpdate.setAccountEmail(updateRequest.getAccountEmail());
         }
         return AccountDetailResponse.of(accountRepository.save(accountToUpdate));
     }
 
-    public AccountDetailResponse accountUpdateRoles(Long id, RoleUpdateActionType roleAction, AccountRole roleValue) {
+    public AccountDetailResponse accountUpdateRoles(Long id, String roleName) {
+        log.info("accountUpdateRoles: " + id);
         Account accountToUpdate = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
-        Collection<Role> rolesList = accountToUpdate.getRoles();
-
-        if (roleAction != RoleUpdateActionType.ADD && roleAction != RoleUpdateActionType.REMOVE) {
-            throw new RoleNotFoundException(roleValue.name());
-        } else {
-            if (roleAction == RoleUpdateActionType.ADD) {
-                rolesList.add(roleService.getRoleByName(roleValue.name()));
-            } else {
-                accountToUpdate.setRoles(
-                        rolesList.stream()
-                                .filter(el -> !el.getName().equals(roleValue.name()))
-                                .toList()
-                );
-            }
-        }
-
+        log.info(accountToUpdate.getAccountName());
+        log.info(roleName);
+        accountToUpdate.setRole(roleService.getRoleByName(roleName));
+        log.info(accountToUpdate.toString());
         Account savedAccount = accountRepository.save(accountToUpdate);
         return AccountDetailResponse.of(savedAccount);
-
     }
 
     @Override
@@ -86,27 +81,31 @@ public class AccountService implements UserDetailsService  {
         return new User(
                 account.getAccountName(),
                 account.getAccountPassword(),
-                account.getRoles().stream()
+                Stream.of(account.getRole())
                         .map(el -> new SimpleGrantedAuthority(el.getName()))
                         .toList()
         );
     }
 
     public RegistrationResponse createNewAccount(RegistrationRequest registrationRequest) {
-        if (findByName(registrationRequest.getUsername()).isPresent()) {
-            throw new AccountAlreadyExists(registrationRequest.getUsername());
+        if (findByName(registrationRequest.getAccountName()).isPresent()) {
+            throw new AccountAlreadyExists(registrationRequest.getAccountName());
         }
         Account savedAccount = accountRepository.save(
                 new Account()
-                        .setAccountName(registrationRequest.getUsername())
-                        .setAccountPassword(registrationRequest.getPassword())
-                        .setAccountEmail(registrationRequest.getEmail())
-                        .setRoles(List.of(roleService.getUserRole()))
+                        .setAccountName(registrationRequest.getAccountName())
+                        .setAccountPassword(
+                                "{bcrypt}" +
+                                new BCryptPasswordEncoder().encode(registrationRequest.getAccountPassword())
+                        )
+                        .setAccountEmail(registrationRequest.getAccountEmail())
+                        .setRole(roleService.getUserRole())
         );
         return new RegistrationResponse(
                 savedAccount.getId(),
                 savedAccount.getAccountName(),
-                savedAccount.getAccountEmail()
+                savedAccount.getAccountEmail(),
+                savedAccount.getRole()
         );
     }
 

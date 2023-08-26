@@ -36,13 +36,16 @@ public class Account {
     @OneToMany
     private Set<Booking> bookings;
 
-    @ManyToMany
-    @JoinTable(
-            name = "accounts_roles",
-            joinColumns = @JoinColumn(name = "account_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Collection<Role> roles;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "accounts_roles",
+//            joinColumns = @JoinColumn(name = "account_id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id")
+//    )
+//    private Collection<Role> roles;
+
+    @ManyToOne
+    private Role role;
 
     private boolean deleted;
 }

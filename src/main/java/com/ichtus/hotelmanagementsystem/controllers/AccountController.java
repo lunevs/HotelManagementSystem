@@ -9,6 +9,7 @@ import com.ichtus.hotelmanagementsystem.model.dictionaries.RoleUpdateActionType;
 import com.ichtus.hotelmanagementsystem.model.dto.account.AccountDetailResponse;
 import com.ichtus.hotelmanagementsystem.model.dto.account.RegistrationRequest;
 import com.ichtus.hotelmanagementsystem.model.dto.account.AccountUpdateRequest;
+import com.ichtus.hotelmanagementsystem.model.dto.roles.UpdateRoleRequest;
 import com.ichtus.hotelmanagementsystem.services.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -64,14 +65,11 @@ public class AccountController {
         return ResponseEntity.ok(accountService.accountUpdateInfo(id, accountUpdateRequest));
     }
 
-    @PutMapping("/{id}/role?{action}={value}")
+    @PutMapping("/{id}/role")
     @IsAdministrator
-    public ResponseEntity<?> updateAccountRole(
-            @PathVariable Long id,
-            @PathVariable RoleUpdateActionType action,
-            @PathVariable AccountRole value) {
-
-        return ResponseEntity.ok(accountService.accountUpdateRoles(id, action, value));
+    public ResponseEntity<?> updateAccountRole(@PathVariable Long id, @RequestBody UpdateRoleRequest updateRoleRequest) {
+        log.info("controller updateAccountRole");
+        return ResponseEntity.ok(accountService.accountUpdateRoles(id, updateRoleRequest.getRole().name()));
     }
 
     @DeleteMapping("/{id}")

@@ -23,7 +23,7 @@ public class AccountDetailResponse {
     private String accountEmail;
     private Set<Location> locations;
     private Set<Booking> bookings;
-    private Collection<Role> roles;
+    private Role role;
     private boolean deleted;
 
     public static AccountDetailResponse of(Account account) {
@@ -33,7 +33,7 @@ public class AccountDetailResponse {
                 account.getAccountEmail(),
                 account.getLocations(),
                 account.getBookings(),
-                account.getRoles(),
+                account.getRole(),
                 account.isDeleted()
         );
     }

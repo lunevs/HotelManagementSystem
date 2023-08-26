@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class AccountUpdateRequest {
 
-    private String username;
-    private String password;
-    private String email;
+    private String accountName;
+    private String accountPassword;
+    private String accountEmail;
 }
