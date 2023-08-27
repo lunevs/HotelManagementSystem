@@ -1,29 +1,9 @@
-import axios from "axios";
-
-const baseUrl = 'http://localhost:8080';
+import BaseService from "./BaseService";
 
 
-const login = (authObject) => {
-    const request = axios.post
-    (
-        `${baseUrl}/login`,
-        authObject,
-        //qs.stringify(authObject),
-        {headers: {'Content-Type': 'application/json'}}
-    )
-    return request.then(response => response.data);
-}
+const login = (authObject) => BaseService.authMethod(authObject, 'login');
 
-const register = (registerUser) => {
-    const request = axios.post
-    (
-        `${baseUrl}/register`,
-        registerUser,
-        {headers: {'Content-Type': 'application/json'}}
-    )
-    return request.then(response => response.data);
-}
-
+const register = (registerUser) => BaseService.authMethod(registerUser, 'register')
 
 const authService = {login, register};
 export default authService;

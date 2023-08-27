@@ -1,7 +1,8 @@
 import './App.css';
 import LoginBox from "./components/LoginBox";
 import {useState} from "react";
-import AccountsBox from "./components/AccountsBox";
+import User from "./components/User";
+import Location from "./components/Location";
 
 function App() {
 
@@ -20,18 +21,19 @@ function App() {
         </div>
         <div className="row">
             <div className="col border border-dark m-2 p-3 rounded-2">
-                <p className="fs-3 pb-3">Search locations</p>
+                <p className="fs-3 pb-3">Search locations and booking it</p>
             </div>
         </div>
         <div className="row">
             <div className="col border border-dark m-2 p-3 rounded-2">
                 <p className="fs-3 pb-3">Location management</p>
+                <Location token={token} />
             </div>
         </div>
         <div className="row">
             <div className="col border border-dark m-2 p-3 rounded-2">
                 <p className="fs-3 pb-3">Users management</p>
-                <AccountsBox token={token} />
+                <User token={token} />
             </div>
         </div>
     </div>

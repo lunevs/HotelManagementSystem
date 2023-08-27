@@ -1,64 +1,15 @@
-import axios from "axios";
-
-const baseUrl = 'http://localhost:8080';
+import BaseService from "./BaseService";
 
 
-const getAllAccounts = (token) => {
-    const request = axios.get(
-        `${baseUrl}/accounts`,{
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-    return request.then(response => response.data);
-}
+const getAllAccounts = (token) => BaseService.getAll(token, 'accounts');
 
-const getAllRoles = (token) => {
-    const request = axios.get(
-        `${baseUrl}/roles`,{
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-    return request.then(response => response.data);
-}
+const getAllRoles = (token) => BaseService.getAll(token, 'roles');
 
+const updateAccountInfo = (token, accountToUpdate) => BaseService.updateElement(token, accountToUpdate.id, accountToUpdate, 'accounts', 'info');
 
-const updateAccountInfo = (token, accountToUpdate) => {
-    const request = axios.put(
-        `${baseUrl}/accounts/${accountToUpdate.id}/info`,
-        accountToUpdate,
-        {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-    return request.then(response => response.data);
-}
+const updateAccountRole = (token, id, actionRoleDto) => BaseService.updateElement(token, id, actionRoleDto, 'accounts', 'role');
 
-const updateAccountRole = (token, id, actionRoleDto) => {
-    const request = axios.put(
-        `${baseUrl}/accounts/${id}/role`,
-        actionRoleDto,
-        {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-    return request.then(response => response.data);
-}
-
-const createAccount = (token, accountToCreate) => {
-    const request = axios.post(
-        `${baseUrl}/accounts`,
-        accountToCreate,
-        {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-    return request.then(response => response.data);
-}
+const createAccount = (token, accountToCreate) => BaseService.createElement(token, accountToCreate, 'accounts');
 
 const AccountService = {getAllAccounts, updateAccountInfo, createAccount, getAllRoles, updateAccountRole};
 export default AccountService;
