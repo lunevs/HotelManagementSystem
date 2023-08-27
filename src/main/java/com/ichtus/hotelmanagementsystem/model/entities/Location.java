@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -29,7 +30,7 @@ public class Location {
     private String locationDescription;
 
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
-    private Set<Room> roomsList;
+    private List<Room> roomsList;
 
     @OneToMany
     private Set<Amenity> amenities;

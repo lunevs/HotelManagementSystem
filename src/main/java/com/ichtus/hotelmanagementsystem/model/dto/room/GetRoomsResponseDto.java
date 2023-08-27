@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,9 +27,10 @@ public class GetRoomsResponseDto {
                 .setRoomPrice(room.getRoomPrice())
                 .setRoomCapacity(room.getRoomCapacity())
                 .setLocationId(room.getLocation().getId())
-                .setAmenities(room.getAmenities().stream()
-                        .map(GetRoomAmenitiesResponseDto::of)
-                        .collect(Collectors.toSet())
+                .setAmenities(room.getAmenities() == null ? Collections.emptySet() :
+                        room.getAmenities().stream()
+                                .map(GetRoomAmenitiesResponseDto::of)
+                                .collect(Collectors.toSet())
                 );
     }
 }

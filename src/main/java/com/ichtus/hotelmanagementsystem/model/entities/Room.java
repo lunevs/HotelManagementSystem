@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
@@ -35,6 +36,7 @@ public class Room {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id")
+    @ToString.Exclude
     private Location location;
 
 

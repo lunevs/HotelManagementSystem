@@ -14,14 +14,14 @@ public class GetRoomShortIntroResponseDto {
     String roomName;
     BigDecimal roomPrice;
     int roomCapacity;
-    long locationId;
+//    long locationId;
 
     public static GetRoomShortIntroResponseDto of(Room room) {
         return new GetRoomShortIntroResponseDto()
                 .setId(room.getId())
                 .setRoomName(room.getRoomName())
                 .setRoomPrice(room.getRoomPrice())
-                .setRoomCapacity(room.getRoomCapacity())
-                .setLocationId(room.getLocation().getId());
+                .setRoomCapacity(room.getRoomCapacity());
+//                .setLocationId(room.getLocation().getId());
     }
 }

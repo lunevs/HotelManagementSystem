@@ -15,7 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -35,11 +37,12 @@ public class LocationService {
     public Location addLocation(CreateLocationRequestDto locationDto) {
         Location newLocation = new Location()
                 .setLocationName(locationDto.getLocationName())
-                .setLocationDescription(locationDto.getLocationDescription());
+                .setLocationDescription(locationDto.getLocationDescription())
+                .setRoomsList(Collections.emptyList());
         return locationRepository.save(newLocation);
     }
 
-    private Location findLocationById(Long id) throws LocationNotFoundException {
+    public Location findLocationById(Long id) throws LocationNotFoundException {
         return locationRepository
                 .findById(id)
                 .orElseThrow(() -> new LocationNotFoundException(id));
@@ -50,7 +53,7 @@ public class LocationService {
         return GetLocationInfoResponseDto.of(currentLocation);
     }
 
-    public void updateLocationInfo(Long id, UpdateLocationRequestDto newLocationDto) {
+    public GetLocationsResponseDto updateLocationInfo(Long id, UpdateLocationRequestDto newLocationDto) {
         Location currentLocation = findLocationById(id);
         currentLocation
                 .setLocationName(
@@ -61,7 +64,8 @@ public class LocationService {
                         newLocationDto.getLocationDescription() == null
                                 ? currentLocation.getLocationDescription()
                                 : newLocationDto.getLocationDescription());
-        locationRepository.save(currentLocation);
+        Location updatedLocation = locationRepository.save(currentLocation);
+        return GetLocationsResponseDto.of(updatedLocation);
     }
 
     public void deleteLocation(Long id) {
@@ -75,13 +79,18 @@ public class LocationService {
                         .toList();
     }
 
-    public GetLocationsResponseDto addRoomToLocation(Long id, CreateRoomRequestDto roomRequestDto) {
-        Location currentLocation = findLocationById(id);
-        Room newRoom = new Room()
-                        .setRoomName(roomRequestDto.getRoomName())
-                        .setRoomPrice(roomRequestDto.getRoomPrice())
-                        .setRoomCapacity(roomRequestDto.getRoomMaxCapacity());
-        currentLocation.getRoomsList().add(newRoom);
-        return GetLocationsResponseDto.of(locationRepository.save(currentLocation));
-    }
+//    public GetLocationsResponseDto addRoomToLocation(Long id, CreateRoomRequestDto roomRequestDto) {
+//        Location currentLocation = findLocationById(id);
+//        Room newRoom = new Room()
+//                        .setRoomName(roomRequestDto.getRoomName())
+//                        .setRoomPrice(roomRequestDto.getRoomPrice())
+//                        .setRoomCapacity(roomRequestDto.getRoomMaxCapacity())
+//                        .setLocation(currentLocation);
+//        Room savedRoom = roomService.saveNewRoom(newRoom);
+//        log.info("addRoomToLocation1: " + savedRoom);
+////        Location savedLocation = locationRepository.save(currentLocation);
+////        log.info("addRoomToLocation3: " + savedLocation);
+//        return GetLocationsResponseDto.of(currentLocation);
+//    }
+
 }

@@ -5,6 +5,7 @@ import com.ichtus.hotelmanagementsystem.model.dto.room.GetRoomShortIntroResponse
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,7 @@ public class GetLocationsResponseDto {
     long id;
     String locationName;
     String locationDescription;
-    Set<GetRoomShortIntroResponseDto> roomsList;
+    Iterable<GetRoomShortIntroResponseDto> roomsList;
 
     public static GetLocationsResponseDto of (Location loc) {
         return new GetLocationsResponseDto()
@@ -23,9 +24,10 @@ public class GetLocationsResponseDto {
                 .setLocationName(loc.getLocationName())
                 .setLocationDescription(loc.getLocationDescription())
                 .setRoomsList(
+                        loc.getRoomsList() == null ? null :
                         loc.getRoomsList().stream()
                                 .map(GetRoomShortIntroResponseDto::of)
-                                .collect(Collectors.toSet())
+                                .collect(Collectors.toList())
                 );
     }
 

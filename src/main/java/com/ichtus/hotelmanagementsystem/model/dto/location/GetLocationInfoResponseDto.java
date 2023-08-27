@@ -6,6 +6,7 @@ import com.ichtus.hotelmanagementsystem.model.entities.Room;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.util.List;
 import java.util.Set;
 
 @Accessors(chain = true)
@@ -17,7 +18,7 @@ public class GetLocationInfoResponseDto {
     long id;
     String locationName;
     String locationDescription;
-    Set<Room> roomsList;
+    List<Room> roomsList;
     Set<Amenity> amenities;
 
     public static GetLocationInfoResponseDto of(Location loc) {

@@ -1,6 +1,7 @@
 package com.ichtus.hotelmanagementsystem.model.dto.room;
 
 import com.ichtus.hotelmanagementsystem.model.anotations.ValidRoomCapacity;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import lombok.Value;
@@ -9,6 +10,9 @@ import java.math.BigDecimal;
 
 @Value
 public class CreateRoomRequestDto {
+
+    @NotBlank
+    Long locationId;
 
     @NotEmpty
     String roomName;

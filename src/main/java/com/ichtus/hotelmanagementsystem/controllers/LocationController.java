@@ -2,6 +2,7 @@ package com.ichtus.hotelmanagementsystem.controllers;
 
 import com.ichtus.hotelmanagementsystem.model.anotations.IsModerator;
 import com.ichtus.hotelmanagementsystem.model.anotations.IsUser;
+import com.ichtus.hotelmanagementsystem.model.dto.location.CreateLocationResponseDto;
 import com.ichtus.hotelmanagementsystem.model.entities.Location;
 import com.ichtus.hotelmanagementsystem.model.dto.location.CreateLocationRequestDto;
 import com.ichtus.hotelmanagementsystem.model.dto.location.GetLocationsResponseDto;
@@ -45,20 +46,23 @@ public class LocationController {
                 .buildAndExpand(savedLocation.getId())
                 .toUri();
         responseHeaders.setLocation(savedLocationUri);
-        return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                GetLocationsResponseDto.of(savedLocation),
+                responseHeaders,
+                HttpStatus.CREATED
+        );
     }
 
     @GetMapping("/{id}")
     @IsUser
     ResponseEntity<?> getLocationInfo(@PathVariable Long id) {
-        return new ResponseEntity<>(locationService.getLocationInfo(id), HttpStatus.OK);
+        return ResponseEntity.ok(locationService.getLocationInfo(id));
     }
 
     @PutMapping("/{id}")
     @IsModerator
     ResponseEntity<?> updateLocationInfo(@PathVariable Long id, @RequestBody UpdateLocationRequestDto locationRequestDto) {
-        locationService.updateLocationInfo(id, locationRequestDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(locationService.updateLocationInfo(id, locationRequestDto));
     }
 
     @DeleteMapping("/{id}")
@@ -74,9 +78,9 @@ public class LocationController {
         return new ResponseEntity<>(locationService.getRoomsList(id), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/rooms")
-    @IsModerator
-    ResponseEntity<?> addRoomToLocation(@PathVariable Long id, @Valid @RequestBody CreateRoomRequestDto roomRequestDto) {
-        return new ResponseEntity<>(locationService.addRoomToLocation(id, roomRequestDto), HttpStatus.OK);
-    }
+//    @PostMapping("/{id}/rooms")
+//    @IsModerator
+//    ResponseEntity<?> addRoomToLocation(@PathVariable Long id, @Valid @RequestBody CreateRoomRequestDto roomRequestDto) {
+//        return new ResponseEntity<>(locationService.addRoomToLocation(id, roomRequestDto), HttpStatus.OK);
+//    }
 }
