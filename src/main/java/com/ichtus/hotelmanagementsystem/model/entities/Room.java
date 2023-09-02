@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,7 +33,7 @@ public class Room {
     private int roomCapacity;
 
     @OneToMany
-    private Set<Amenity> amenities;
+    private List<Amenity> amenities;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id")

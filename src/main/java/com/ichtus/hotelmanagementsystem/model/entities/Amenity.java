@@ -5,11 +5,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "type"})})
 public class Amenity {
 

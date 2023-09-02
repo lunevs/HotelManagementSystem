@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -27,7 +28,8 @@ public class RoomService {
                 .setRoomName(roomRequestDto.getRoomName())
                 .setRoomPrice(roomRequestDto.getRoomPrice())
                 .setRoomCapacity(roomRequestDto.getRoomMaxCapacity())
-                .setLocation(currentLocation);
+                .setLocation(currentLocation)
+                .setAmenities(roomRequestDto.getAmenitiesList() == null ? Collections.emptyList() : roomRequestDto.getAmenitiesList());
         Room savedRoom = roomRepository.save(newRoom);
         log.info("addRoomToLocation1: " + savedRoom);
         return GetRoomsResponseDto.of(savedRoom);
@@ -40,7 +42,8 @@ public class RoomService {
         roomToUpdate
                 .setRoomName(roomRequestDto.getRoomName())
                 .setRoomCapacity(roomRequestDto.getRoomMaxCapacity())
-                .setRoomPrice(roomRequestDto.getRoomPrice());
+                .setRoomPrice(roomRequestDto.getRoomPrice())
+                .setAmenities(roomRequestDto.getAmenitiesList() == null ? Collections.emptyList() : roomRequestDto.getAmenitiesList());
 
         return GetRoomsResponseDto.of(roomRepository.save(roomToUpdate));
     }

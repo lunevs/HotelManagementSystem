@@ -1,6 +1,8 @@
 package com.ichtus.hotelmanagementsystem.services;
 
+import com.ichtus.hotelmanagementsystem.exceptions.AccountNotFoundException;
 import com.ichtus.hotelmanagementsystem.exceptions.LocationNotFoundException;
+import com.ichtus.hotelmanagementsystem.model.entities.Account;
 import com.ichtus.hotelmanagementsystem.model.entities.Location;
 import com.ichtus.hotelmanagementsystem.model.entities.Room;
 import com.ichtus.hotelmanagementsystem.model.dto.location.CreateLocationRequestDto;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 public class LocationService {
 
     private final LocationRepository locationRepository;
+    private final AccountService accountService;
 
     public Iterable<GetLocationsResponseDto> getLocationsList() {
         return locationRepository.findAll().stream()
@@ -34,11 +37,13 @@ public class LocationService {
                 .collect(Collectors.toList());
     }
 
-    public Location addLocation(CreateLocationRequestDto locationDto) {
+    public Location addLocation(CreateLocationRequestDto locationDto, String creatorName) {
+        Account creator = accountService.findByName(creatorName).orElseThrow(() -> new AccountNotFoundException(creatorName));
         Location newLocation = new Location()
                 .setLocationName(locationDto.getLocationName())
                 .setLocationDescription(locationDto.getLocationDescription())
-                .setRoomsList(Collections.emptyList());
+                .setRoomsList(Collections.emptyList())
+                .setLocationAdmin(creator);
         return locationRepository.save(newLocation);
     }
 

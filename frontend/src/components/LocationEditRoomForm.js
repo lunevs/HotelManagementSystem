@@ -1,11 +1,15 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Status from "./Status";
 import LocationService from "../services/LocationService";
+import AmenityElementCheckbox from "./AmenityElementCheckbox";
+import amenityService from "../services/AmenityService";
 
 
 const LocationEditRoomForm = ({token, locations, setReload}) => {
 
     const [status, setStatus] = useState('');
+    const [rooms, setRooms] = useState([]);
+    const [amenities, setAmenities] = useState([]);
     const [selectedLocation, setSelectedLocation] = useState({
         id: 0,
         locationName: '',
@@ -16,8 +20,23 @@ const LocationEditRoomForm = ({token, locations, setReload}) => {
         id: 0,
         roomName: '',
         roomPrice: 0,
-        roomCapacity: 0
+        roomCapacity: 0,
+        amenities: []
     });
+
+    useEffect(() => {
+        amenityService
+            .getAll(token)
+            .then(result => {
+                if (Array.isArray(result)) {
+                    setAmenities(result);
+                }
+            })
+            .catch(error => {
+
+            })
+    }, [token]);
+
 
     const selectLocationHandler = (event) => {
         let location = locations.filter(el => el.id.toString() === event.target.value)[0];
@@ -27,16 +46,29 @@ const LocationEditRoomForm = ({token, locations, setReload}) => {
                 id: 0,
                 roomName: '',
                 roomPrice: 0,
-                roomCapacity: 0
+                roomCapacity: 0,
+                amenities: []
             });
+            LocationService
+                .getAllRooms(token, location.id)
+                .then(result => {
+                    if (Array.isArray(result)) {
+                        setRooms(result);
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
         }
     }
 
     const selectRoomHandler = (event) => {
-        let room = selectedLocation.roomsList.filter(el => el.id.toString() === event.target.value)[0];
+        let room = rooms.filter(el => el.id.toString() === event.target.value)[0];
         if (room !== undefined) {
-            console.log(room);
             setSelectedRoom(room);
+            console.log(room.amenities);
+            console.log(amenities);
+            console.log(amenities.filter(el => room.amenities.some(el2 => el2.id === el.id) ));
         }
     }
 
@@ -47,7 +79,8 @@ const LocationEditRoomForm = ({token, locations, setReload}) => {
             locationId: selectedLocation.id,
             roomName: selectedRoom.roomName,
             roomPrice: selectedRoom.roomPrice,
-            roomMaxCapacity: selectedRoom.roomCapacity
+            roomMaxCapacity: selectedRoom.roomCapacity,
+            amenities: []
         }
         console.log(editRoomDto);
         LocationService
@@ -55,7 +88,7 @@ const LocationEditRoomForm = ({token, locations, setReload}) => {
             .then(result => {
                 if (result.hasOwnProperty('id')) {
                     setReload(true);
-                    setStatus('Successfully added');
+                    setStatus('Successfully updated');
                     setTimeout(() => setStatus(''), 2000);
                     document.getElementById('editRoomFormId').reset();
                     setSelectedRoom({
@@ -104,7 +137,7 @@ const LocationEditRoomForm = ({token, locations, setReload}) => {
                                     onChange={selectRoomHandler}
                             >
                                 <option value="---" key="0">---</option>
-                                {selectedLocation.roomsList.map(el => <option value={el.id} key={el.id}>{el.roomName}</option>)}
+                                {rooms.map(el => <option value={el.id} key={el.id}>{el.roomName}</option>)}
                             </select>
                         </div>
                     </div>
@@ -153,6 +186,18 @@ const LocationEditRoomForm = ({token, locations, setReload}) => {
                                    value={selectedRoom.roomCapacity}
                                    onChange={(e) => setSelectedRoom({...selectedRoom, roomCapacity: Number.parseInt(e.target.value)})}
                             />
+                        </div>
+                    </div>
+                    <div className="col-12 mb-3 g-3">
+                        <div className="row gy-2 gx-3">
+                            {amenities.filter(el => el.amenityType === "ROOM").map(el =>
+                                <AmenityElementCheckbox
+                                    key={el.id}
+                                    el_id={el.id}
+                                    el_name={el.amenityName}
+                                    el_price={el.amenityPrice}
+                                    checked={selectedRoom.amenities.some(el2 => el2.id === el.id)}
+                                /> )}
                         </div>
                     </div>
                 </div>

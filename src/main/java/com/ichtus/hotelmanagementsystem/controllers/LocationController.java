@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/locations")
@@ -37,8 +38,8 @@ public class LocationController {
 
     @PostMapping
     @IsModerator
-    ResponseEntity<?> createLocation(@Valid @RequestBody CreateLocationRequestDto locationDto) {
-        Location savedLocation = locationService.addLocation(locationDto);
+    ResponseEntity<?> createLocation(@Valid @RequestBody CreateLocationRequestDto locationDto, Principal principal) {
+        Location savedLocation = locationService.addLocation(locationDto, principal.getName());
         HttpHeaders responseHeaders = new HttpHeaders();
         URI savedLocationUri = ServletUriComponentsBuilder
                 .fromCurrentRequest()

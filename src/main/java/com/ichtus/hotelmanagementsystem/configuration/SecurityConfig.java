@@ -2,10 +2,11 @@ package com.ichtus.hotelmanagementsystem.configuration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,22 +14,29 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
 @Slf4j
-@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtRequestFilter jwtRequestFilter;
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver exceptionResolver;
+
+    @Bean
+    public JwtRequestFilter jwtRequestFilter() {
+        return new JwtRequestFilter(exceptionResolver);
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -41,8 +49,7 @@ public class SecurityConfig {
 //                        .requestMatchers("/locations").authenticated()
 //                        .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .exceptionHandling()
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

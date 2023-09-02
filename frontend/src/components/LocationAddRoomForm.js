@@ -1,19 +1,44 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Status from "./Status";
 import LocationService from "../services/LocationService";
+import amenityService from "../services/AmenityService";
+import AmenityElementCheckbox from "./AmenityElementCheckbox";
 
 
 const LocationAddRoomForm = ({token, locations, setReload}) => {
 
     const [status, setStatus] = useState('');
+    const [amenities, setAmenities] = useState([]);
+
+    useEffect(() => {
+        amenityService
+            .getAll(token)
+            .then(result => {
+                if (Array.isArray(result)) {
+                    setAmenities(result);
+                }
+            })
+            .catch(error => {
+
+            })
+    }, [token]);
 
     const addRoomToLocationHandler = (event) => {
         event.preventDefault();
+        let checkedIds = [];
+        event.target.amenitiesList.forEach(el => {
+            let id = el.value;
+            if (el.checked) {
+                checkedIds.push(id)
+            }
+        })
+        const checkedAmenities = amenities.filter(el => checkedIds.includes(el.id.toString()));
         const addRoomDto = {
             locationId: event.target.locationId.value,
             roomName: event.target.roomName.value,
             roomPrice: event.target.roomPrice.value,
-            roomMaxCapacity: event.target.roomMaxCapacity.value
+            roomMaxCapacity: event.target.roomMaxCapacity.value,
+            amenitiesList: checkedAmenities
         }
         console.log(addRoomDto);
         LocationService
@@ -92,6 +117,12 @@ const LocationAddRoomForm = ({token, locations, setReload}) => {
                                    min="1"
                                    max="6"
                             />
+                        </div>
+                    </div>
+                    <div className="col-12 mb-3 g-3">
+                        <div className="row gy-2 gx-3">
+                            {amenities.filter(el => el.amenityType === "ROOM").map(el =>
+                                <AmenityElementCheckbox key={el.id} el_id={el.id} el_name={el.amenityName} el_price={el.amenityPrice} /> )}
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,8 @@ package com.ichtus.hotelmanagementsystem.exceptions;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.ichtus.hotelmanagementsystem.model.dto.error.ErrorDetail;
 import com.ichtus.hotelmanagementsystem.model.dto.error.ValidationError;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -13,10 +15,12 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -30,6 +34,21 @@ import java.util.List;
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
     private final MessageSource messageSource;
+
+    @ExceptionHandler
+    @ResponseBody
+    public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex) {
+        return badRequestTemplateResponse(
+                "Authentication failed at controller advice",
+                ex,
+                HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(JWTVerificationException.class)
+    @ResponseBody
+    public ResponseEntity<?> incorrectTokenVerification2(Exception exception) {
+        return badRequestTemplateResponse("Invalid token", exception, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler
     public ResponseEntity<?> accessDenied(AccessDeniedException exception) {
@@ -66,10 +85,6 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return badRequestTemplateResponse("User with such name already exists", exception, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<?> incorrectTokenVerification(JWTVerificationException exception) {
-        return badRequestTemplateResponse("Token verification problem", exception, HttpStatus.BAD_REQUEST);
-    }
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
