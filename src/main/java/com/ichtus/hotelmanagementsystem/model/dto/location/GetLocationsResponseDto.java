@@ -17,12 +17,14 @@ public class GetLocationsResponseDto {
     String locationName;
     String locationDescription;
     Iterable<GetRoomShortIntroResponseDto> roomsList;
+    String adminName;
 
     public static GetLocationsResponseDto of (Location loc) {
         return new GetLocationsResponseDto()
                 .setId(loc.getId())
                 .setLocationName(loc.getLocationName())
                 .setLocationDescription(loc.getLocationDescription())
+                .setAdminName(loc.getLocationAdmin().getAccountName())
                 .setRoomsList(
                         loc.getRoomsList() == null ? null :
                         loc.getRoomsList().stream()

@@ -14,6 +14,7 @@ import com.ichtus.hotelmanagementsystem.model.dto.location.UpdateLocationRequest
 import com.ichtus.hotelmanagementsystem.repository.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final AccountService accountService;
 
+    @PostFilter("filterObject.adminName == authentication.name || hasRole('ADMIN')")
     public Iterable<GetLocationsResponseDto> getLocationsList() {
         return locationRepository.findAll().stream()
                 .map(GetLocationsResponseDto::of)

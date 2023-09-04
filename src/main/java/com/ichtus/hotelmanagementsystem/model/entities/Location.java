@@ -32,8 +32,13 @@ public class Location {
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
     private List<Room> roomsList;
 
-    @OneToMany
-    private Set<Amenity> amenities;
+    @ManyToMany
+    @JoinTable(
+            name = "locations_amenities",
+            joinColumns = @JoinColumn(name = "location_id"),
+            inverseJoinColumns = @JoinColumn(name = "amenity_id")
+    )
+    private List<Amenity> amenities;
 
     @ManyToOne
     private Account locationAdmin;

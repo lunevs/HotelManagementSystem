@@ -19,7 +19,7 @@ public class GetLocationInfoResponseDto {
     String locationName;
     String locationDescription;
     List<Room> roomsList;
-    Set<Amenity> amenities;
+    List<Amenity> amenities;
 
     public static GetLocationInfoResponseDto of(Location loc) {
         return new GetLocationInfoResponseDto()
@@ -30,3 +30,4 @@ public class GetLocationInfoResponseDto {
                 .setAmenities(loc.getAmenities());
     }
 }
+

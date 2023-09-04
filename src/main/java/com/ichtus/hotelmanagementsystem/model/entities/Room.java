@@ -16,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
+@Table(name = "rooms")
 public class Room {
 
     @Id
@@ -23,7 +24,7 @@ public class Room {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     private String roomName;
 
     @Column(name = "price")
@@ -32,7 +33,12 @@ public class Room {
     @Column(name = "capacity")
     private int roomCapacity;
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(
+            name = "rooms_amenities",
+            joinColumns = @JoinColumn(name = "room_id"),
+            inverseJoinColumns = @JoinColumn(name = "amenity_id")
+    )
     private List<Amenity> amenities;
 
     @ManyToOne(fetch = FetchType.EAGER)
