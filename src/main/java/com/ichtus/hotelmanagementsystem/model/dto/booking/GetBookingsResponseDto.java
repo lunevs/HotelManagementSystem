@@ -20,6 +20,7 @@ public class GetBookingsResponseDto {
 
     private GetRoomShortIntroResponseDto bookedRoom;
     private Long accountId;
+    private String accountName;
     private BookingStatus bookingStatus;
     private Date startDate;
     private Date endDate;
@@ -30,6 +31,7 @@ public class GetBookingsResponseDto {
                 .setId(booking.getId())
                 .setBookedRoom(GetRoomShortIntroResponseDto.of(booking.getRoom()))
                 .setAccountId(booking.getAccount().getId())
+                .setAccountName(booking.getAccount().getAccountName())
                 .setBookingStatus(booking.getBookingStatus())
                 .setStartDate(booking.getStartDate())
                 .setEndDate(booking.getEndDate())

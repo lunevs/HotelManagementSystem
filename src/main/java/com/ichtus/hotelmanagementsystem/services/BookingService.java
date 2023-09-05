@@ -6,14 +6,16 @@ import com.ichtus.hotelmanagementsystem.model.dto.booking.CreateBookingRequestDt
 import com.ichtus.hotelmanagementsystem.model.dto.booking.GetBookingsResponseDto;
 import com.ichtus.hotelmanagementsystem.model.entities.Account;
 import com.ichtus.hotelmanagementsystem.model.entities.Booking;
-import com.ichtus.hotelmanagementsystem.model.entities.Location;
 import com.ichtus.hotelmanagementsystem.model.entities.Room;
 import com.ichtus.hotelmanagementsystem.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -24,15 +26,23 @@ public class BookingService {
     private final RoomService roomService;
     private final AccountService accountService;
 
+
     public List<GetBookingsResponseDto> getMyBookings() {
-        return bookingRepository.findAll()
-                .stream()
-                .map(GetBookingsResponseDto::of)
-                .toList();
+        Authentication auth = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+        Stream<Booking> bookingStream = bookingRepository.findAll().stream();
+        if (auth.getAuthorities().stream()
+                .anyMatch(el -> !el.getAuthority().contains("ADMIN"))) {
+            bookingStream = bookingStream
+                    .filter(el -> el.getAccount().getAccountName().equals(auth.getName()));
+        }
+        return bookingStream
+                    .map(GetBookingsResponseDto::of)
+                    .toList();
     }
 
     public GetBookingsResponseDto bookRoom(CreateBookingRequestDto requestDto, String accountName) {
-        log.info(requestDto.getRoomId() + " " + requestDto.getStartDate());
         Room room = roomService.findById(requestDto.getRoomId());
         Account account = accountService.findByName(accountName)
                 .orElseThrow(() -> new AccountNotFoundException(accountName));

@@ -16,7 +16,7 @@ const BookingsList = ({token}) => {
             .catch(error => {
 
             })
-    })
+    }, [])
 
     return (
         <div>

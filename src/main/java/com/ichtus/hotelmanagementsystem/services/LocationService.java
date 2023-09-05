@@ -32,7 +32,7 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final AccountService accountService;
 
-    @PostFilter("filterObject.adminName == authentication.name || hasRole('ADMIN')")
+//    @PostFilter("filterObject.adminName == authentication.name || hasRole('ADMIN')")
     public Iterable<GetLocationsResponseDto> getLocationsList() {
         return locationRepository.findAll().stream()
                 .map(GetLocationsResponseDto::of)
