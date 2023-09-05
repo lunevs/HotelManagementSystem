@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import accountService from "../services/AccountService";
-import Status from "./Status";
+import accountService from "../../services/AccountService";
+import Status from "../utils/Status";
 
 
 const UserChangeRole = ({token, roles, accounts, setReload}) => {

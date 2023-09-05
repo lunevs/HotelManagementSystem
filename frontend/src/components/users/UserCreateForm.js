@@ -1,5 +1,5 @@
 import React from "react";
-import accountService from "../services/AccountService";
+import accountService from "../../services/AccountService";
 
 const UserCreateForm = ({token, accounts, setAccounts}) => {
 

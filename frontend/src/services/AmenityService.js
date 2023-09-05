@@ -1,10 +1,16 @@
 import BaseService from "./BaseService";
 
-const getAll = (token) => BaseService.getAll(token, 'amenities');
+let token = null
 
-const createAmenity = (token, amenityDto) => BaseService.createElement(token, amenityDto, 'amenities');
+const setToken = newToken => {
+    token = newToken
+}
 
-const updateAmenity = (token ,amenityDto) => BaseService.updateElement(token, amenityDto.id, amenityDto, 'amenities', null);
+const getAll = () => BaseService.getAll(token, 'amenities');
 
-const amenityService = {getAll, createAmenity, updateAmenity}
+const createAmenity = (amenityDto) => BaseService.createElement(token, amenityDto, 'amenities');
+
+const updateAmenity = (amenityDto) => BaseService.updateElement(token, amenityDto.id, amenityDto, 'amenities', null);
+
+const amenityService = {getAll, createAmenity, updateAmenity, setToken}
 export default amenityService;

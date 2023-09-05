@@ -22,6 +22,10 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final LocationService locationService;
 
+    public Room findById(Long id) {
+        return roomRepository.findById(id).orElseThrow(() -> new RoomNotFoundException(id.toString()));
+    }
+
     public GetRoomsResponseDto addRoom(CreateRoomRequestDto roomRequestDto) {
         Location currentLocation = locationService.findLocationById(roomRequestDto.getLocationId());
         Room newRoom = new Room()

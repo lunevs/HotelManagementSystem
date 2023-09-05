@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
-import accountService from "../services/AccountService";
+import accountService from "../../services/AccountService";
 import UserCreateForm from "./UserCreateForm";
-import UserEdirForm from "./UserEdirForm";
+import UserEditForm from "./UserEditForm";
 import UserChangeRole from "./UserChangeRole";
 
 const User = ({token}) => {
@@ -40,7 +40,7 @@ const User = ({token}) => {
             <div>
                 <UserCreateForm token={token} accounts={accounts} setAccounts={setAccounts} />
 
-                <UserEdirForm token={token} accounts={accounts} setAccounts={setAccounts} />
+                <UserEditForm token={token} accounts={accounts} setAccounts={setAccounts} />
 
                 <UserChangeRole token={token} accounts={accounts} roles={roles} setReload={setReload} />
 

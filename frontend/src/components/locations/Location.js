@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import LocationService from "../services/LocationService";
+import LocationService from "../../services/LocationService";
 import LocationEditForm from "./LocationEditForm";
 import LocationCreateForm from "./LocationCreateForm";
 import LocationAddRoomForm from "./LocationAddRoomForm";

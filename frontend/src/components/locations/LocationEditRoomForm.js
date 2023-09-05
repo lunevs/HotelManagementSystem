@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import Status from "./Status";
-import LocationService from "../services/LocationService";
-import AmenityElementCheckbox from "./AmenityElementCheckbox";
-import amenityService from "../services/AmenityService";
+import Status from "../utils/Status";
+import LocationService from "../../services/LocationService";
+import AmenityElementCheckbox from "../amenities/AmenityElementCheckbox";
+import amenityService from "../../services/AmenityService";
 
 
 const LocationEditRoomForm = ({token, locations, setReload}) => {

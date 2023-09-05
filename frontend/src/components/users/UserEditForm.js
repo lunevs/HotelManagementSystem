@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import accountService from "../services/AccountService";
+import accountService from "../../services/AccountService";
 
-const UserEdirForm = ({token, accounts, setAccounts}) => {
+const UserEditForm = ({token, accounts, setAccounts}) => {
 
     const [selectedAccount, setSelectedAccount] = useState({
         accountName: '',
@@ -93,4 +93,4 @@ const UserEdirForm = ({token, accounts, setAccounts}) => {
 }
 
 
-export default UserEdirForm;
+export default UserEditForm;

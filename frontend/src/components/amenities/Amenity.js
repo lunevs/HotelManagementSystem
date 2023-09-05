@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import AmenityAddForm from "./AmenityAddForm";
 import AmenityListAndUpdate from "./AmenityListAndUpdate";
-import amenityService from "../services/AmenityService";
+import amenityService from "../../services/AmenityService";
 
 const Amenity = ({token}) => {
 

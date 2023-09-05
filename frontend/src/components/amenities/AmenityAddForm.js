@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import Status from "./Status";
-import amenityService from "../services/AmenityService";
+import Status from "../utils/Status";
+import amenityService from "../../services/AmenityService";
 
 const AmenityAddForm = ({token, amenities, setAmenities}) => {
 

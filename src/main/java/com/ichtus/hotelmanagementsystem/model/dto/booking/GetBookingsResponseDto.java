@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 @Data
 @Accessors(chain = true)
@@ -20,8 +21,8 @@ public class GetBookingsResponseDto {
     private GetRoomShortIntroResponseDto bookedRoom;
     private Long accountId;
     private BookingStatus bookingStatus;
-    private LocalDateTime startDate;
-    private long numberOfNights;
+    private Date startDate;
+    private Date endDate;
     private int numberOfGuests;
 
     public static GetBookingsResponseDto of(Booking booking) {
@@ -31,9 +32,10 @@ public class GetBookingsResponseDto {
                 .setAccountId(booking.getAccount().getId())
                 .setBookingStatus(booking.getBookingStatus())
                 .setStartDate(booking.getStartDate())
-                .setNumberOfGuests(booking.getNumberOfGuests())
-                .setNumberOfNights(
-                        ChronoUnit.DAYS.between(booking.getStartDate(),booking.getEndDate())
-                );
+                .setEndDate(booking.getEndDate())
+                .setNumberOfGuests(booking.getNumberOfGuests());
+//                .setNumberOfNights(
+//                        ChronoUnit.DAYS.between(booking.getStartDate(),booking.getEndDate())
+//                );
     }
 }

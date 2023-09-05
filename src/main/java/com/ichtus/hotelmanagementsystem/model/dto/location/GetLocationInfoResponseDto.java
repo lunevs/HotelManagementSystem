@@ -1,5 +1,6 @@
 package com.ichtus.hotelmanagementsystem.model.dto.location;
 
+import com.ichtus.hotelmanagementsystem.model.dto.room.GetRoomsResponseDto;
 import com.ichtus.hotelmanagementsystem.model.entities.Amenity;
 import com.ichtus.hotelmanagementsystem.model.entities.Location;
 import com.ichtus.hotelmanagementsystem.model.entities.Room;
@@ -18,7 +19,7 @@ public class GetLocationInfoResponseDto {
     long id;
     String locationName;
     String locationDescription;
-    List<Room> roomsList;
+    List<GetRoomsResponseDto> roomsList;
     List<Amenity> amenities;
 
     public static GetLocationInfoResponseDto of(Location loc) {
@@ -26,7 +27,7 @@ public class GetLocationInfoResponseDto {
                 .setId(loc.getId())
                 .setLocationName(loc.getLocationName())
                 .setLocationDescription(loc.getLocationDescription())
-                .setRoomsList(loc.getRoomsList())
+                .setRoomsList(loc.getRoomsList().stream().map(GetRoomsResponseDto::of).toList())
                 .setAmenities(loc.getAmenities());
     }
 }

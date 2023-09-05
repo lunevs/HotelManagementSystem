@@ -3,6 +3,8 @@ import BaseService from "./BaseService";
 
 const getAllLocations = (token) => BaseService.getAll(token, 'locations');
 
+const getLocationDetails = (token, id) => BaseService.getAll(token, `locations/${id}`);
+
 const createLocation = (token, createLocationDto) => BaseService.createElement(token, createLocationDto, 'locations');
 
 const updateLocationInfo = (token, id, updateLocationDto) => BaseService.updateElement(token, id, updateLocationDto, 'locations', null);
@@ -13,5 +15,5 @@ const addRoomToLocation = (token, addRoomDto) => BaseService.createElement(token
 
 const updateRoom = (token, locationId, updateRoomDto) => BaseService.updateElement(token, locationId, updateRoomDto, 'rooms', null);
 
-const LocationService = {getAllLocations, createLocation, updateLocationInfo, addRoomToLocation, updateRoom, getAllRooms};
+const LocationService = {getAllLocations, createLocation, updateLocationInfo, addRoomToLocation, updateRoom, getAllRooms, getLocationDetails};
 export default LocationService;

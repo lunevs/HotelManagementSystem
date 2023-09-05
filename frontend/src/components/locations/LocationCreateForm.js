@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import LocationService from "../services/LocationService";
-import Status from "./Status";
+import LocationService from "../../services/LocationService";
+import Status from "../utils/Status";
 
 const LocationCreateForm = ({token, locations, setLocations}) => {
 
