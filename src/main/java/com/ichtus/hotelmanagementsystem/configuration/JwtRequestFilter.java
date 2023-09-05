@@ -1,5 +1,6 @@
 package com.ichtus.hotelmanagementsystem.configuration;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.ichtus.hotelmanagementsystem.services.AccountService;
 import com.ichtus.hotelmanagementsystem.services.JwtTokenService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -50,13 +51,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         try {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 jwtToken = authHeader.substring(7);
-                try {
-                    username = jwtTokenService.validateTokenAndGetUsername(jwtToken);
-                } catch (ExpiredJwtException e) {
-                    log.info("ExpiredJwtException: " + e.getMessage());
-                } catch (SignatureException e) {
-                    log.info("SignatureException: " + e.getMessage());
-                }
+                username = jwtTokenService.validateTokenAndGetUsername(jwtToken);
             }
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

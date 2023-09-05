@@ -5,11 +5,17 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -41,6 +47,9 @@ public class JwtTokenService {
 
     public String validateTokenAndGetUsername(String token) {
         try {
+////            byte[] keyBytes = Decoders.BASE64.decode("...secret...");
+////            Key k = Keys.hmacShaKeyFor(keyBytes);
+//            Jwts.parserBuilder().setSigningKey(k).build().parseClaimsJws(token);
             return verifier.verify(token).getSubject();
         } catch (JWTVerificationException jwtVerificationException) {
             throw new JWTVerificationException(token);
