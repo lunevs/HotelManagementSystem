@@ -1,10 +1,16 @@
-import React, {useState} from "react";
-import Status from "../utils/Status";
+import React from "react";
 import amenityService from "../../services/AmenityService";
+import {useNavigate} from "react-router-dom";
+import ErrorsHandler from "../utils/Utils";
+import BoxDiv from "../utils/style/BoxDiv";
+import InputText from "../utils/style/InputText";
+import InputNumber from "../utils/style/InputNumber";
+import InputCheckBox from "../utils/style/InputCheckBox";
+import Button from "../utils/style/Button";
 
-const AmenityAddForm = ({token, amenities, setAmenities}) => {
+const AmenityAddForm = ({token, changeStatusHandler}) => {
 
-    const [status, setStatus] = useState('');
+    const navigate = useNavigate();
 
     const createHandler = (event) => {
         event.preventDefault();
@@ -14,75 +20,39 @@ const AmenityAddForm = ({token, amenities, setAmenities}) => {
             amenityType: event.target.amenityCreateTypeInput.value,
             amenityPrice: event.target.amenityCreatePriceInput.value
         }
-        console.log(amenity);
         amenityService
             .createAmenity(token, amenity)
             .then(result => {
                 if (result.hasOwnProperty('id')) {
-                    setAmenities([...amenities, result]);
-                    setStatus('Successfully added');
-                    setTimeout(() => setStatus(''), 2000);
+                    changeStatusHandler({message: 'Amenity successfully added', type: 'success'})
                     document.getElementById('amenityCreateFormId').reset();
+                } else {
+                    changeStatusHandler({message: 'Unknown error', type: 'error'})
                 }
             })
-            .catch(e => {
-                console.log(e)
-            })
+            .catch(e => ErrorsHandler(e, changeStatusHandler, navigate))
 
     }
 
     return (
-        <div className="row border border-success-subtle mt-4 mx-2 rounded-2 shadow-sm">
+        <BoxDiv>
             <p className="text-start text-secondary">Create new amenity:</p>
-            <Status message={status} />
             <form onSubmit={createHandler} id="amenityCreateFormId">
-                <div className="input-group mb-1">
-                    <input type="text"
-                           className="form-control m-2"
-                           placeholder="Amenity name"
-                           aria-label="Amenity name"
-                           aria-describedby="addon-wrapping"
-                           name="amenityCreateNameInput"
-                    />
-                </div>
-                <div className="input-group mb-2">
-                    <input type="text"
-                           className="form-control m-2"
-                           placeholder="Amenity description"
-                           aria-label="Amenity description"
-                           aria-describedby="addon-wrapping"
-                           name="amenityCreateDescriptionInput"
-                    />
-                </div>
+                <InputText name="amenityCreateNameInput" description="Amenity name" />
+                <InputText name="amenityCreateDescriptionInput" description="Amenity description" />
                 <div className="input-group mb-2 mx-2">
-                    <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio"
-                               name="amenityCreateTypeInput"
-                               id="amenityCreateTypeInput1"
-                               value="ROOM" />
-                        <label className="form-check-label" htmlFor="amenityCreateTypeInput1">Room amenity</label>
-                    </div>
-                    <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio"
-                               name="amenityCreateTypeInput"
-                               id="amenityCreateTypeInput2"
-                               value="LOCATION" />
-                        <label className="form-check-label" htmlFor="amenityCreateTypeInput2">Location Amenity</label>
-                    </div>
+                    <InputCheckBox id="amenityCreateTypeInput1" name="amenityCreateTypeInput" value="ROOM">
+                        Room amenity
+                    </InputCheckBox>
+                    <InputCheckBox id="amenityCreateTypeInput2" name="amenityCreateTypeInput" value="HOTEL">
+                        Location amenity
+                    </InputCheckBox>
                 </div>
-                <div className="input-group mb-1">
-                    <input type="number"
-                           className="form-control m-2"
-                           placeholder="Amenity price"
-                           aria-label="Amenity price"
-                           aria-describedby="addon-wrapping"
-                           step="0.01"
-                           name="amenityCreatePriceInput"
-                    />
-                </div>
-                <button className="btn btn-secondary m-2" type="submit">Create amenity</button>
+                <InputNumber name="amenityCreatePriceInput" description="Amenity price" />
+
+                <Button>Create amenity</Button>
             </form>
-        </div>
+        </BoxDiv>
     );
 }
 

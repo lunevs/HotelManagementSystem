@@ -1,10 +1,7 @@
 package com.ichtus.hotelmanagementsystem.model.entities;
 
-import com.ichtus.hotelmanagementsystem.model.dictionaries.AccountRole;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.time.LocalDate;
 
 @Entity
 @Data
@@ -19,10 +16,4 @@ public class Role {
     @Column(name = "name")
     private String name;
 
-
-//    @Column(name = "granted_date")
-//    private LocalDate grantedDate;
-//
-//    @ManyToOne
-//    private Account grantedBy;
 }

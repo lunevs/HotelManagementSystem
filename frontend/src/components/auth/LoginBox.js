@@ -1,8 +1,15 @@
 import React, {useState} from 'react';
 import authService from "../../services/AuthService";
+import ErrorsHandler from "../utils/Utils";
+import {useNavigate} from "react-router-dom";
+import Button from "../utils/style/Button";
+import InputTextWithSpan from "../utils/style/InputTextWithSpan";
+import TabItem from "../utils/style/TabItem";
+import TabBody from "../utils/style/TabBody";
 
 const LoginBox = ({changeTokenHandler, changeStatusHandler}) => {
 
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
 
     const signInHandler = (event) => {
@@ -11,22 +18,19 @@ const LoginBox = ({changeTokenHandler, changeStatusHandler}) => {
             accountName: event.target.loginName.value,
             accountPassword: event.target.loginPassword.value
         }
-        authService.login(authData)
+        authService
+            .login(authData)
             .then(resultToken => {
                 if (resultToken.token !== null) {
                     setUsername(authData.username);
                     changeTokenHandler(resultToken.token);
                     changeStatusHandler({message: "Welcome" + username, type: 'success'});
                     window.localStorage.setItem('loggedHotelServiceUser', JSON.stringify(resultToken))
+                } else {
+                    changeStatusHandler({message: 'Unknown result data', type: 'error'});
                 }
             })
-            .catch(function (error) {
-                if (error.hasOwnProperty('response')) {
-                    changeStatusHandler({message: error.response.data.title, type: 'error'});
-                } else {
-                    changeStatusHandler({message: "unknown error: " + JSON.stringify(error), type: 'error'});
-                }
-            });
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate));
     }
 
     const registerHandler = (event) => {
@@ -58,78 +62,25 @@ const LoginBox = ({changeTokenHandler, changeStatusHandler}) => {
     return (
         <div className="mx-auto mb-5 ">
             <ul className="nav nav-tabs mb-3" id="myTab" role="tablist">
-                <li className="nav-item" role="presentation">
-                    <button className="nav-link active" id="home-tab" data-bs-toggle="tab"
-                            data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
-                            aria-selected="true">Login form
-                    </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                    <button className="nav-link" id="profile-tab" data-bs-toggle="tab"
-                            data-bs-target="#profile-tab-pane" type="button" role="tab"
-                            aria-controls="profile-tab-pane" aria-selected="false">Registration
-                    </button>
-                </li>
+                <TabItem name="home" selected={true} tabLabel="Login form" />
+                <TabItem name="profile" selected={false} tabLabel="Registration form" />
             </ul>
             <div className="tab-content" id="myTabContent">
-                <div className="tab-pane fade show active" id="home-tab-pane" role="tabpanel"
-                     aria-labelledby="home-tab" tabIndex="0">
-
+                <TabBody name="home" selected={true}>
                     <form onSubmit={signInHandler}>
-                        <div className="input-group mb-3">
-                            <span className="input-group-text" id="inputGroup-sizing-default">Username</span>
-                            <input type="text" className="form-control"
-                                   aria-label="Username input"
-                                   aria-describedby="inputGroup-sizing-default"
-                                   name="loginName"
-                            />
-                        </div>
-                        <div className="input-group mb-3">
-                            <span className="input-group-text" id="inputGroup-sizing-default">Password</span>
-                            <input type="password" className="form-control"
-                                   aria-label="Password input"
-                                   aria-describedby="inputGroup-sizing-default"
-                                   name="loginPassword"
-                            />
-                        </div>
-                        <button type="submit" className="btn btn-secondary m-2">Sign in</button>
+                        <InputTextWithSpan type="text" name="loginName" spanLabel="Username" />
+                        <InputTextWithSpan type="password" name="loginPassword" spanLabel="Password" />
+                        <Button>Sign in</Button>
                     </form>
-
-
-                </div>
-                <div className="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
-                     tabIndex="0">
-
+                </TabBody>
+                <TabBody name="profile" selected={false}>
                     <form onSubmit={registerHandler} id="registerFormId">
-                        <div className="input-group mb-3">
-                            <span className="input-group-text" id="inputGroup-sizing-default">Username</span>
-                            <input type="text" className="form-control"
-                                   aria-label="Username input"
-                                   aria-describedby="inputGroup-sizing-default"
-                                   name="registerName"
-                            />
-                        </div>
-                        <div className="input-group mb-3">
-                            <span className="input-group-text" id="inputGroup-sizing-default">Password</span>
-                            <input type="password" className="form-control"
-                                   aria-label="Password input"
-                                   aria-describedby="inputGroup-sizing-default"
-                                   name="registerPassword"
-                            />
-                        </div>
-                        <div className="input-group mb-3">
-                            <span className="input-group-text" id="inputGroup-sizing-default">Email</span>
-                            <input type="email" className="form-control"
-                                   aria-label="Email input"
-                                   aria-describedby="inputGroup-sizing-default"
-                                   name="registerEmail"
-                            />
-                        </div>
-                        <button type="submit" className="btn btn-secondary m-2">Register</button>
+                        <InputTextWithSpan type="text" name="registerName" spanLabel="Username" />
+                        <InputTextWithSpan type="password" name="registerPassword" spanLabel="Password" />
+                        <InputTextWithSpan type="email" name="registerEmail" spanLabel="Email" />
+                        <Button>Register</Button>
                     </form>
-
-
-                </div>
+                </TabBody>
             </div>
 
         </div>

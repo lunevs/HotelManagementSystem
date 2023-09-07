@@ -1,7 +1,11 @@
 import React, {useState} from "react";
 import bookingService from "../../services/BookingService";
+import ErrorsHandler from "../utils/Utils";
+import {useNavigate} from "react-router-dom";
 
-const RoomItem = ({token, roomElement}) => {
+const RoomItem = ({token, roomElement, changeStatusHandler}) => {
+
+    const navigate = useNavigate();
 
     const [from, setFrom] = useState(new Date().toISOString().split('T')[0]);
     const [to, setTo] = useState(new Date().toISOString().split('T')[0])
@@ -18,11 +22,13 @@ const RoomItem = ({token, roomElement}) => {
         bookingService
             .bookRoom(token, bookDto)
             .then(result => {
-                console.log(result)
+                if (result.hasOwnProperty('id')) {
+                    changeStatusHandler({message: 'Successfully added!', type: 'success'});
+                } else {
+                    changeStatusHandler({message: 'Unknown result data', type: 'error'});
+                }
             })
-            .catch(error => {
-                console.log(error)
-            })
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate))
 
     }
 
@@ -39,6 +45,7 @@ const RoomItem = ({token, roomElement}) => {
                             <div className="card-body">
                                 <h5 className="card-title">{roomElement.roomName}</h5>
                                 <table>
+                                    <tbody>
                                     <tr>
                                         <td>room capacity:</td>
                                         <td><p className="card-text">{roomElement.roomCapacity}</p></td>
@@ -47,6 +54,7 @@ const RoomItem = ({token, roomElement}) => {
                                         <td>price for 1 night: </td>
                                         <td><p className="card-text">{roomElement.roomPrice}$</p></td>
                                     </tr>
+                                    </tbody>
                                 </table>
                                 <div className="border border-light rounded-2 shadow-sm p-3 m-2" >
                                     <form onSubmit={bookRoomHandler}>
@@ -54,7 +62,7 @@ const RoomItem = ({token, roomElement}) => {
                                             <label className="input-group-text" htmlFor="inputGroupSelect04">Persons</label>
                                             <select className="form-select" size="1" id="inputGroupSelect04">
                                                 {
-                                                    Array.from({length: roomElement.roomCapacity}, (v, i) => 1 + i).map(el => <option value={el}>{el}</option>)
+                                                    Array.from({length: roomElement.roomCapacity}, (v, i) => 1 + i).map(el => <option value={el} key={el}>{el}</option>)
                                                 }
                                             </select>
                                         </div>

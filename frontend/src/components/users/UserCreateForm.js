@@ -1,7 +1,14 @@
 import React from "react";
 import accountService from "../../services/AccountService";
+import ErrorsHandler from "../utils/Utils";
+import {useNavigate} from "react-router-dom";
+import BoxDiv from "../utils/style/BoxDiv";
+import InputText from "../utils/style/InputText";
+import Button from "../utils/style/Button";
 
-const UserCreateForm = ({token, accounts, setAccounts}) => {
+const UserCreateForm = ({token, changeStatusHandler}) => {
+
+    const navigate = useNavigate();
 
     const createAccountHandler = (event) => {
         event.preventDefault();
@@ -13,44 +20,26 @@ const UserCreateForm = ({token, accounts, setAccounts}) => {
         accountService
             .createAccount(token, newAccount)
             .then(result => {
-                const newAccounts = [...accounts, result];
-                console.log(newAccounts)
-                setAccounts(newAccounts);
+                if (result.hasOwnProperty('id')) {
+                    changeStatusHandler({message: 'Account successfully created!', type: 'success'})
+                    document.getElementById('createUserFormId').reset();
+                } else {
+                    changeStatusHandler({message: 'Unknown error', type: 'error'})
+                }
             })
-            .catch(error => console.log(error));
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate));
     }
 
 
     return (
-        <div className="row border border-success-subtle mt-4 mx-2 rounded-2 shadow-sm">
-            <p className="text-start text-secondary">Create new account block:</p>
-            <form onSubmit={createAccountHandler}>
-                <div className="input-group mb-1">
-                    <input type="text"
-                           className="form-control m-2"
-                           placeholder="Account name"
-                           aria-label="Account name"
-                           aria-describedby="addon-wrapping"
-                           name="newAccountName"
-                    />
-                    <input type="password"
-                           className="form-control m-2"
-                           placeholder="Account password"
-                           aria-label="Account password"
-                           aria-describedby="addon-wrapping"
-                           name="newAccountPassword"
-                    />
-                    <input type="email"
-                           className="form-control m-2"
-                           placeholder="Account email"
-                           aria-label="Account email"
-                           aria-describedby="addon-wrapping"
-                           name="newAccountEmail"
-                    />
-                    <button className="btn btn-secondary m-2" type="submit">Create user</button>
-                </div>
+        <BoxDiv title="Create new account block:">
+            <form onSubmit={createAccountHandler} id="createUserFormId">
+                <InputText name="newAccountName" description="Account name" />
+                <InputText name="newAccountPassword" description="Account password" />
+                <InputText name="newAccountEmail" description="Account email" />
+                <Button>Create user</Button>
             </form>
-        </div>
+        </BoxDiv>
     );
 }
 

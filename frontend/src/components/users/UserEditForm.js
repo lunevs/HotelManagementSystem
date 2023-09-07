@@ -1,14 +1,36 @@
-import React, {useState} from "react";
+/* eslint-disable */
+import React, {useEffect, useState} from "react";
 import accountService from "../../services/AccountService";
+import {useNavigate} from "react-router-dom";
+import ErrorsHandler from "../utils/Utils";
+import BoxDiv from "../utils/style/BoxDiv";
+import InputTextWithSpan from "../utils/style/InputTextWithSpan";
+import Button from "../utils/style/Button";
 
-const UserEditForm = ({token, accounts, setAccounts}) => {
+const UserEditForm = ({token, changeStatusHandler}) => {
 
+    const navigate = useNavigate();
+
+    const [accounts, setAccounts] = useState([]);
     const [selectedAccount, setSelectedAccount] = useState({
         accountName: '',
         accountEmail: '',
         id: 0,
         role: {}
     });
+
+    useEffect(() => {
+        if (token !== '') {
+            accountService
+                .getAllAccounts(token)
+                .then(result => {
+                    if (Array.isArray(result)) {
+                        setAccounts(result);
+                    }
+                })
+                .catch(error => ErrorsHandler(error, changeStatusHandler, navigate));
+        }
+    }, [token]);
 
     const updateAccountHandler = (event) => {
         event.preventDefault();
@@ -20,10 +42,10 @@ const UserEditForm = ({token, accounts, setAccounts}) => {
             accountName: selectedAccount.accountName,
             accountEmail: selectedAccount.accountEmail
         };
-        console.dir(accountToUpdate);
         accountService
             .updateAccountInfo(token, accountToUpdate)
             .then(result => {
+                changeStatusHandler({message: 'Account successfully updated!', type: 'success'});
                 setAccounts(accounts.map(el => {
                     if (el.id === result.id) {
                         return result;
@@ -32,9 +54,8 @@ const UserEditForm = ({token, accounts, setAccounts}) => {
                     }
                 }))
             })
-            .catch(error => console.log(error))
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate))
     }
-
 
     const selectAccountHandler = (event) => {
         let account = accounts.filter(el => el.id.toString() === event.target.value)[0];
@@ -43,10 +64,8 @@ const UserEditForm = ({token, accounts, setAccounts}) => {
         }
     }
 
-
     return (
-        <div className="row border border-success-subtle mt-4 mx-2 pb-2 rounded-2 shadow-sm">
-            <p className="text-start text-secondary">Edit account info block:</p>
+        <BoxDiv title="Edit account info:">
 
             <div className="row">
                 <div className="col-3">
@@ -55,39 +74,21 @@ const UserEditForm = ({token, accounts, setAccounts}) => {
                     </select>
                 </div>
                 <div className="col-9">
-                    <form>
-                        <div className="input-group mb-3">
-                            <span className="input-group-text w-25" id="addon-wrapping">username</span>
-                            <input type="text" className="form-control"
-                                   placeholder="Username"
-                                   aria-label="Username"
-                                   aria-describedby="addon-wrapping"
-                                   name="accountName"
+                    <form onSubmit={updateAccountHandler}>
+                        <InputTextWithSpan type="text" name="accountName" spanLabel="Username"
                                    value={selectedAccount.accountName}
                                    onChange={e => setSelectedAccount({...selectedAccount, accountName: e.target.value})}
-                            />
-                        </div>
-
-                        <div className="input-group mb-3">
-                            <span className="input-group-text w-25" id="addon-wrapping">email</span>
-                            <input type="text"
-                                   id="AccountEmailInputId"
-                                   className="form-control"
-                                   placeholder="Email"
-                                   aria-label="Email"
-                                   aria-describedby="addon-wrapping"
-                                   name="accountEmail"
+                        />
+                        <InputTextWithSpan type="text" name="accountEmail" spanLabel="Email"
                                    value={selectedAccount.accountEmail}
                                    onChange={e => setSelectedAccount({...selectedAccount, accountEmail: e.target.value})}
-                            />
-                        </div>
-
-                        <button className="btn btn-secondary" type="button" onClick={updateAccountHandler}>Update user</button>
+                        />
+                        <Button>Update user</Button>
                     </form>
 
                 </div>
             </div>
-        </div>
+        </BoxDiv>
 
     );
 }

@@ -1,11 +1,20 @@
-import React, {useState} from "react";
-import Status from "../utils/Status";
+/* eslint-disable */
+import React, {useEffect, useState} from "react";
 import amenityService from "../../services/AmenityService";
+import ErrorsHandler from "../utils/Utils";
+import {useNavigate} from "react-router-dom";
+import BoxDiv from "../utils/style/BoxDiv";
+import InputText from "../utils/style/InputText";
+import InputCheckBox from "../utils/style/InputCheckBox";
+import InputNumber from "../utils/style/InputNumber";
+import Button from "../utils/style/Button";
 
 
-const AmenityListAndUpdate = ({token, amenities, setAmenities}) => {
+const AmenityListAndUpdate = ({token, changeStatusHandler}) => {
 
-    const [status, setStatus] = useState('');
+    const navigate = useNavigate();
+
+    const [amenities, setAmenities] = useState([]);
     const [selectedAmenity, setSelectedAmenity] = useState({
         id: 0,
         amenityName: '',
@@ -14,6 +23,17 @@ const AmenityListAndUpdate = ({token, amenities, setAmenities}) => {
         amenityPrice: 0
     })
 
+    useEffect(() => {
+        amenityService
+            .getAll(token)
+            .then(result => {
+                if (Array.isArray(result)) {
+                    setAmenities(result);
+                }
+            })
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate))
+    }, [token]);
+
     const updateHandler = (event) => {
         event.preventDefault();
         amenityService
@@ -21,15 +41,11 @@ const AmenityListAndUpdate = ({token, amenities, setAmenities}) => {
             .then(result => {
                 if (result.hasOwnProperty('id')) {
                     const newAmenities = amenities.map(el => (el.id === result.id) ? result : el)
-                    console.log(newAmenities);
                     setAmenities(newAmenities);
-                    setStatus('Successfully updated');
-                    setTimeout(() => setStatus(''), 2000);
+                    changeStatusHandler({message: 'Amenity successfully updated', type: 'success'})
                 }
             })
-            .catch(e => {
-                console.log(e)
-            })
+            .catch(e => ErrorsHandler(e, changeStatusHandler, navigate))
     }
 
     const selectHandler = (event) => {
@@ -50,9 +66,8 @@ const AmenityListAndUpdate = ({token, amenities, setAmenities}) => {
     }
 
     return (
-        <div className="row border border-success-subtle mt-4 mx-2 rounded-2 shadow-sm">
+        <BoxDiv>
             <p className="text-start text-secondary">All amenities list:</p>
-            <Status message={status} />
             <div className="input-group mb-1">
                 <select className="form-select" size="1" aria-label="All amenities list" onChange={selectHandler}>
                     <option value="---" key="0">---</option>
@@ -60,65 +75,32 @@ const AmenityListAndUpdate = ({token, amenities, setAmenities}) => {
                 </select>
             </div>
             <form id="amenitiesListViewFormId" onSubmit={updateHandler}>
-                <div className="input-group mb-1">
-                    <input type="text"
-                           className="form-control m-2"
-                           placeholder="Amenity name"
-                           aria-label="Amenity name"
-                           aria-describedby="addon-wrapping"
-                           name="amenityUpdateNameInput"
+                <InputText name="amenityUpdateNameInput" description="Amenity name"
                            value={selectedAmenity.amenityName}
                            onChange={e => setSelectedAmenity({...selectedAmenity, amenityName: e.target.value})}
-                    />
-                </div>
-                <div className="input-group mb-1">
-                    <input type="text"
-                           className="form-control m-2"
-                           placeholder="Amenity description"
-                           aria-label="Amenity description"
-                           aria-describedby="addon-wrapping"
-                           name="amenityUpdateDescriptionInput"
+                />
+                <InputText name="amenityUpdateDescriptionInput" description="Amenity description"
                            value={selectedAmenity.amenityDescription}
-                           onChange={e => setSelectedAmenity({...selectedAmenity, amenityDescription: e.target.value})}
-                    />
-                </div>
+                           onChange={e => setSelectedAmenity({...selectedAmenity, amenityName: e.target.value})}
+                />
                 <div className="input-group mb-2 mx-2">
-                    <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio"
-                               name="amenityUpdateTypeInput"
-                               id="amenityUpdateTypeInput1"
-                               value="ROOM"
-                               checked={selectedAmenity.amenityType === "ROOM"}
-                               onChange={e => setSelectedAmenity({...selectedAmenity, amenityType: e.target.value})}
-                        />
-                        <label className="form-check-label" htmlFor="amenityUpdateTypeInput1">Room amenity</label>
-                    </div>
-                    <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio"
-                               name="amenityUpdateTypeInput"
-                               id="amenityUpdateTypeInput2"
-                               value="LOCATION"
-                               checked={selectedAmenity.amenityType === "LOCATION"}
-                               onChange={e => setSelectedAmenity({...selectedAmenity, amenityType: e.target.value})}
-                        />
-                        <label className="form-check-label" htmlFor="amenityUpdateTypeInput2">Location Amenity</label>
-                    </div>
+                    <InputCheckBox id="amenityUpdateTypeInput1" name="amenityUpdateTypeInput" value="ROOM"
+                                   checked={selectedAmenity.amenityType === "ROOM"}
+                                   onChange={e => setSelectedAmenity({...selectedAmenity, amenityType: e.target.value})}>
+                        Room amenity
+                    </InputCheckBox>
+                    <InputCheckBox id="amenityUpdateTypeInput2" name="amenityUpdateTypeInput" value="HOTEL"
+                                   checked={selectedAmenity.amenityType === "HOTEL"}
+                                   onChange={e => setSelectedAmenity({...selectedAmenity, amenityType: e.target.value})}>
+                        Room amenity
+                    </InputCheckBox>
                 </div>
-                <div className="input-group mb-1">
-                    <input type="number"
-                           className="form-control m-2"
-                           placeholder="Amenity price"
-                           aria-label="Amenity price"
-                           aria-describedby="addon-wrapping"
-                           name="amenityUpdatePriceInput"
-                           step="0.01"
-                           value={selectedAmenity.amenityPrice}
-                           onChange={e => setSelectedAmenity({...selectedAmenity, amenityPrice: Number.parseFloat(e.target.value)})}
-                    />
-                </div>
-                <button className="btn btn-secondary m-2" type="submit">Update amenity</button>
+                <InputNumber name="amenityUpdatePriceInput" description="Amenity price"
+                             value={selectedAmenity.amenityPrice}
+                             onChange={e => setSelectedAmenity({...selectedAmenity, amenityPrice: Number.parseFloat(e.target.value)})} />
+                <Button>Update amenity</Button>
             </form>
-        </div>
+        </BoxDiv>
     );
 }
 

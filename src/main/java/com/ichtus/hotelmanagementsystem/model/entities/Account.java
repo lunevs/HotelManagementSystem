@@ -6,8 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -31,18 +30,10 @@ public class Account {
     private String accountEmail;
 
     @OneToMany
-    private Set<Location> locations;
+    private List<Hotel> hotels;
 
     @OneToMany
-    private Set<Booking> bookings;
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "accounts_roles",
-//            joinColumns = @JoinColumn(name = "account_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id")
-//    )
-//    private Collection<Role> roles;
+    private List<Booking> bookings;
 
     @ManyToOne
     private Role role;

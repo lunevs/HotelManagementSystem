@@ -1,10 +1,15 @@
-import React, {useState} from "react";
+/* eslint-disable */
+import React from "react";
 import LocationService from "../../services/LocationService";
-import Status from "../utils/Status";
+import ErrorsHandler from "../utils/Utils";
+import {useNavigate} from "react-router-dom";
+import BoxDiv from "../utils/style/BoxDiv";
+import InputText from "../utils/style/InputText";
+import Button from "../utils/style/Button";
 
-const LocationCreateForm = ({token, locations, setLocations}) => {
+const LocationCreateForm = ({token, changeStatusHandler}) => {
 
-    const [status, setStatus] = useState('');
+    const navigate = useNavigate();
 
     const createHandler = (event) => {
         event.preventDefault();
@@ -17,45 +22,24 @@ const LocationCreateForm = ({token, locations, setLocations}) => {
             .createLocation(token, newElement)
             .then(result => {
                 if (result.hasOwnProperty('id')) {
-                    const newLocations = [...locations, result];
-                    setLocations(newLocations);
-                    setStatus("Successfully created");
                     document.getElementById('locationCreateFormId').reset();
-                    setTimeout(() => setStatus(''), 2000);
-
-                    console.log(result);
+                    changeStatusHandler({message: 'Location created', type: 'success'});
                 } else {
-                    console.log("unknown error: " + result);
+                    changeStatusHandler({message: 'Unknown error. Try again', type: 'error'});
                 }
             })
-            .catch(error => console.log(error));
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate));
     }
 
 
     return (
-        <div className="row border border-success-subtle mt-4 mx-2 rounded-2 shadow-sm">
-            <p className="text-start text-secondary">Create new location:</p>
-            <Status message={status} />
+        <BoxDiv title="Create new hotel:">
             <form onSubmit={createHandler} id="locationCreateFormId">
-                <div className="input-group mb-1">
-                    <input type="text"
-                           className="form-control m-2"
-                           placeholder="Location name"
-                           aria-label="Location name"
-                           aria-describedby="addon-wrapping"
-                           name="locationNameInput"
-                    />
-                    <input type="text"
-                           className="form-control m-2"
-                           placeholder="Location description"
-                           aria-label="Location description"
-                           aria-describedby="addon-wrapping"
-                           name="locationDescriptionInput"
-                    />
-                    <button className="btn btn-secondary m-2" type="submit">Create location</button>
-                </div>
+                <InputText name="locationNameInput" description="Location name" />
+                <InputText name="locationDescriptionInput" description="Location description" />
+                <Button>Create hotel</Button>
             </form>
-        </div>
+        </BoxDiv>
     );
 }
 

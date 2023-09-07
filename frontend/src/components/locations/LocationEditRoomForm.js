@@ -1,13 +1,21 @@
+/* eslint-disable */
 import React, {useEffect, useState} from "react";
-import Status from "../utils/Status";
 import LocationService from "../../services/LocationService";
 import AmenityElementCheckbox from "../amenities/AmenityElementCheckbox";
 import amenityService from "../../services/AmenityService";
+import {useNavigate} from "react-router-dom";
+import ErrorsHandler from "../utils/Utils";
+import locationService from "../../services/LocationService";
+import BoxDiv from "../utils/style/BoxDiv";
+import InputTextWithSpan from "../utils/style/InputTextWithSpan";
+import Button from "../utils/style/Button";
 
 
-const LocationEditRoomForm = ({token, locations, setReload}) => {
+const LocationEditRoomForm = ({token, changeStatusHandler}) => {
 
-    const [status, setStatus] = useState('');
+    const navigate= useNavigate();
+
+    const [locations, setLocations] = useState([]);
     const [rooms, setRooms] = useState([]);
     const [amenities, setAmenities] = useState([]);
     const [selectedLocation, setSelectedLocation] = useState({
@@ -25,16 +33,29 @@ const LocationEditRoomForm = ({token, locations, setReload}) => {
     });
 
     useEffect(() => {
+        locationService
+            .getAllLocations(token)
+            .then(result => {
+                if (Array.isArray(result)) {
+                    setLocations(result);
+                } else {
+                    changeStatusHandler({message: 'Unknown data format of Locations', type: 'error'});
+                }
+            })
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate))
+    }, [token]);
+
+    useEffect(() => {
         amenityService
             .getAll(token)
             .then(result => {
                 if (Array.isArray(result)) {
                     setAmenities(result);
+                } else {
+                    changeStatusHandler({message: 'Unknown data format of Amenities', type: 'error'});
                 }
             })
-            .catch(error => {
-
-            })
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate))
     }, [token]);
 
 
@@ -54,11 +75,11 @@ const LocationEditRoomForm = ({token, locations, setReload}) => {
                 .then(result => {
                     if (Array.isArray(result)) {
                         setRooms(result);
+                    } else {
+                        changeStatusHandler({message: 'Unknown data format of Rooms', type: 'error'});
                     }
                 })
-                .catch(error => {
-                    console.log(error)
-                })
+                .catch(error => ErrorsHandler(error, changeStatusHandler, navigate))
         }
     }
 
@@ -66,9 +87,6 @@ const LocationEditRoomForm = ({token, locations, setReload}) => {
         let room = rooms.filter(el => el.id.toString() === event.target.value)[0];
         if (room !== undefined) {
             setSelectedRoom(room);
-            console.log(room.amenities);
-            console.log(amenities);
-            console.log(amenities.filter(el => room.amenities.some(el2 => el2.id === el.id) ));
         }
     }
 
@@ -80,44 +98,47 @@ const LocationEditRoomForm = ({token, locations, setReload}) => {
             roomName: selectedRoom.roomName,
             roomPrice: selectedRoom.roomPrice,
             roomMaxCapacity: selectedRoom.roomCapacity,
-            amenities: []
+            amenitiesList: selectedRoom.amenities
         }
-        console.log(editRoomDto);
         LocationService
             .updateRoom(token, roomId, editRoomDto)
             .then(result => {
                 if (result.hasOwnProperty('id')) {
-                    setReload(true);
-                    setStatus('Successfully updated');
-                    setTimeout(() => setStatus(''), 2000);
-                    document.getElementById('editRoomFormId').reset();
+                    changeStatusHandler({message: 'Room successfully updated!', type: 'success'});
                     setSelectedRoom({
                         id: 0,
                         roomName: '',
                         roomPrice: 0,
-                        roomCapacity: 0
+                        roomCapacity: 0,
+                        amenities: []
                     });
+                    document.getElementById('editRoomFormId').reset();
                 }
             })
-            .catch(error => {
-                console.log(error);
-                setStatus('Error');
-                setTimeout(() => setStatus(''), 2000);
-            });
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate));
     };
 
-    return (
-        <div className="row border border-success-subtle mt-4 mx-2 pb-2 rounded-2 shadow-sm">
-            <p className="text-start text-secondary">Edit room information:</p>
-            <Status message={status} />
+    const changeAmenitySelectionHandler = (event) => {
+        if (selectedRoom.id !== 0) {
+            const id = event.target.value;
+            if (selectedRoom.amenities.some(el => el.id === id)) {
+                const newAmenities = selectedRoom.amenities.filter(el => el.id !== id);
+                setSelectedRoom({...selectedRoom, amenities: newAmenities});
+            } else {
+                let newAmenities = amenities.find(el => el.id.toString() === id);
+                setSelectedRoom({...selectedRoom, amenities: [...selectedRoom.amenities, newAmenities]});
+            }
+        }
+    }
 
+    return (
+        <BoxDiv title="Edit room information:">
             <form onSubmit={saveRoomHandler} id="editRoomFormId">
                 <div className="row">
                     <div className="col-12 mb-3">
                         <div className="input-group">
                             <span id="selectLocationsForAddRoomSpan" className="input-group-text">Select Location:</span>
-                            <select className="form-select" size="1"
-                                    aria-label="All locations list"
+                            <select className="form-select" size="1" aria-label="All locations list"
                                     id="selectLocationsForAddRoom"
                                     name="locationId"
                                     onChange={selectLocationHandler}
@@ -130,8 +151,7 @@ const LocationEditRoomForm = ({token, locations, setReload}) => {
                     <div className="col-12 mb-3">
                         <div className="input-group">
                             <span id="selectRoomForEditInfoSpan" className="input-group-text">Select room:</span>
-                            <select className="form-select" size="1"
-                                    aria-label="All rooms list"
+                            <select className="form-select" size="1" aria-label="All rooms list"
                                     id="selectRoomForEditInfo"
                                     name="roomIdId"
                                     onChange={selectRoomHandler}
@@ -141,52 +161,23 @@ const LocationEditRoomForm = ({token, locations, setReload}) => {
                             </select>
                         </div>
                     </div>
-                    <div className="col-12 mb-3">
-                        <div className="input-group">
-                            <span className="input-group-text" id="newRoomNameSpan">Room name:</span>
-                            <input type="text" className="form-control"
-                                   id="newRoomName"
-                                   placeholder="Room name"
-                                   aria-label="Room name"
-                                   aria-describedby="addon-wrapping"
-                                   name="roomName"
+                    <div className="col-12">
+                        <InputTextWithSpan type="text" name="roomName" spanLabel="Room name:"
                                    value={selectedRoom.roomName}
                                    onChange={(e) => setSelectedRoom({...selectedRoom, roomName: e.target.value})}
-                            />
-                        </div>
+                        />
                     </div>
-                    <div className="col-6 mb-3">
-                        <div className="input-group">
-                            <span className="input-group-text" id="newRoomPriceSpan">Room price:</span>
-                            <input type="number" className="form-control"
-                                   id="newRoomPrice"
-                                   placeholder="Room price"
-                                   aria-label="Room price"
-                                   aria-describedby="addon-wrapping"
-                                   name="roomPrice"
-                                   step="0.1"
-                                   min="0"
+                    <div className="col-6">
+                        <InputTextWithSpan type="number" name="roomPrice" spanLabel="Room price:" money={true}
                                    value={selectedRoom.roomPrice}
                                    onChange={(e) => setSelectedRoom({...selectedRoom, roomPrice: Number.parseFloat(e.target.value)})}
-                            />
-                        </div>
+                        />
                     </div>
-                    <div className="col-6 mb-3">
-                        <div className="input-group">
-                            <span className="input-group-text" id="newRoomCapacitySpan">Room maximum capacity:</span>
-                            <input type="number" className="form-control"
-                                   id="newRoomCapacity"
-                                   placeholder="Room capacity"
-                                   aria-label="Room capacity"
-                                   aria-describedby="addon-wrapping"
-                                   name="roomCapacity"
-                                   step="1"
-                                   min="1"
-                                   max="6"
+                    <div className="col-6">
+                        <InputTextWithSpan type="number" name="roomCapacity" spanLabel="Room capacity:"
                                    value={selectedRoom.roomCapacity}
                                    onChange={(e) => setSelectedRoom({...selectedRoom, roomCapacity: Number.parseInt(e.target.value)})}
-                            />
-                        </div>
+                        />
                     </div>
                     <div className="col-12 mb-3 g-3">
                         <div className="row gy-2 gx-3">
@@ -197,13 +188,14 @@ const LocationEditRoomForm = ({token, locations, setReload}) => {
                                     el_name={el.amenityName}
                                     el_price={el.amenityPrice}
                                     checked={selectedRoom.amenities.some(el2 => el2.id === el.id)}
+                                    onChange={changeAmenitySelectionHandler}
                                 /> )}
                         </div>
                     </div>
                 </div>
-                <button className="btn btn-secondary" type="submit">Save Room</button>
+                <Button>Save Room</Button>
             </form>
-        </div>
+        </BoxDiv>
 
     );
 }

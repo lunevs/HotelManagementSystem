@@ -6,7 +6,7 @@ const Navigation = ({isAuth}) => {
     return (
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
-                    <Link className="navbar-brand" href="/">Houses for rent | Marketplace</Link>
+                    <Link className="navbar-brand" to={"/"}>Houses for rent | Marketplace</Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -45,8 +45,11 @@ const Navigation = ({isAuth}) => {
                                     Administration
                                 </a>
                                 <ul className="dropdown-menu">
-                                    <li><Link className="dropdown-item" to={`/accounts`}>Li Accounts</Link></li>
-                                    <li><Link className="dropdown-item" to={`/amenities`}>Li Amenities</Link></li>
+                                    <li><Link className="dropdown-item" to={`/addaccount`}>Add new account</Link></li>
+                                    <li><Link className="dropdown-item" to={`/editaccount`}>Edit account</Link></li>
+                                    <li><Link className="dropdown-item" to={`/editaccountrole`}>Edit account's role</Link></li>
+                                    <li><Link className="dropdown-item" to={`/addamenity`}>Add new amenity</Link></li>
+                                    <li><Link className="dropdown-item" to={`/editamenity`}>Edit amenity</Link></li>
                                 </ul>
                             </li>
                         </ul>

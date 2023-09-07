@@ -12,10 +12,11 @@ import java.util.Map;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class ErrorDetail {
-    private String title;
+
     private int status;
-    private String detail;
     private long timeStamp;
+    private String title;
+    private String detail;
     private String developerMessage;
 
     private Map<String, List<ValidationError>> errors = new HashMap<>();

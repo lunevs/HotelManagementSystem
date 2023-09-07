@@ -1,7 +1,7 @@
 package com.ichtus.hotelmanagementsystem.services;
 
 import com.ichtus.hotelmanagementsystem.exceptions.AmenityNotFoundException;
-import com.ichtus.hotelmanagementsystem.model.dto.amenity.ChangeAmenityRequest;
+import com.ichtus.hotelmanagementsystem.model.dto.amenity.RequestAmenityChange;
 import com.ichtus.hotelmanagementsystem.model.entities.Amenity;
 import com.ichtus.hotelmanagementsystem.repository.AmenityRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class AmenityService {
         return amenityRepository.findAll();
     }
 
-    public Amenity createAmenity(ChangeAmenityRequest amenityRequest) {
+    public Amenity createAmenity(RequestAmenityChange amenityRequest) {
         Amenity amenity = new Amenity()
                 .setAmenityName(amenityRequest.getAmenityName())
                 .setAmenityDescription(amenityRequest.getAmenityDescription())
@@ -29,16 +29,13 @@ public class AmenityService {
 
     }
 
-    public Amenity updateAmenity(Long id, ChangeAmenityRequest amenityRequest) {
+    public Amenity updateAmenity(Long id, RequestAmenityChange amenityRequest) {
         Amenity amenity = amenityRepository.findById(id)
-                .orElseThrow(() -> new AmenityNotFoundException(id));
-
-        amenity
+                .orElseThrow(() -> new AmenityNotFoundException(id))
                 .setAmenityName(amenityRequest.getAmenityName())
                 .setAmenityDescription(amenityRequest.getAmenityDescription())
                 .setAmenityPrice(amenityRequest.getAmenityPrice())
                 .setAmenityType(amenityRequest.getAmenityType());
-
         return amenityRepository.save(amenity);
     }
 }

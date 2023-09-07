@@ -1,17 +1,42 @@
-import React, {useState} from "react";
+/* eslint-disable */
+import React, {useEffect, useState} from "react";
 import accountService from "../../services/AccountService";
-import Status from "../utils/Status";
+import ErrorsHandler from "../utils/Utils";
+import {useNavigate} from "react-router-dom";
+import BoxDiv from "../utils/style/BoxDiv";
+import InputTextWithSpan from "../utils/style/InputTextWithSpan";
 
 
-const UserChangeRole = ({token, roles, accounts, setReload}) => {
+const UserChangeRole = ({token, changeStatusHandler}) => {
 
-    const [addStatus, setAddStatus] = useState('');
+    const navigate = useNavigate();
+
+    const [roles, setRoles] = useState([]);
+    const [accounts, setAccounts] = useState([]);
     const [selectedAccountRole, setSelectedAccountRole] = useState({
         accountName: '',
         accountEmail: '',
         id: 0,
         role: {}
     });
+
+    useEffect(() => {
+        if (token !== '') {
+            accountService
+                .getAllAccounts(token)
+                .then(result => setAccounts(result))
+                .catch(error => ErrorsHandler(error, changeStatusHandler, navigate));
+        }
+    }, [token]);
+
+    useEffect(() => {
+        if (token !== '') {
+            accountService
+                .getAllRoles(token)
+                .then(result => setRoles(result))
+                .catch(error => ErrorsHandler(error, changeStatusHandler, navigate));
+        }
+    }, [token]);
 
     const updateRoleHandler = (event) => {
         event.preventDefault();
@@ -25,18 +50,12 @@ const UserChangeRole = ({token, roles, accounts, setReload}) => {
             .updateAccountRole(token, id, updateRoleDto)
             .then(result => {
                 if (result.hasOwnProperty('id')) {
-                    setAddStatus('Successfully added!');
-                    setTimeout(
-                        () => setAddStatus(''),
-                        1000
-                    );
-                    setReload(true);
+                    changeStatusHandler({message: 'Role successfully updated!', type: 'success'})
                     document.getElementById('updateRoleFormId').reset();
                     setSelectedAccountRole({...selectedAccountRole, role: {name: ''} });
-
                 }
             })
-            .catch(err => console.log(err));
+            .catch(err => ErrorsHandler(err, changeStatusHandler, navigate));
     }
 
     const selectAccountRoleHandler = (event) => {
@@ -52,9 +71,7 @@ const UserChangeRole = ({token, roles, accounts, setReload}) => {
 
 
     return(
-        <div className="row border border-success-subtle mt-4 mx-2 rounded-2 shadow-sm">
-            <p className="text-start text-secondary">Change user role:</p>
-                <Status message={addStatus} />
+        <BoxDiv title="Change user role:" >
             <form onSubmit={updateRoleHandler} id="updateRoleFormId">
                 <div className="row g-3">
                     <div className="col">
@@ -89,7 +106,7 @@ const UserChangeRole = ({token, roles, accounts, setReload}) => {
                 </div>
                 <button className="btn btn-secondary m-2" type="submit">Update role</button>
             </form>
-        </div>
+        </BoxDiv>
 
     );
 }

@@ -1,12 +1,7 @@
 package com.ichtus.hotelmanagementsystem.services;
 
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -17,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.time.Duration;
-import java.time.Instant;
+import java.util.Date;
 
 @Service
 @Slf4j
@@ -26,33 +21,44 @@ public class JwtTokenService {
     @Value("${jwt.lifetime}")
     private Duration jwtLifetime;
 
-    private final Algorithm hmac256;
-    private final JWTVerifier verifier;
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
-
-    public JwtTokenService(@Value("${jwt.secret}") final String jwtSecret) {
-        this.hmac256 = Algorithm.HMAC256(jwtSecret);
-        this.verifier = JWT.require(this.hmac256).build();
+    private Key getKey() {
+            byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+            return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String generateToken(UserDetails userDetails) {
-        Instant now = Instant.now();
-        return JWT.create()
-                .withSubject(userDetails.getUsername())
-                .withIssuer("app")
-                .withIssuedAt(now)
-                .withExpiresAt(now.plusMillis(jwtLifetime.toMillis()))
-                .sign(this.hmac256);
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtLifetime.toMillis());
+
+        return Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public String validateTokenAndGetUsername(String token) {
         try {
-////            byte[] keyBytes = Decoders.BASE64.decode("...secret...");
-////            Key k = Keys.hmacShaKeyFor(keyBytes);
-//            Jwts.parserBuilder().setSigningKey(k).build().parseClaimsJws(token);
-            return verifier.verify(token).getSubject();
-        } catch (JWTVerificationException jwtVerificationException) {
-            throw new JWTVerificationException(token);
+            return Jwts.parserBuilder()
+                    .setSigningKey(getKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (SignatureException ex) {
+            throw new SignatureException(token);
+        } catch (MalformedJwtException ex) {
+            throw new MalformedJwtException(token);
+        } catch (ExpiredJwtException ex) {
+            throw new ExpiredJwtException(ex.getHeader(), ex.getClaims(), token);
+        } catch (UnsupportedJwtException ex) {
+            throw new UnsupportedJwtException(token);
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException(token);
         }
     }
 }

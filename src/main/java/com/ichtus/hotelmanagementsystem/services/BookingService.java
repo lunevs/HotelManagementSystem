@@ -2,8 +2,8 @@ package com.ichtus.hotelmanagementsystem.services;
 
 import com.ichtus.hotelmanagementsystem.exceptions.AccountNotFoundException;
 import com.ichtus.hotelmanagementsystem.model.dictionaries.BookingStatus;
-import com.ichtus.hotelmanagementsystem.model.dto.booking.CreateBookingRequestDto;
-import com.ichtus.hotelmanagementsystem.model.dto.booking.GetBookingsResponseDto;
+import com.ichtus.hotelmanagementsystem.model.dto.booking.RequestNewBooking;
+import com.ichtus.hotelmanagementsystem.model.dto.booking.ResponseBooking;
 import com.ichtus.hotelmanagementsystem.model.entities.Account;
 import com.ichtus.hotelmanagementsystem.model.entities.Booking;
 import com.ichtus.hotelmanagementsystem.model.entities.Room;
@@ -27,7 +27,7 @@ public class BookingService {
     private final AccountService accountService;
 
 
-    public List<GetBookingsResponseDto> getMyBookings() {
+    public List<ResponseBooking> getMyBookings() {
         Authentication auth = SecurityContextHolder
                 .getContext()
                 .getAuthentication();
@@ -38,14 +38,13 @@ public class BookingService {
                     .filter(el -> el.getAccount().getAccountName().equals(auth.getName()));
         }
         return bookingStream
-                    .map(GetBookingsResponseDto::of)
+                    .map(ResponseBooking::of)
                     .toList();
     }
 
-    public GetBookingsResponseDto bookRoom(CreateBookingRequestDto requestDto, String accountName) {
+    public ResponseBooking bookRoom(RequestNewBooking requestDto, String accountName) {
         Room room = roomService.findById(requestDto.getRoomId());
-        Account account = accountService.findByName(accountName)
-                .orElseThrow(() -> new AccountNotFoundException(accountName));
+        Account account = accountService.findAccountByName(accountName);
         Booking booking = new Booking()
                 .setBookingStatus(BookingStatus.ACTIVE)
                 .setRoom(room)
@@ -54,6 +53,6 @@ public class BookingService {
                 .setNumberOfGuests(requestDto.getNumberOfGuests())
                 .setAccount(account)
                 .setDeleted(false);
-        return GetBookingsResponseDto.of(bookingRepository.save(booking));
+        return ResponseBooking.of(bookingRepository.save(booking));
     }
 }

@@ -9,7 +9,6 @@ import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
@@ -42,9 +41,9 @@ public class Room {
     private List<Amenity> amenities;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "hotel_id")
     @ToString.Exclude
-    private Location location;
+    private Hotel hotel;
 
 
     private boolean deleted;

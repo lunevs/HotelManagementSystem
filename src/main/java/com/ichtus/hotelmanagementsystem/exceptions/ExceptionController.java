@@ -1,9 +1,10 @@
 package com.ichtus.hotelmanagementsystem.exceptions;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.ichtus.hotelmanagementsystem.model.dto.error.ErrorDetail;
 import com.ichtus.hotelmanagementsystem.model.dto.error.ValidationError;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -36,7 +36,6 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     private final MessageSource messageSource;
 
     @ExceptionHandler
-    @ResponseBody
     public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex) {
         return badRequestTemplateResponse(
                 "Authentication failed at controller advice",
@@ -44,9 +43,25 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
                 HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(JWTVerificationException.class)
-    @ResponseBody
-    public ResponseEntity<?> incorrectTokenVerification2(Exception exception) {
+    @ExceptionHandler
+    public ResponseEntity<?> signatureExceptionHandler(SignatureException exception) {
+        return badRequestTemplateResponse("Invalid token", exception, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler
+    public ResponseEntity<?> malformedJwtExceptionHandler(MalformedJwtException exception) {
+        return badRequestTemplateResponse("Invalid token", exception, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler
+    public ResponseEntity<?> expiredJwtExceptionHandler(ExpiredJwtException exception) {
+        return badRequestTemplateResponse("Token expired", exception, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler
+    public ResponseEntity<?> unsupportedJwtExceptionHandler(UnsupportedJwtException exception) {
+        return badRequestTemplateResponse("Invalid token", exception, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> illegalArgumentExceptionHandler(IllegalArgumentException exception) {
         return badRequestTemplateResponse("Invalid token", exception, HttpStatus.BAD_REQUEST);
     }
 
@@ -56,7 +71,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> locationNotFound(LocationNotFoundException exception) {
+    public ResponseEntity<?> locationNotFound(HotelNotFoundException exception) {
         return badRequestTemplateResponse("Location not found", exception, HttpStatus.NOT_FOUND);
     }
 

@@ -1,7 +1,7 @@
 package com.ichtus.hotelmanagementsystem.controllers;
 
-import com.ichtus.hotelmanagementsystem.model.dto.account.RegistrationRequest;
-import com.ichtus.hotelmanagementsystem.model.dto.auth.AuthRequest;
+import com.ichtus.hotelmanagementsystem.model.dto.account.RequestAccountChange;
+import com.ichtus.hotelmanagementsystem.model.dto.auth.RequestAuthorization;
 import com.ichtus.hotelmanagementsystem.services.AccountService;
 import com.ichtus.hotelmanagementsystem.services.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +20,12 @@ public class AuthController {
     private final AccountService accountService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUserAndReturnToken(@RequestBody AuthRequest authRequest) {
-        log.info("loginUserAndReturnToken: " + authRequest);
-        return ResponseEntity.ok(authService.createNewToken(authRequest));
+    public ResponseEntity<?> loginUserAndReturnToken(@RequestBody RequestAuthorization requestAuthorization) {
+        return ResponseEntity.ok(authService.createNewToken(requestAuthorization));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerNewUser(@RequestBody RegistrationRequest registrationRequest) {
-        return ResponseEntity.ok(accountService.createNewAccount(registrationRequest));
+    public ResponseEntity<?> registerNewUser(@RequestBody RequestAccountChange requestAccountChange) {
+        return ResponseEntity.ok(accountService.createNewAccount(requestAccountChange));
     }
 }

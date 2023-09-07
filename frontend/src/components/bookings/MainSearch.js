@@ -1,7 +1,11 @@
+/* eslint-disable */
 import React, {useEffect, useState} from "react";
 import LocationService from "../../services/LocationService";
 import LocationItem from "../locations/LocationItem";
 import {useNavigate} from "react-router-dom";
+import ErrorsHandler from "../utils/Utils";
+import BoxDiv from "../utils/style/BoxDiv";
+import Button from "../utils/style/Button";
 
 const MainSearch = ({token, changeStatusHandler}) => {
 
@@ -20,30 +24,20 @@ const MainSearch = ({token, changeStatusHandler}) => {
                         changeStatusHandler({message: 'unknown result data', type: 'error'});
                     }
                 })
-                .catch(error => {
-                    if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-                        changeStatusHandler({message: error.response.data.title, type: 'error'});
-                        if (error.response.data.title.includes('token')) {
-                            navigate('/logout');
-                        }
-                    } else {
-                        changeStatusHandler({message: JSON.stringify(error), type: 'error'});
-                    }
-                });
+                .catch(error => ErrorsHandler(error, changeStatusHandler, navigate));
         }
     }, []);
 
 
     return (
-        <div className="row border border-success-subtle mt-4 mx-2 pb-2 rounded-2 shadow-sm">
-
+        <BoxDiv>
             <div className="row">
                 <div className="card p-3 m-3">
                     <form>
                         <div className="input-group mb-3">
                             <label className="input-group-text" htmlFor="inputGroupSelect01">City</label>
                             <select className="form-select" id="inputGroupSelect01">
-                                <option selected>All cities</option>
+                                <option value="0">All cities</option>
                                 <option value="1">London</option>
                                 <option value="2">Paris</option>
                                 <option value="3">Berlin</option>
@@ -69,15 +63,15 @@ const MainSearch = ({token, changeStatusHandler}) => {
                             <input type="number" className="form-control" id="inputGroupSelect06" />
                         </div>
 
-                        <button type="submit" className="btn btn-outline-success">filter Locations</button>
+                        <Button>filter Locations</Button>
                     </form>
                 </div>
             </div>
 
             <div className="row">
-                {locations.map(el => <LocationItem locationElement={el} />)}
+                {locations.map(el => <LocationItem locationElement={el} key={el.id} />)}
             </div>
-        </div>
+        </BoxDiv>
     );
 }
 

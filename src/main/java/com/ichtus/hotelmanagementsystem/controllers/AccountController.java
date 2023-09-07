@@ -3,20 +3,15 @@ package com.ichtus.hotelmanagementsystem.controllers;
 
 import com.ichtus.hotelmanagementsystem.exceptions.AccountNotFoundException;
 import com.ichtus.hotelmanagementsystem.model.anotations.IsAdministrator;
-import com.ichtus.hotelmanagementsystem.model.anotations.IsUser;
-import com.ichtus.hotelmanagementsystem.model.dictionaries.AccountRole;
-import com.ichtus.hotelmanagementsystem.model.dictionaries.RoleUpdateActionType;
-import com.ichtus.hotelmanagementsystem.model.dto.account.AccountDetailResponse;
-import com.ichtus.hotelmanagementsystem.model.dto.account.RegistrationRequest;
-import com.ichtus.hotelmanagementsystem.model.dto.account.AccountUpdateRequest;
-import com.ichtus.hotelmanagementsystem.model.dto.roles.UpdateRoleRequest;
+import com.ichtus.hotelmanagementsystem.model.dto.account.RequestAccountChange;
+import com.ichtus.hotelmanagementsystem.model.dto.account.ResponseAccountData;
+import com.ichtus.hotelmanagementsystem.model.dto.account.RequestAccountRoleChange;
 import com.ichtus.hotelmanagementsystem.services.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -38,8 +33,8 @@ public class AccountController {
 
     @PostMapping
     @IsAdministrator
-    public ResponseEntity<?> createNewUserAccount(@RequestBody RegistrationRequest registrationRequest) {
-        return ResponseEntity.ok(accountService.createNewAccount(registrationRequest));
+    public ResponseEntity<?> createNewUserAccount(@RequestBody RequestAccountChange requestAccountChange) {
+        return ResponseEntity.ok(accountService.createNewAccount(requestAccountChange));
     }
 
     @GetMapping
@@ -51,25 +46,19 @@ public class AccountController {
     @GetMapping("/{id}")
     @IsAdministrator
     public ResponseEntity<?> getAccountDetails(@PathVariable Long id) {
-        return ResponseEntity.ok(
-                accountService
-                        .findById(id)
-                        .map(AccountDetailResponse::of)
-                        .orElseThrow(() -> new AccountNotFoundException(id))
-        );
+        return ResponseEntity.ok(ResponseAccountData.of(accountService.findAccountById(id)));
     }
 
     @PutMapping("/{id}/info")
     @IsAdministrator
-    public ResponseEntity<?> updateAccountInfo(@PathVariable Long id, @Valid @RequestBody AccountUpdateRequest accountUpdateRequest) {
+    public ResponseEntity<?> updateAccountInfo(@PathVariable Long id, @Valid @RequestBody RequestAccountChange accountUpdateRequest) {
         return ResponseEntity.ok(accountService.accountUpdateInfo(id, accountUpdateRequest));
     }
 
     @PutMapping("/{id}/role")
     @IsAdministrator
-    public ResponseEntity<?> updateAccountRole(@PathVariable Long id, @RequestBody UpdateRoleRequest updateRoleRequest) {
-        log.info("controller updateAccountRole");
-        return ResponseEntity.ok(accountService.accountUpdateRoles(id, updateRoleRequest.getRole().name()));
+    public ResponseEntity<?> updateAccountRole(@PathVariable Long id, @RequestBody RequestAccountRoleChange roleChange) {
+        return ResponseEntity.ok(accountService.accountUpdateRole(id, roleChange.getRole().name()));
     }
 
     @DeleteMapping("/{id}")

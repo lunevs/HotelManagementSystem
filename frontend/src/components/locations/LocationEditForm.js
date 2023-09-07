@@ -1,23 +1,45 @@
-import React, {useState} from "react";
+/* eslint-disable */
+import React, {useEffect, useState} from "react";
 import LocationService from "../../services/LocationService";
-import Status from "../utils/Status";
+import ErrorsHandler from "../utils/Utils";
+import {useNavigate} from "react-router-dom";
+import BoxDiv from "../utils/style/BoxDiv";
+import Button from "../utils/style/Button";
+import InputTextWithSpan from "../utils/style/InputTextWithSpan";
 
 
-const LocationEditForm = ({token, locations, setLocations}) => {
+const LocationEditForm = ({token, changeStatusHandler}) => {
 
-    const [status, setStatus] = useState('');
+    const navigate = useNavigate();
+
+    const [locations, setLocations] = useState([]);
     const [selectedLocation, setSelectedLocation] = useState({
         locationName: '',
-        locationDescription: '',
-        roomsList: []
+        locationDescription: ''
     });
+
+
+    useEffect(() => {
+        if (token !== '') {
+            LocationService
+                .getAllLocations(token)
+                .then(result => {
+                    if (Array.isArray(result)) {
+                        setLocations(result);
+                    } else {
+                        changeStatusHandler({message: 'Unknown data format', type: 'error'})
+                    }
+                })
+                .catch(error => ErrorsHandler(error, changeStatusHandler, navigate));
+        }
+    }, [token]);
 
 
 
     const selectLocationHandler = (event) => {
-        let location = locations.filter(el => el.id.toString() === event.target.value)[0];
-        if (location !== undefined) {
-            setSelectedLocation(location);
+        let hotel = locations.filter(el => el.id.toString() === event.target.value)[0];
+        if (hotel !== undefined) {
+            setSelectedLocation(hotel);
         }
     }
 
@@ -31,28 +53,18 @@ const LocationEditForm = ({token, locations, setLocations}) => {
             .updateLocationInfo(token, selectedLocation.id, updateLocationDto)
             .then(result => {
                 if (result.hasOwnProperty('id')) {
-                    setStatus("Successfully updated!");
-                    setTimeout(() => setStatus(''), 2000);
-                    setLocations(locations.map(el => {
-                        if (el.id === result.id) {
-                            return result;
-                        } else {
-                            return el;
-                        }
-                    }))
+                    changeStatusHandler({message: 'Location successfully updated!', type: 'success'})
+                    setLocations(locations.map(el => (el.id === result.id) ? result : el))
                 } else {
-                    console.log("Unknown error: " + result);
+                    changeStatusHandler({message: 'Unknown tesult format!', type: 'error'})
                 }
             })
-            .catch(error => console.log(error));
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate));
     }
 
 
     return (
-        <div className="row border border-success-subtle mt-4 mx-2 pb-2 rounded-2 shadow-sm">
-            <p className="text-start text-secondary">Edit location info:</p>
-            <Status message={status} />
-            
+        <BoxDiv title="Edit hotel info:">
             <div className="row">
                 <div className="col-3">
                     <select className="form-select" size="5" aria-label="All accounts list" onChange={selectLocationHandler}>
@@ -60,37 +72,21 @@ const LocationEditForm = ({token, locations, setLocations}) => {
                     </select>
                 </div>
                 <div className="col-9">
-                    <form>
-                        <div className="input-group mb-3">
-                            <span className="input-group-text w-25" id="addon-wrapping">Location name</span>
-                            <input type="text" className="form-control"
-                                   placeholder="Location name"
-                                   aria-label="Location name"
-                                   aria-describedby="addon-wrapping"
-                                   name="locationName"
+                    <form onSubmit={updateLocationHandler}>
+                        <InputTextWithSpan type="text" name="locationName" spanLabel="Location name"
                                    value={selectedLocation.locationName}
                                    onChange={e => setSelectedLocation({...selectedLocation, locationName: e.target.value})}
-                            />
-                        </div>
-
-                        <div className="input-group mb-3">
-                            <span className="input-group-text w-25" id="addon-wrapping">Location description</span>
-                            <input type="text" className="form-control"
-                                   placeholder="Location description"
-                                   aria-label="Location description"
-                                   aria-describedby="addon-wrapping"
-                                   name="locationDescription"
-                                   value={selectedLocation.locationDescription}
-                                   onChange={e => setSelectedLocation({...selectedLocation, locationDescription: e.target.value})}
-                            />
-                        </div>
-
-                        <button className="btn btn-secondary" type="button" onClick={updateLocationHandler}>Update location info</button>
+                        />
+                        <InputTextWithSpan type="text" name="locationDescription" spanLabel="Location description"
+                                           value={selectedLocation.locationDescription}
+                                           onChange={e => setSelectedLocation({...selectedLocation, locationDescription: e.target.value})}
+                        />
+                        <Button>Update hotel info</Button>
                     </form>
 
                 </div>
             </div>
-        </div>
+        </BoxDiv>
 
     );
 }

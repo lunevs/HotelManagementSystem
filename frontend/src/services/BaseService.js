@@ -3,20 +3,26 @@ import axios from "axios";
 const baseUrl = 'http://localhost:8080/api/v1';
 
 
-const getAll = (token, url) => {
-    const request = axios.get(
+const getAll = async (token, url) => {
+    const request = await axios.get(
         `${baseUrl}/${url}`,{
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
-    return request.then(response => response.data);
+    console.log({
+        method: 'GET',
+        body: null,
+        url: `${baseUrl}/${url}`,
+        headers: {...request.headers, 'Authorization': `Bearer ${token}`}
+    });
+    return request.data;
 }
 
 
-const updateElement = (token, id, elementToUpdate, mainUrl, secondUrl) => {
+const updateElement = async (token, id, elementToUpdate, mainUrl, secondUrl) => {
     const url = (secondUrl === null) ? `${baseUrl}/${mainUrl}/${id}` : `${baseUrl}/${mainUrl}/${id}/${secondUrl}`;
-    const request = axios.put(
+    const request = await axios.put(
         url,
         elementToUpdate,
         {
@@ -24,11 +30,17 @@ const updateElement = (token, id, elementToUpdate, mainUrl, secondUrl) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-    return request.then(response => response.data);
+    console.log({
+        method: 'PUT',
+        body: elementToUpdate,
+        url: url,
+        headers: {...request.headers, 'Authorization': `Bearer ${token}`}
+    });
+    return request.data;
 }
 
-const createElement = (token, elementToCreate, url) => {
-    const request = axios.post(
+const createElement = async (token, elementToCreate, url) => {
+    const request = await axios.post(
         `${baseUrl}/${url}`,
         elementToCreate,
         {
@@ -36,18 +48,30 @@ const createElement = (token, elementToCreate, url) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-    return request.then(response => response.data);
+    console.log({
+        method: 'POST',
+        body: elementToCreate,
+        url: `${baseUrl}/${url}`,
+        headers: {...request.headers, 'Authorization': `Bearer ${token}`}
+    });
+    return request.data;
 }
 
 
-const authMethod = (authObject, url) => {
-    const request = axios.post
+const authMethod = async (authObject, url) => {
+    const request = await axios.post
     (
         `${baseUrl}/${url}`,
         authObject,
         {headers: {'Content-Type': 'application/json'}}
     )
-    return request.then(response => response.data);
+    console.log({
+        method: 'POST',
+        body: authObject,
+        url: `${baseUrl}/${url}`,
+        headers: {...request.headers, 'Content-Type': 'application/json'}
+    });
+    return request.data;
 }
 
 const BaseService = {getAll, updateElement, createElement, authMethod};

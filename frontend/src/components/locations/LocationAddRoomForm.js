@@ -1,14 +1,35 @@
+/* eslint-disable */
 import React, {useEffect, useState} from "react";
-import Status from "../utils/Status";
 import LocationService from "../../services/LocationService";
 import amenityService from "../../services/AmenityService";
 import AmenityElementCheckbox from "../amenities/AmenityElementCheckbox";
+import ErrorsHandler from "../utils/Utils";
+import {useNavigate} from "react-router-dom";
+import locationService from "../../services/LocationService";
+import BoxDiv from "../utils/style/BoxDiv";
+import InputTextWithSpan from "../utils/style/InputTextWithSpan";
+import Button from "../utils/style/Button";
 
 
-const LocationAddRoomForm = ({token, locations, setReload}) => {
+const LocationAddRoomForm = ({token, changeStatusHandler}) => {
 
-    const [status, setStatus] = useState('');
+    const navigate = useNavigate();
+
+    const [locations, setLocations] = useState([]);
     const [amenities, setAmenities] = useState([]);
+
+    useEffect(() => {
+        locationService
+            .getAllLocations(token)
+            .then(result => {
+                if (Array.isArray(result)) {
+                    setLocations(result);
+                } else {
+                    changeStatusHandler({message: 'Unknown data format for Locations', type: 'error'});
+                }
+            })
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate))
+    }, [token]);
 
     useEffect(() => {
         amenityService
@@ -16,11 +37,11 @@ const LocationAddRoomForm = ({token, locations, setReload}) => {
             .then(result => {
                 if (Array.isArray(result)) {
                     setAmenities(result);
+                } else {
+                    changeStatusHandler({message: 'Unknown data format for Amenities', type: 'error'});
                 }
             })
-            .catch(error => {
-
-            })
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate))
     }, [token]);
 
     const addRoomToLocationHandler = (event) => {
@@ -40,28 +61,20 @@ const LocationAddRoomForm = ({token, locations, setReload}) => {
             roomMaxCapacity: event.target.roomMaxCapacity.value,
             amenitiesList: checkedAmenities
         }
-        console.log(addRoomDto);
         LocationService
             .addRoomToLocation(token, addRoomDto)
             .then(result => {
                 if (result.hasOwnProperty('id')) {
-                    setStatus('Successfully added');
-                    setTimeout(() => setStatus(''), 2000);
+                    changeStatusHandler({message: 'Room successfully added', type: 'success'});
                     document.getElementById('createNewRoomFormId').reset();
-                    setReload(true);
                 }
             })
-            .catch(error => {
-                console.log(error);
-                setStatus('Error');
-                setTimeout(() => setStatus(''), 2000);
-            });
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate));
     };
 
     return (
-        <div className="row border border-success-subtle mt-4 mx-2 pb-2 rounded-2 shadow-sm">
+        <BoxDiv>
             <p className="text-start text-secondary">Create new room in a location:</p>
-            <Status message={status} />
 
             <form onSubmit={addRoomToLocationHandler} id="createNewRoomFormId">
                 <div className="row">
@@ -78,46 +91,14 @@ const LocationAddRoomForm = ({token, locations, setReload}) => {
                             </select>
                         </div>
                     </div>
-                    <div className="col-12 mb-3">
-                        <div className="input-group">
-                            <span className="input-group-text" id="newRoomNameSpan">New room name:</span>
-                            <input type="text" className="form-control"
-                                   id="newRoomName"
-                                   placeholder="Room name"
-                                   aria-label="Room name"
-                                   aria-describedby="addon-wrapping"
-                                   name="roomName"
-                            />
-                        </div>
+                    <div className="col-12">
+                        <InputTextWithSpan type="text" name="roomName" spanLabel="New room name:" />
                     </div>
-                    <div className="col-6 mb-3">
-                        <div className="input-group">
-                            <span className="input-group-text" id="newRoomPriceSpan">New room price:</span>
-                            <input type="number" className="form-control"
-                                   id="newRoomPrice"
-                                   placeholder="Room price"
-                                   aria-label="Room price"
-                                   aria-describedby="addon-wrapping"
-                                   name="roomPrice"
-                                   step="0.1"
-                                   min="0"
-                            />
-                        </div>
+                    <div className="col-6">
+                        <InputTextWithSpan type="number" name="roomPrice" spanLabel="New room price:" money={true}/>
                     </div>
-                    <div className="col-6 mb-3">
-                        <div className="input-group">
-                            <span className="input-group-text" id="newRoomCapacitySpan">Room maximum capacity:</span>
-                            <input type="number" className="form-control"
-                                   id="newRoomCapacity"
-                                   placeholder="Room capacity"
-                                   aria-label="Room capacity"
-                                   aria-describedby="addon-wrapping"
-                                   name="roomMaxCapacity"
-                                   step="1"
-                                   min="1"
-                                   max="6"
-                            />
-                        </div>
+                    <div className="col-6">
+                        <InputTextWithSpan type="number" name="roomMaxCapacity" spanLabel="Room maximum capacity:" />
                     </div>
                     <div className="col-12 mb-3 g-3">
                         <div className="row gy-2 gx-3">
@@ -126,9 +107,9 @@ const LocationAddRoomForm = ({token, locations, setReload}) => {
                         </div>
                     </div>
                 </div>
-                <button className="btn btn-secondary" type="submit">Add Room to Location</button>
+                <Button>Add Room to Location</Button>
             </form>
-        </div>
+        </BoxDiv>
 
     );
 }

@@ -1,7 +1,10 @@
+/* eslint-disable */
 import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import locationService from "../../services/LocationService";
 import RoomItem from "./RoomItem";
+import ErrorsHandler from "../utils/Utils";
+import BoxDiv from "../utils/style/BoxDiv";
 
 const LocationDetails = ({token, changeStatusHandler}) => {
 
@@ -25,26 +28,17 @@ const LocationDetails = ({token, changeStatusHandler}) => {
                     changeStatusHandler({message: 'unknown result', type: 'error'});
                 }
             })
-            .catch(error => {
-                if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-                    changeStatusHandler({message: error.response.data.title, type: 'error'});
-                    if (error.response.data.title.includes('token')) {
-                        navigate('/logout');
-                    }
-                } else {
-                    changeStatusHandler({message: JSON.stringify(error), type: 'error'});
-                }
-            })
+            .catch(error => ErrorsHandler(error, changeStatusHandler, navigate))
     }, [locationId])
 
     return (
-        <div className="row border border-success-subtle mt-4 mx-2 pb-2 rounded-2 shadow-sm">
+        <BoxDiv>
             <div className="row">
                 {
-                    location.roomsList.map(el => <RoomItem token={token} roomElement={el} />)
+                    location.roomsList.map(el => <RoomItem key={el.id} token={token} roomElement={el} changeStatusHandler={changeStatusHandler} />)
                 }
             </div>
-        </div>
+        </BoxDiv>
     );
 }
 
