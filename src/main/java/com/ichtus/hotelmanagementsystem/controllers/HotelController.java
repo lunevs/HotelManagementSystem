@@ -3,7 +3,7 @@ package com.ichtus.hotelmanagementsystem.controllers;
 import com.ichtus.hotelmanagementsystem.model.anotations.IsModerator;
 import com.ichtus.hotelmanagementsystem.model.anotations.IsUser;
 import com.ichtus.hotelmanagementsystem.model.entities.Hotel;
-import com.ichtus.hotelmanagementsystem.model.dto.hotels.ResponseHotelChange;
+import com.ichtus.hotelmanagementsystem.model.dto.hotels.ResponseHotelData;
 import com.ichtus.hotelmanagementsystem.model.dto.room.ResponseRoomData;
 import com.ichtus.hotelmanagementsystem.model.dto.hotels.RequestHotelChange;
 import com.ichtus.hotelmanagementsystem.services.HotelService;
@@ -18,34 +18,41 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
-@RequestMapping("/locations")
+@RequestMapping("/hotels")
 @RequiredArgsConstructor
 @Slf4j
-public class LocationController {
+public class HotelController {
 
     private final HotelService hotelService;
 
     @GetMapping
     @IsUser
-    ResponseEntity<Iterable<ResponseHotelChange>> getLocationsList() {
-        return new ResponseEntity<>(hotelService.getLocationsList(), HttpStatus.OK);
+    public ResponseEntity<?> getHotelsList() {
+        return new ResponseEntity<>(hotelService.getHotelsList(), HttpStatus.OK);
+    }
+
+    @GetMapping("/cities")
+    @IsUser
+    public ResponseEntity<?> getHotelsCities() {
+        return new ResponseEntity<>(hotelService.getHotelsCities(), HttpStatus.OK);
     }
 
     @PostMapping
     @IsModerator
-    ResponseEntity<?> createLocation(@Valid @RequestBody RequestHotelChange hotelChange, Principal principal) {
-        Hotel savedHotel = hotelService.addLocation(hotelChange, principal.getName());
+    public ResponseEntity<ResponseHotelData> createHotel(@Valid @RequestBody RequestHotelChange hotelChange, Principal principal) {
+        Hotel savedHotel = hotelService.addHotel(hotelChange, principal.getName());
         HttpHeaders responseHeaders = new HttpHeaders();
-        URI savedLocationUri = ServletUriComponentsBuilder
+        URI savedHotelUri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(savedHotel.getId())
                 .toUri();
-        responseHeaders.setLocation(savedLocationUri);
+        responseHeaders.setLocation(savedHotelUri);
         return new ResponseEntity<>(
-                ResponseHotelChange.of(savedHotel),
+                ResponseHotelData.of(savedHotel),
                 responseHeaders,
                 HttpStatus.CREATED
         );
@@ -53,26 +60,26 @@ public class LocationController {
 
     @GetMapping("/{id}")
     @IsUser
-    ResponseEntity<?> getLocationInfo(@PathVariable Long id) {
-        return ResponseEntity.ok(hotelService.getLocationInfo(id));
+    public ResponseEntity<ResponseHotelData> getHotelInfo(@PathVariable Long id) {
+        return ResponseEntity.ok(hotelService.getHotelInfo(id));
     }
 
     @PutMapping("/{id}")
     @IsModerator
-    ResponseEntity<?> updateLocationInfo(@PathVariable Long id, @RequestBody RequestHotelChange locationRequestDto) {
-        return ResponseEntity.ok(hotelService.updateLocationInfo(id, locationRequestDto));
+    public ResponseEntity<ResponseHotelData> updateHotelInfo(@PathVariable Long id, @RequestBody RequestHotelChange hotelRequestDto) {
+        return ResponseEntity.ok(hotelService.updateHotelInfo(id, hotelRequestDto));
     }
 
     @DeleteMapping("/{id}")
     @IsModerator
-    ResponseEntity<?> deleteLocation(@PathVariable Long id) {
-        hotelService.deleteLocation(id);
+    public ResponseEntity<?> deleteHotel(@PathVariable Long id) {
+        hotelService.deleteHotel(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{id}/rooms")
     @IsUser
-    ResponseEntity<Iterable<ResponseRoomData>> getLocationRoomsList(@PathVariable Long id) {
+    public ResponseEntity<List<ResponseRoomData>> getHotelRoomsList(@PathVariable Long id) {
         return new ResponseEntity<>(hotelService.getRoomsList(id), HttpStatus.OK);
     }
 

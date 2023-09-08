@@ -7,15 +7,15 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class ResponseAmenityChange {
+public class ResponseAmenityData {
 
     Long id;
     String amenityName;
     float amenityPrice;
     AmenityType amenityType;
 
-    public static ResponseAmenityChange of(Amenity amenity) {
-        return new ResponseAmenityChange()
+    public static ResponseAmenityData of(Amenity amenity) {
+        return new ResponseAmenityData()
                 .setId(amenity.getId())
                 .setAmenityName(amenity.getAmenityName())
                 .setAmenityPrice(amenity.getAmenityPrice())

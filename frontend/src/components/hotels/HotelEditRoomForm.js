@@ -1,27 +1,27 @@
 /* eslint-disable */
 import React, {useEffect, useState} from "react";
-import LocationService from "../../services/LocationService";
 import AmenityElementCheckbox from "../amenities/AmenityElementCheckbox";
 import amenityService from "../../services/AmenityService";
 import {useNavigate} from "react-router-dom";
 import ErrorsHandler from "../utils/Utils";
-import locationService from "../../services/LocationService";
+import HotelService from "../../services/HotelService";
 import BoxDiv from "../utils/style/BoxDiv";
 import InputTextWithSpan from "../utils/style/InputTextWithSpan";
 import Button from "../utils/style/Button";
 
 
-const LocationEditRoomForm = ({token, changeStatusHandler}) => {
+const HotelEditRoomForm = ({token, changeStatusHandler}) => {
 
     const navigate= useNavigate();
 
-    const [locations, setLocations] = useState([]);
+    const [hotels, setHotels] = useState([]);
     const [rooms, setRooms] = useState([]);
     const [amenities, setAmenities] = useState([]);
-    const [selectedLocation, setSelectedLocation] = useState({
+    const [selectedHotel, setSelectedHotel] = useState({
         id: 0,
-        locationName: '',
-        locationDescription: '',
+        hotelName: '',
+        hotelDescription: '',
+        hotelCity: '',
         roomsList: []
     });
     const [selectedRoom, setSelectedRoom] = useState({
@@ -33,13 +33,13 @@ const LocationEditRoomForm = ({token, changeStatusHandler}) => {
     });
 
     useEffect(() => {
-        locationService
-            .getAllLocations(token)
+        HotelService
+            .getAllHotels(token)
             .then(result => {
                 if (Array.isArray(result)) {
-                    setLocations(result);
+                    setHotels(result);
                 } else {
-                    changeStatusHandler({message: 'Unknown data format of Locations', type: 'error'});
+                    changeStatusHandler({message: 'Unknown data format of Hotels', type: 'error'});
                 }
             })
             .catch(error => ErrorsHandler(error, changeStatusHandler, navigate))
@@ -59,10 +59,10 @@ const LocationEditRoomForm = ({token, changeStatusHandler}) => {
     }, [token]);
 
 
-    const selectLocationHandler = (event) => {
-        let location = locations.filter(el => el.id.toString() === event.target.value)[0];
-        if (location !== undefined) {
-            setSelectedLocation(location);
+    const selectHotelHandler = (event) => {
+        let hotel = hotels.filter(el => el.id.toString() === event.target.value)[0];
+        if (hotel !== undefined) {
+            setSelectedHotel(hotel);
             setSelectedRoom({
                 id: 0,
                 roomName: '',
@@ -70,8 +70,8 @@ const LocationEditRoomForm = ({token, changeStatusHandler}) => {
                 roomCapacity: 0,
                 amenities: []
             });
-            LocationService
-                .getAllRooms(token, location.id)
+            HotelService
+                .getAllRooms(token, hotel.id)
                 .then(result => {
                     if (Array.isArray(result)) {
                         setRooms(result);
@@ -94,13 +94,13 @@ const LocationEditRoomForm = ({token, changeStatusHandler}) => {
         event.preventDefault();
         const roomId = selectedRoom.id;
         const editRoomDto = {
-            locationId: selectedLocation.id,
+            hotelId: selectedHotel.id,
             roomName: selectedRoom.roomName,
             roomPrice: selectedRoom.roomPrice,
             roomMaxCapacity: selectedRoom.roomCapacity,
             amenitiesList: selectedRoom.amenities
         }
-        LocationService
+        HotelService
             .updateRoom(token, roomId, editRoomDto)
             .then(result => {
                 if (result.hasOwnProperty('id')) {
@@ -137,14 +137,14 @@ const LocationEditRoomForm = ({token, changeStatusHandler}) => {
                 <div className="row">
                     <div className="col-12 mb-3">
                         <div className="input-group">
-                            <span id="selectLocationsForAddRoomSpan" className="input-group-text">Select Location:</span>
-                            <select className="form-select" size="1" aria-label="All locations list"
-                                    id="selectLocationsForAddRoom"
-                                    name="locationId"
-                                    onChange={selectLocationHandler}
+                            <span id="selectHotelsForAddRoomSpan" className="input-group-text">Select Hotel:</span>
+                            <select className="form-select" size="1" aria-label="All hotels list"
+                                    id="selectHotelsForAddRoomSpan"
+                                    name="hotelId"
+                                    onChange={selectHotelHandler}
                             >
                                 <option value="---" key="0">---</option>
-                                {locations.map(el => <option value={el.id} key={el.id}>{el.locationName}</option>)}
+                                {hotels.map(el => <option value={el.id} key={el.id}>{el.hotelName}</option>)}
                             </select>
                         </div>
                     </div>
@@ -200,4 +200,4 @@ const LocationEditRoomForm = ({token, changeStatusHandler}) => {
     );
 }
 
-export default LocationEditRoomForm;
+export default HotelEditRoomForm;

@@ -25,27 +25,26 @@ public class RoomService {
     }
 
     public ResponseRoomData addRoom(RequestRoomCreate roomRequestDto) {
-        Hotel currentHotel = hotelService.findHotelById(roomRequestDto.getLocationId());
+        Hotel currentHotel = hotelService.findHotelById(roomRequestDto.getHotelId());
         Room newRoom = new Room()
                 .setRoomName(roomRequestDto.getRoomName())
                 .setRoomPrice(roomRequestDto.getRoomPrice())
                 .setRoomCapacity(roomRequestDto.getRoomMaxCapacity())
                 .setHotel(currentHotel)
                 .setAmenities(roomRequestDto.getAmenitiesList() == null ? Collections.emptyList() : roomRequestDto.getAmenitiesList());
-        Room savedRoom = roomRepository.save(newRoom);
-        log.info("addRoomToLocation1: " + savedRoom);
-        return ResponseRoomData.of(savedRoom);
+        return ResponseRoomData.of(roomRepository.save(newRoom));
     }
 
     public ResponseRoomData updateRoom(Long roomId, RequestRoomCreate roomRequestDto) {
         Room roomToUpdate = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RoomNotFoundException(roomRequestDto.getRoomName()));
-        roomToUpdate
+                .orElseThrow(() -> new RoomNotFoundException(roomRequestDto.getRoomName()))
                 .setRoomName(roomRequestDto.getRoomName())
                 .setRoomCapacity(roomRequestDto.getRoomMaxCapacity())
                 .setRoomPrice(roomRequestDto.getRoomPrice())
-                .setAmenities(roomRequestDto.getAmenitiesList() == null ? Collections.emptyList() : roomRequestDto.getAmenitiesList());
-
+                .setAmenities(roomRequestDto.getAmenitiesList() == null
+                        ? Collections.emptyList()
+                        : roomRequestDto.getAmenitiesList()
+                );
         return ResponseRoomData.of(roomRepository.save(roomToUpdate));
     }
 

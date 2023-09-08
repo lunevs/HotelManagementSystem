@@ -3,7 +3,8 @@
 const ErrorsHandler = (error, changeStatusHandler, navigate) => {
     if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
         changeStatusHandler({message: error.response.data.title, type: 'error'});
-        if (error.response.data.title.includes('token')) {
+        console.log(error.response)
+        if (error.response.data.title.includes('Token expired')) {
             navigate('/logout');
         }
     } else {

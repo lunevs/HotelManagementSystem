@@ -1,6 +1,6 @@
 package com.ichtus.hotelmanagementsystem.services;
 
-import com.ichtus.hotelmanagementsystem.exceptions.AccountNotFoundException;
+import com.ichtus.hotelmanagementsystem.exceptions.FreeDatesForRoomNotFountException;
 import com.ichtus.hotelmanagementsystem.model.dictionaries.BookingStatus;
 import com.ichtus.hotelmanagementsystem.model.dto.booking.RequestNewBooking;
 import com.ichtus.hotelmanagementsystem.model.dto.booking.ResponseBooking;
@@ -11,6 +11,7 @@ import com.ichtus.hotelmanagementsystem.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -28,21 +29,25 @@ public class BookingService {
 
 
     public List<ResponseBooking> getMyBookings() {
-        Authentication auth = SecurityContextHolder
-                .getContext()
-                .getAuthentication();
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String accountName = auth.getName();
         Stream<Booking> bookingStream = bookingRepository.findAll().stream();
-        if (auth.getAuthorities().stream()
-                .anyMatch(el -> !el.getAuthority().contains("ADMIN"))) {
+        Stream<? extends GrantedAuthority> authStream = auth.getAuthorities().stream();
+
+        if (authStream.anyMatch(el -> !el.getAuthority().contains("ADMIN"))) {
             bookingStream = bookingStream
-                    .filter(el -> el.getAccount().getAccountName().equals(auth.getName()));
+                    .filter(
+                            el -> el.getAccount().getAccountName().equals(accountName)
+                    );
         }
-        return bookingStream
-                    .map(ResponseBooking::of)
-                    .toList();
+        return bookingStream.map(ResponseBooking::of).toList();
     }
 
-    public ResponseBooking bookRoom(RequestNewBooking requestDto, String accountName) {
+    public ResponseBooking doBooking(RequestNewBooking requestDto, String accountName) {
+        if (!roomIsAvailable(requestDto)) {
+            throw new FreeDatesForRoomNotFountException();
+        }
         Room room = roomService.findById(requestDto.getRoomId());
         Account account = accountService.findAccountByName(accountName);
         Booking booking = new Booking()
@@ -55,4 +60,16 @@ public class BookingService {
                 .setDeleted(false);
         return ResponseBooking.of(bookingRepository.save(booking));
     }
+
+    private boolean roomIsAvailable(RequestNewBooking booking) {
+
+        int existingBookings = bookingRepository.checkBookingsForRoom(
+                booking.getRoomId(),
+                booking.getStartDate(),
+                booking.getEndDate()
+        ).size();
+
+        return !(existingBookings > 0);
+    }
+
 }

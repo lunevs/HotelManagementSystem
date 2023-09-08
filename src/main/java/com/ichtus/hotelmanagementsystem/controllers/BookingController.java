@@ -24,7 +24,8 @@ public class BookingController {
 
     @PostMapping
     @IsUser
-    public ResponseEntity<?> createNewBook(@RequestBody RequestNewBooking requestDto, Principal principal) {
-        return ResponseEntity.ok(bookingService.bookRoom(requestDto, principal.getName()));
+    public ResponseEntity<?> doBooking(@RequestBody RequestNewBooking requestDto, Principal principal) {
+        return ResponseEntity.ok(bookingService.doBooking(requestDto, principal.getName()));
     }
+
 }

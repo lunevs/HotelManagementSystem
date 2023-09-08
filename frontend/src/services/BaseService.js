@@ -3,7 +3,7 @@ import axios from "axios";
 const baseUrl = 'http://localhost:8080/api/v1';
 
 
-const getAll = async (token, url) => {
+const getRequest = async (token, url) => {
     const request = await axios.get(
         `${baseUrl}/${url}`,{
             headers: {
@@ -20,7 +20,7 @@ const getAll = async (token, url) => {
 }
 
 
-const updateElement = async (token, id, elementToUpdate, mainUrl, secondUrl) => {
+const putRequest = async (token, id, elementToUpdate, mainUrl, secondUrl) => {
     const url = (secondUrl === null) ? `${baseUrl}/${mainUrl}/${id}` : `${baseUrl}/${mainUrl}/${id}/${secondUrl}`;
     const request = await axios.put(
         url,
@@ -39,7 +39,7 @@ const updateElement = async (token, id, elementToUpdate, mainUrl, secondUrl) => 
     return request.data;
 }
 
-const createElement = async (token, elementToCreate, url) => {
+const postRequest = async (token, elementToCreate, url) => {
     const request = await axios.post(
         `${baseUrl}/${url}`,
         elementToCreate,
@@ -54,11 +54,12 @@ const createElement = async (token, elementToCreate, url) => {
         url: `${baseUrl}/${url}`,
         headers: {...request.headers, 'Authorization': `Bearer ${token}`}
     });
+    console.log(request);
     return request.data;
 }
 
 
-const authMethod = async (authObject, url) => {
+const authRequest = async (authObject, url) => {
     const request = await axios.post
     (
         `${baseUrl}/${url}`,
@@ -74,5 +75,5 @@ const authMethod = async (authObject, url) => {
     return request.data;
 }
 
-const BaseService = {getAll, updateElement, createElement, authMethod};
+const BaseService = {getRequest, putRequest, postRequest, authRequest};
 export default BaseService;

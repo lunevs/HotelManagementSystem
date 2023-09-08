@@ -44,6 +44,11 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<?> noFreeDatesHandler(FreeDatesForRoomNotFountException exception) {
+        return badRequestTemplateResponse("Room already booked for this period", exception, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<?> signatureExceptionHandler(SignatureException exception) {
         return badRequestTemplateResponse("Invalid token", exception, HttpStatus.BAD_REQUEST);
     }
@@ -71,8 +76,8 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> locationNotFound(HotelNotFoundException exception) {
-        return badRequestTemplateResponse("Location not found", exception, HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> hotelNotFound(HotelNotFoundException exception) {
+        return badRequestTemplateResponse("Hotel not found", exception, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler

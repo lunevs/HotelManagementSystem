@@ -7,13 +7,13 @@ import Status from "./components/utils/Status";
 import Navigation from "./components/utils/Navigation";
 import LogoutBox from "./components/auth/LogoutBox";
 import MainSearch from "./components/bookings/MainSearch";
-import LocationDetails from "./components/locations/LocationDetails";
+import HotelDetails from "./components/hotels/HotelDetails";
 import BookingsList from "./components/bookings/BookingsList";
-import LocationsTable from "./components/locations/LocationsTable";
-import LocationCreateForm from "./components/locations/LocationCreateForm";
-import LocationEditForm from "./components/locations/LocationEditForm";
-import LocationAddRoomForm from "./components/locations/LocationAddRoomForm";
-import LocationEditRoomForm from "./components/locations/LocationEditRoomForm";
+import HotelsTable from "./components/hotels/HotelsTable";
+import HotelCreateForm from "./components/hotels/HotelCreateForm";
+import HotelEditForm from "./components/hotels/HotelEditForm";
+import HotelAddRoomForm from "./components/hotels/HotelAddRoomForm";
+import HotelEditRoomForm from "./components/hotels/HotelEditRoomForm";
 import UserCreateForm from "./components/users/UserCreateForm";
 import UserEditForm from "./components/users/UserEditForm";
 import UserChangeRole from "./components/users/UserChangeRole";
@@ -41,7 +41,7 @@ function App() {
 
     const changeStatusHandler = ({message, type}) => {
         setStatus({message, type});
-        setTimeout(() => setStatus({message: '', type: ''}), 2000);
+        setTimeout(() => setStatus({message: '', type: ''}), 3000);
     }
 
   return (
@@ -63,12 +63,12 @@ function App() {
                               <Route path='/' element={<MainSearch token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/search' element={<MainSearch token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/bookings' element={<BookingsList token={token} changeStatusHandler={changeStatusHandler} />} />
-                              <Route path='/mylocations' element={<LocationsTable token={token} changeStatusHandler={changeStatusHandler} />} />
-                              <Route path='/addlocation' element={<LocationCreateForm token={token} changeStatusHandler={changeStatusHandler} />} />
-                              <Route path='/editlocation' element={<LocationEditForm token={token} changeStatusHandler={changeStatusHandler} />} />
-                              <Route path='/locationdetails/:id' element={<LocationDetails token={token} changeStatusHandler={changeStatusHandler} />} />
-                              <Route path='/addroom' element={<LocationAddRoomForm token={token} changeStatusHandler={changeStatusHandler} />} />
-                              <Route path='/editroom' element={<LocationEditRoomForm token={token} changeStatusHandler={changeStatusHandler} />} />
+                              <Route path='/myhotels' element={<HotelsTable token={token} changeStatusHandler={changeStatusHandler} />} />
+                              <Route path='/addhotel' element={<HotelCreateForm token={token} changeStatusHandler={changeStatusHandler} />} />
+                              <Route path='/edithotel' element={<HotelEditForm token={token} changeStatusHandler={changeStatusHandler} />} />
+                              <Route path='/hoteldetails/:id' element={<HotelDetails token={token} changeStatusHandler={changeStatusHandler} />} />
+                              <Route path='/addroom' element={<HotelAddRoomForm token={token} changeStatusHandler={changeStatusHandler} />} />
+                              <Route path='/editroom' element={<HotelEditRoomForm token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/addaccount' element={<UserCreateForm token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/editaccount' element={<UserEditForm token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/editaccountrole' element={<UserChangeRole token={token} changeStatusHandler={changeStatusHandler} />} />

@@ -1,22 +1,22 @@
 /* eslint-disable */
 import React, {useEffect, useState} from "react";
-import LocationService from "../../services/LocationService";
+import HotelService from "../../services/HotelService";
 import ErrorsHandler from "../utils/Utils";
 import {useNavigate} from "react-router-dom";
-import LocationItem from "./LocationItem";
+import HotelItem from "./HotelItem";
 
-const LocationsTable = ({token, changeStatusHandler}) => {
+const HotelsTable = ({token, changeStatusHandler}) => {
 
-    const [locations, setLocations] = useState([]);
+    const [hotels, setHotels] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         if (token !== '') {
-            LocationService
-                .getAllLocations(token)
+            HotelService
+                .getAllHotels(token)
                 .then(result => {
                     if (Array.isArray(result)) {
-                        setLocations(result);
+                        setHotels(result);
                     }
                 })
                 .catch(error => ErrorsHandler(error, changeStatusHandler, navigate));
@@ -25,9 +25,9 @@ const LocationsTable = ({token, changeStatusHandler}) => {
 
     return (
         <div className="row">
-            {locations.map(el => <LocationItem locationElement={el} key={el.id} />)}
+            {hotels.map(el => <HotelItem hotelElement={el} key={el.id} />)}
         </div>
     );
 }
 
-export default LocationsTable;
+export default HotelsTable;

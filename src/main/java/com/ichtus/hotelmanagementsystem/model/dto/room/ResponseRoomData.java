@@ -1,7 +1,7 @@
 package com.ichtus.hotelmanagementsystem.model.dto.room;
 
 import com.ichtus.hotelmanagementsystem.model.entities.Room;
-import com.ichtus.hotelmanagementsystem.model.dto.amenity.ResponseAmenityChange;
+import com.ichtus.hotelmanagementsystem.model.dto.amenity.ResponseAmenityData;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -17,7 +17,7 @@ public class ResponseRoomData {
     int roomCapacity;
     String roomName;
     BigDecimal roomPrice;
-    List<ResponseAmenityChange> amenities;
+    List<ResponseAmenityData> amenities;
 
     public static ResponseRoomData of(Room room) {
         return new ResponseRoomData()
@@ -29,7 +29,7 @@ public class ResponseRoomData {
                 .setAmenities(
                         room.getAmenities() == null
                                 ? Collections.emptyList()
-                                : room.getAmenities().stream().map(ResponseAmenityChange::of).toList()
+                                : room.getAmenities().stream().map(ResponseAmenityData::of).toList()
                 );
     }
 }

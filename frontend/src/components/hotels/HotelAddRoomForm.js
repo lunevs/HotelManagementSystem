@@ -1,31 +1,30 @@
 /* eslint-disable */
 import React, {useEffect, useState} from "react";
-import LocationService from "../../services/LocationService";
 import amenityService from "../../services/AmenityService";
 import AmenityElementCheckbox from "../amenities/AmenityElementCheckbox";
 import ErrorsHandler from "../utils/Utils";
 import {useNavigate} from "react-router-dom";
-import locationService from "../../services/LocationService";
+import HotelService from "../../services/HotelService";
 import BoxDiv from "../utils/style/BoxDiv";
 import InputTextWithSpan from "../utils/style/InputTextWithSpan";
 import Button from "../utils/style/Button";
 
 
-const LocationAddRoomForm = ({token, changeStatusHandler}) => {
+const HotelAddRoomForm = ({token, changeStatusHandler}) => {
 
     const navigate = useNavigate();
 
-    const [locations, setLocations] = useState([]);
+    const [hotels, setHotels] = useState([]);
     const [amenities, setAmenities] = useState([]);
 
     useEffect(() => {
-        locationService
-            .getAllLocations(token)
+        HotelService
+            .getAllHotels(token)
             .then(result => {
                 if (Array.isArray(result)) {
-                    setLocations(result);
+                    setHotels(result);
                 } else {
-                    changeStatusHandler({message: 'Unknown data format for Locations', type: 'error'});
+                    changeStatusHandler({message: 'Unknown data format for Hotels', type: 'error'});
                 }
             })
             .catch(error => ErrorsHandler(error, changeStatusHandler, navigate))
@@ -44,7 +43,7 @@ const LocationAddRoomForm = ({token, changeStatusHandler}) => {
             .catch(error => ErrorsHandler(error, changeStatusHandler, navigate))
     }, [token]);
 
-    const addRoomToLocationHandler = (event) => {
+    const addRoomToHotelHandler = (event) => {
         event.preventDefault();
         let checkedIds = [];
         event.target.amenitiesList.forEach(el => {
@@ -55,14 +54,14 @@ const LocationAddRoomForm = ({token, changeStatusHandler}) => {
         })
         const checkedAmenities = amenities.filter(el => checkedIds.includes(el.id.toString()));
         const addRoomDto = {
-            locationId: event.target.locationId.value,
+            hotelId: event.target.hotelId.value,
             roomName: event.target.roomName.value,
             roomPrice: event.target.roomPrice.value,
             roomMaxCapacity: event.target.roomMaxCapacity.value,
             amenitiesList: checkedAmenities
         }
-        LocationService
-            .addRoomToLocation(token, addRoomDto)
+        HotelService
+            .addRoomToHotel(token, addRoomDto)
             .then(result => {
                 if (result.hasOwnProperty('id')) {
                     changeStatusHandler({message: 'Room successfully added', type: 'success'});
@@ -74,20 +73,20 @@ const LocationAddRoomForm = ({token, changeStatusHandler}) => {
 
     return (
         <BoxDiv>
-            <p className="text-start text-secondary">Create new room in a location:</p>
+            <p className="text-start text-secondary">Create new room in a Hotel:</p>
 
-            <form onSubmit={addRoomToLocationHandler} id="createNewRoomFormId">
+            <form onSubmit={addRoomToHotelHandler} id="createNewRoomFormId">
                 <div className="row">
                     <div className="col-12 mb-3">
                         <div className="input-group">
-                            <span id="selectLocationsForAddRoomSpan" className="input-group-text">Select Location for a Room:</span>
+                            <span id="selectHotelForAddRoomSpan" className="input-group-text">Select a Hotel for a Room:</span>
                             <select className="form-select" size="1"
-                                    aria-label="All locations list"
-                                    id="selectLocationsForAddRoom"
-                                    name="locationId"
+                                    aria-label="All hotels list"
+                                    id="selectHotelForAddRoomSpan"
+                                    name="hotelId"
                             >
                                 <option value="---" key="0">---</option>
-                                {locations.map(el => <option value={el.id} key={el.id}>{el.locationName}</option>)}
+                                {hotels.map(el => <option value={el.id} key={el.id}>{el.hotelName}</option>)}
                             </select>
                         </div>
                     </div>
@@ -107,11 +106,11 @@ const LocationAddRoomForm = ({token, changeStatusHandler}) => {
                         </div>
                     </div>
                 </div>
-                <Button>Add Room to Location</Button>
+                <Button>Add Room to the Hotel</Button>
             </form>
         </BoxDiv>
 
     );
 }
 
-export default LocationAddRoomForm;
+export default HotelAddRoomForm;

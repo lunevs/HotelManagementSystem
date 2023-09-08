@@ -6,6 +6,7 @@ import com.ichtus.hotelmanagementsystem.services.AccountService;
 import com.ichtus.hotelmanagementsystem.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,4 +29,10 @@ public class AuthController {
     public ResponseEntity<?> registerNewUser(@RequestBody RequestAccountChange requestAccountChange) {
         return ResponseEntity.ok(accountService.createNewAccount(requestAccountChange));
     }
+
+    @PostMapping("/error")
+    public ResponseEntity<?> failedRequest() {
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
 }

@@ -1,45 +1,46 @@
 /* eslint-disable */
 import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import locationService from "../../services/LocationService";
+import HotelService from "../../services/HotelService";
 import RoomItem from "./RoomItem";
 import ErrorsHandler from "../utils/Utils";
 import BoxDiv from "../utils/style/BoxDiv";
 
-const LocationDetails = ({token, changeStatusHandler}) => {
+const HotelDetails = ({token, changeStatusHandler}) => {
 
-    const locationId = useParams().id;
+    const hotelId = useParams().id;
     const navigate = useNavigate();
-    const [location, setLocation] = useState({
+    const [hotel, setHotel] = useState({
         id: 0,
-        locationName: '',
-        locationDescription: '',
+        hotelName: '',
+        hotelDescription: '',
+        hotelCity: '',
         amenities: [],
         roomsList: []
     });
 
     useEffect(() => {
-        locationService
-            .getLocationDetails(token, locationId)
+        HotelService
+            .getHotelDetails(token, hotelId)
             .then(result => {
                 if (result.hasOwnProperty('id')) {
-                    setLocation(result);
+                    setHotel(result);
                 } else {
                     changeStatusHandler({message: 'unknown result', type: 'error'});
                 }
             })
             .catch(error => ErrorsHandler(error, changeStatusHandler, navigate))
-    }, [locationId])
+    }, [hotelId])
 
     return (
         <BoxDiv>
             <div className="row">
                 {
-                    location.roomsList.map(el => <RoomItem key={el.id} token={token} roomElement={el} changeStatusHandler={changeStatusHandler} />)
+                    hotel.roomsList.map(el => <RoomItem key={el.id} token={token} roomElement={el} changeStatusHandler={changeStatusHandler} />)
                 }
             </div>
         </BoxDiv>
     );
 }
 
-export default LocationDetails;
+export default HotelDetails;

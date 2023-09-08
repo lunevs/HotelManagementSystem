@@ -14,7 +14,7 @@ import java.util.List;
 public class RequestRoomCreate {
 
     @NotBlank
-    Long locationId;
+    Long hotelId;
 
     @NotEmpty
     String roomName;

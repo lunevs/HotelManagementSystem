@@ -15,23 +15,23 @@ const Navigation = ({isAuth}) => {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <Link className="nav-link" to={"/search"}>Find location</Link>
+                                <Link className="nav-link" to={"/search"}>Find Hotel</Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to={"/bookings"}>My bookings</Link>
                             </li>
                             <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="/mylocations" role="button" data-bs-toggle="dropdown"
+                                <a className="nav-link dropdown-toggle" href="/myhotels" role="button" data-bs-toggle="dropdown"
                                    aria-expanded="false">
-                                    My locations
+                                    My Hotels
                                 </a>
                                 <ul className="dropdown-menu">
-                                    <li><Link className="dropdown-item" to={"/mylocations"}>My locations list</Link></li>
+                                    <li><Link className="dropdown-item" to={"/myhotels"}>My Hotels list</Link></li>
                                     <li>
                                         <hr className="dropdown-divider" />
                                     </li>
-                                    <li><Link className="dropdown-item" to={"/addlocation"}>Add location</Link></li>
-                                    <li><Link className="dropdown-item" to={"/editlocation"}>Edit location</Link></li>
+                                    <li><Link className="dropdown-item" to={"/addhotel"}>Add Hotel</Link></li>
+                                    <li><Link className="dropdown-item" to={"/edithotel"}>Edit Hotel</Link></li>
                                     <li>
                                         <hr className="dropdown-divider" />
                                     </li>

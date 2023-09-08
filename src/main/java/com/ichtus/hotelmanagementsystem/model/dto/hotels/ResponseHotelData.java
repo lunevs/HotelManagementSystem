@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
-public class ResponseHotelChange {
+public class ResponseHotelData {
 
     long id;
     String hotelName;
@@ -21,8 +21,8 @@ public class ResponseHotelChange {
 
     List<ResponseRoomData> roomsList;
 
-    public static ResponseHotelChange of (Hotel hotel) {
-        return new ResponseHotelChange()
+    public static ResponseHotelData of (Hotel hotel) {
+        return new ResponseHotelData()
                 .setId(hotel.getId())
                 .setHotelName(hotel.getHotelName())
                 .setHotelDescription(hotel.getHotelDescription())

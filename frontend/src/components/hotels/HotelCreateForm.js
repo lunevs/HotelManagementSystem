@@ -1,29 +1,30 @@
 /* eslint-disable */
 import React from "react";
-import LocationService from "../../services/LocationService";
+import HotelService from "../../services/HotelService";
 import ErrorsHandler from "../utils/Utils";
 import {useNavigate} from "react-router-dom";
 import BoxDiv from "../utils/style/BoxDiv";
 import InputText from "../utils/style/InputText";
 import Button from "../utils/style/Button";
 
-const LocationCreateForm = ({token, changeStatusHandler}) => {
+const HotelCreateForm = ({token, changeStatusHandler}) => {
 
     const navigate = useNavigate();
 
     const createHandler = (event) => {
         event.preventDefault();
         const newElement = {
-            locationName: event.target.locationNameInput.value,
-            locationDescription: event.target.locationDescriptionInput.value
+            hotelName: event.target.hotelNameInput.value,
+            hotelDescription: event.target.hotelDescriptionInput.value,
+            hotelCity: event.target.hotelCityInput.value
         }
         console.log(newElement);
-        LocationService
-            .createLocation(token, newElement)
+        HotelService
+            .createHotel(token, newElement)
             .then(result => {
                 if (result.hasOwnProperty('id')) {
-                    document.getElementById('locationCreateFormId').reset();
-                    changeStatusHandler({message: 'Location created', type: 'success'});
+                    document.getElementById('hotelCreateFormId').reset();
+                    changeStatusHandler({message: 'Hotel created', type: 'success'});
                 } else {
                     changeStatusHandler({message: 'Unknown error. Try again', type: 'error'});
                 }
@@ -34,13 +35,14 @@ const LocationCreateForm = ({token, changeStatusHandler}) => {
 
     return (
         <BoxDiv title="Create new hotel:">
-            <form onSubmit={createHandler} id="locationCreateFormId">
-                <InputText name="locationNameInput" description="Location name" />
-                <InputText name="locationDescriptionInput" description="Location description" />
+            <form onSubmit={createHandler} id="hotelCreateFormId">
+                <InputText name='hotelNameInput' description="Hotel name" />
+                <InputText name='hotelDescriptionInput' description="Hotel description" />
+                <InputText name='hotelCityInput' description="Hotel city" />
                 <Button>Create hotel</Button>
             </form>
         </BoxDiv>
     );
 }
 
-export default LocationCreateForm;
+export default HotelCreateForm;

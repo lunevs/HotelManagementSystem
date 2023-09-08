@@ -1,6 +1,7 @@
 package com.ichtus.hotelmanagementsystem.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,12 +23,14 @@ public class Hotel {
     @Column(name = "id")
     private long id;
 
+    @NotBlank
     @Column(name = "name", unique = true)
     private String hotelName;
 
     @Column(name = "description")
     private String hotelDescription;
 
+    @NotBlank
     @Column(name = "city")
     private String hotelCity;
 

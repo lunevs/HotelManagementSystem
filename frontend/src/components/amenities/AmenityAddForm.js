@@ -45,7 +45,7 @@ const AmenityAddForm = ({token, changeStatusHandler}) => {
                         Room amenity
                     </InputCheckBox>
                     <InputCheckBox id="amenityCreateTypeInput2" name="amenityCreateTypeInput" value="HOTEL">
-                        Location amenity
+                        Hotel amenity
                     </InputCheckBox>
                 </div>
                 <InputNumber name="amenityCreatePriceInput" description="Amenity price" />

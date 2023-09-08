@@ -14,7 +14,7 @@ const RoomItem = ({token, roomElement, changeStatusHandler}) => {
         e.preventDefault();
         const bookDto = {
             roomId: roomElement.id,
-            locationId: roomElement.locationId,
+            hotelId: roomElement.hotelId,
             startDate: from,
             endDate: to,
             numberOfGuests: roomElement.roomCapacity
@@ -23,8 +23,9 @@ const RoomItem = ({token, roomElement, changeStatusHandler}) => {
             .bookRoom(token, bookDto)
             .then(result => {
                 if (result.hasOwnProperty('id')) {
-                    changeStatusHandler({message: 'Successfully added!', type: 'success'});
+                    changeStatusHandler({message: 'Successfully booked!', type: 'success'});
                 } else {
+                    console.log("result: " + result)
                     changeStatusHandler({message: 'Unknown result data', type: 'error'});
                 }
             })
