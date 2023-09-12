@@ -10,7 +10,7 @@ const HotelItem = ({hotelElement}) => {
         {
             hotelElement === undefined ? <div />
             :
-                <div className="row g-0" style={{cursor: "pointer"}} onClick={() => navigate(`/hoteldetails/${hotelElement.hotelId}`)}>
+                <div className="row g-0" style={{cursor: "pointer"}} onClick={() => navigate(`/hoteldetails/${hotelElement.id}`)}>
                     <div className="col-md-4">
                         <img src="hotel_default_pict.jpeg" className="img-fluid rounded-start m-4" alt="..." width="200px" />
                     </div>

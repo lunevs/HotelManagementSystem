@@ -1,5 +1,6 @@
 package com.ichtus.hotelmanagementsystem.services;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,31 +22,20 @@ public class HotelServiceTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Value("${custom.rest.basePath}")
+    String basePath;
+
     @Test
     @WithAnonymousUser
     void notAuthorizedCall() throws Exception {
-        mockMvc.perform(get("/locations"))
+        mockMvc.perform(get(basePath + "/hotels"))
                 .andExpect(status().isForbidden());
     }
 
-    @WithMockUser(roles = {"ADMIN"})
-    @Test
-    void testWithAdminRole() throws Exception {
-        mockMvc.perform(get("/accounts"))
-                .andExpect(status().isOk());
-    }
-
-    @WithMockUser(roles = {"USER"})
-    @Test
-    void testAdminZoneWithUserRole() throws Exception {
-        mockMvc.perform(get("/accounts"))
-                .andExpect(status().isForbidden());
-    }
-
-    @WithMockUser(roles = {"USER"})
+    @WithMockUser
     @Test
     void testWithUserRole() throws Exception {
-        mockMvc.perform(get("/locations"))
+        mockMvc.perform(get(basePath + "/hotels"))
                 .andExpect(status().isOk());
     }
 

@@ -7,6 +7,7 @@ import ErrorsHandler from "../utils/Utils";
 import BoxDiv from "../utils/style/BoxDiv";
 import Button from "../utils/style/Button";
 import hotelService from "../../services/HotelService";
+import SearchResultItem from "../hotels/SearchResultItem";
 
 const MainSearch = ({token, changeStatusHandler}) => {
 
@@ -26,7 +27,7 @@ const MainSearch = ({token, changeStatusHandler}) => {
                 }
             })
             .catch(error => ErrorsHandler(error, changeStatusHandler, navigate));
-    }, [hotels])
+    }, [token, hotels])
 
     const searchFilterHandler = (event) => {
         event.preventDefault();
@@ -92,7 +93,10 @@ const MainSearch = ({token, changeStatusHandler}) => {
             </div>
 
             <div className="row">
-                {hotels.map(el => <HotelItem hotelElement={el} key={el.hotelId} />)}
+                {hotels.map(el => <SearchResultItem hotelElement={el}
+                                                    key={el.hotelId}
+                                                    token={token}
+                                                    changeStatusHandler={changeStatusHandler} />)}
             </div>
         </BoxDiv>
     );

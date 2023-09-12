@@ -2,6 +2,7 @@ package com.ichtus.hotelmanagementsystem.model.entities;
 
 import com.ichtus.hotelmanagementsystem.model.dictionaries.BookingStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,10 @@ public class Booking {
     @ManyToOne
     private Room room;
 
+    @NotNull
     private Date startDate;
+
+    @NotNull
     private Date endDate;
     private BookingStatus bookingStatus;
 

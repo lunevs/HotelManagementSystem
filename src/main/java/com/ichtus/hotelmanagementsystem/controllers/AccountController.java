@@ -32,7 +32,7 @@ public class AccountController {
 
     @PostMapping
     @IsAdministrator
-    public ResponseEntity<?> createNewUserAccount(@RequestBody RequestAccountChange requestAccountChange) {
+    public ResponseEntity<?> createNewUserAccount(@Valid @RequestBody RequestAccountChange requestAccountChange) {
         return ResponseEntity.ok(accountService.createNewAccount(requestAccountChange));
     }
 

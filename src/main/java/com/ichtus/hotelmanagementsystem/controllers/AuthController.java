@@ -4,6 +4,7 @@ import com.ichtus.hotelmanagementsystem.model.dto.account.RequestAccountChange;
 import com.ichtus.hotelmanagementsystem.model.dto.auth.RequestAuthorization;
 import com.ichtus.hotelmanagementsystem.services.AccountService;
 import com.ichtus.hotelmanagementsystem.services.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,12 +22,12 @@ public class AuthController {
     private final AccountService accountService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUserAndReturnToken(@RequestBody RequestAuthorization requestAuthorization) {
+    public ResponseEntity<?> loginUserAndReturnToken(@Valid @RequestBody RequestAuthorization requestAuthorization) {
         return ResponseEntity.ok(authService.createNewToken(requestAuthorization));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerNewUser(@RequestBody RequestAccountChange requestAccountChange) {
+    public ResponseEntity<?> registerNewUser(@Valid @RequestBody RequestAccountChange requestAccountChange) {
         return ResponseEntity.ok(accountService.createNewAccount(requestAccountChange));
     }
 

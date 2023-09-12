@@ -2,9 +2,11 @@ package com.ichtus.hotelmanagementsystem.model.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Entity
 @Data
+@Accessors(chain = true)
 @Table(name = "roles")
 public class Role {
 

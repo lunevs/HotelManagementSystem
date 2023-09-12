@@ -5,6 +5,7 @@ import com.ichtus.hotelmanagementsystem.exceptions.AccountNotFoundException;
 import com.ichtus.hotelmanagementsystem.model.dto.account.*;
 import com.ichtus.hotelmanagementsystem.model.entities.Account;
 import com.ichtus.hotelmanagementsystem.repository.AccountRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,13 +16,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class AccountService implements UserDetailsService  {
 
     private final AccountRepository accountRepository;
@@ -61,13 +65,17 @@ public class AccountService implements UserDetailsService  {
         return new User(
                 account.getAccountName(),
                 account.getAccountPassword(),
-                Stream.of(account.getRole())
-                        .map(el -> new SimpleGrantedAuthority(el.getName()))
-                        .toList()
+                account.getRole() == null
+                        ? Stream.of(roleService.getUserRole())
+                            .map(el -> new SimpleGrantedAuthority(el.getName()))
+                            .toList()
+                        : Stream.of(account.getRole())
+                            .map(el -> new SimpleGrantedAuthority(el.getName()))
+                            .toList()
         );
     }
 
-    public ResponseAccountData createNewAccount(RequestAccountChange requestAccountChange) {
+    public ResponseAccountData createNewAccount(@Valid RequestAccountChange requestAccountChange) {
         if (accountRepository.findByAccountName(requestAccountChange.getAccountName()).isPresent()) {
             throw new AccountAlreadyExists(requestAccountChange.getAccountName());
         }

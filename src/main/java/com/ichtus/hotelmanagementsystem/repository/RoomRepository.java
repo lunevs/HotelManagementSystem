@@ -12,8 +12,8 @@ public interface RoomRepository extends CrudRepository<Room, Long> {
 
     // find  rooms with capacity more or equal getNeededCapacity
     // and with room price between min and max
-    List<Room> findAllByRoomCapacityGreaterThanAndRoomPriceBetween(int roomCapacity, BigDecimal minPrice, BigDecimal maxPrice);
+    List<Room> findAllByRoomCapacityGreaterThanEqualAndRoomPriceBetween(int roomCapacity, BigDecimal minPrice, BigDecimal maxPrice);
 
-    List<Room> findAllByRoomCapacityGreaterThanAndRoomPriceGreaterThan(int roomCapacity, BigDecimal minPrice);
+    List<Room> findAllByRoomCapacityGreaterThanEqualAndRoomPriceGreaterThanEqual(int roomCapacity, BigDecimal minPrice);
 
 }
