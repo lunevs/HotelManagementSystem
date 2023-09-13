@@ -3,6 +3,7 @@ package com.ichtus.hotelmanagementsystem.controllers;
 import com.ichtus.hotelmanagementsystem.model.anotations.IsUser;
 import com.ichtus.hotelmanagementsystem.model.dto.search.RequestHotelsSearch;
 import com.ichtus.hotelmanagementsystem.services.SearchService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class SearchController {
 
     @PostMapping
     @IsUser
-    public ResponseEntity<?> searchHotels(@RequestBody RequestHotelsSearch searchParameters) {
+    public ResponseEntity<?> searchHotels(@Valid @RequestBody RequestHotelsSearch searchParameters) {
         return ResponseEntity.ok(searchService.findAllHotelsByParameters(searchParameters));
     }
 

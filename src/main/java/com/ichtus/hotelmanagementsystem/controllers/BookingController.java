@@ -3,6 +3,7 @@ package com.ichtus.hotelmanagementsystem.controllers;
 import com.ichtus.hotelmanagementsystem.model.anotations.IsUser;
 import com.ichtus.hotelmanagementsystem.model.dto.booking.RequestNewBooking;
 import com.ichtus.hotelmanagementsystem.services.BookingService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,8 @@ public class BookingController {
 
     @PostMapping
     @IsUser
-    public ResponseEntity<?> doBooking(@RequestBody RequestNewBooking requestDto, Principal principal) {
+    public ResponseEntity<?> doBooking(@Valid @RequestBody RequestNewBooking requestDto, Principal principal) {
+        System.out.println(requestDto);
         return ResponseEntity.ok(bookingService.doBooking(requestDto, principal.getName()));
     }
 

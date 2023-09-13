@@ -61,7 +61,7 @@ public class BookingService {
         return ResponseBooking.of(bookingRepository.save(booking));
     }
 
-    private boolean roomIsAvailable(RequestNewBooking booking) {
+    public boolean roomIsAvailable(RequestNewBooking booking) {
 
         int existingBookings = bookingRepository.checkBookingsForRoom(
                 booking.getRoomId(),

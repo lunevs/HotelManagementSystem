@@ -1,10 +1,10 @@
 package com.ichtus.hotelmanagementsystem.model.dto.booking;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.ichtus.hotelmanagementsystem.model.anotations.ValidRoomCapacity;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Polymorphism;
 
 import java.util.Date;
 
@@ -12,12 +12,14 @@ import java.util.Date;
 @Accessors(chain = true)
 public class RequestNewBooking {
 
-    @NotBlank
+    @Positive
     private long roomId;
 
-    @NotBlank
+    @Positive
     private long hotelId;
 
+    @Positive
+    @ValidRoomCapacity
     private int numberOfGuests;
 
     @NotNull

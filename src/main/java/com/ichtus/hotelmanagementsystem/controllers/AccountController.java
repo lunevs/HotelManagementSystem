@@ -56,7 +56,7 @@ public class AccountController {
 
     @PutMapping("/{id}/role")
     @IsAdministrator
-    public ResponseEntity<?> updateAccountRole(@PathVariable Long id, @RequestBody RequestAccountRoleChange roleChange) {
+    public ResponseEntity<?> updateAccountRole(@PathVariable Long id, @Valid @RequestBody RequestAccountRoleChange roleChange) {
         return ResponseEntity.ok(accountService.accountUpdateRole(id, roleChange.getRole().name()));
     }
 

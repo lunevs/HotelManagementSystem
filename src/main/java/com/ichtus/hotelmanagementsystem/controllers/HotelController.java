@@ -43,19 +43,8 @@ public class HotelController {
     @PostMapping
     @IsModerator
     public ResponseEntity<ResponseHotelData> createHotel(@Valid @RequestBody RequestHotelChange hotelChange, Principal principal) {
-        Hotel savedHotel = hotelService.addHotel(hotelChange, principal.getName());
-        HttpHeaders responseHeaders = new HttpHeaders();
-        URI savedHotelUri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(savedHotel.getId())
-                .toUri();
-        responseHeaders.setLocation(savedHotelUri);
-        return new ResponseEntity<>(
-                ResponseHotelData.of(savedHotel),
-                responseHeaders,
-                HttpStatus.CREATED
-        );
+        ResponseHotelData savedHotel = hotelService.addHotel(hotelChange, principal.getName());
+        return new ResponseEntity<>(savedHotel, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -66,7 +55,7 @@ public class HotelController {
 
     @PutMapping("/{id}")
     @IsModerator
-    public ResponseEntity<ResponseHotelData> updateHotelInfo(@PathVariable Long id, @RequestBody RequestHotelChange hotelRequestDto) {
+    public ResponseEntity<ResponseHotelData> updateHotelInfo(@PathVariable Long id, @Valid @RequestBody RequestHotelChange hotelRequestDto) {
         return ResponseEntity.ok(hotelService.updateHotelInfo(id, hotelRequestDto));
     }
 

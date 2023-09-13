@@ -30,7 +30,7 @@ public class RequestCachingFilter extends OncePerRequestFilter {
 
         CachedHttpServletRequest cachedHttpServletRequest = new CachedHttpServletRequest(request);
         String s = new String(cachedHttpServletRequest.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-        LOGGER.info(request.getMethod() + " " + request.getRequestURI() + " " + s.replaceAll("[\n ]", ""));
+        LOGGER.info(request.getMethod() + " " + request.getRequestURI() + " " + s.replaceAll("\n", ""));
         filterChain.doFilter(cachedHttpServletRequest, response);
     }
 }

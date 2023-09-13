@@ -5,7 +5,6 @@ import com.ichtus.hotelmanagementsystem.model.anotations.WithMockAdmin;
 import com.ichtus.hotelmanagementsystem.model.dictionaries.AmenityType;
 import com.ichtus.hotelmanagementsystem.model.dto.amenity.RequestAmenityChange;
 import com.ichtus.hotelmanagementsystem.model.entities.Amenity;
-import com.ichtus.hotelmanagementsystem.repository.AmenityRepository;
 import com.ichtus.hotelmanagementsystem.services.AmenityService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +17,8 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.BDDMockito.*;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc

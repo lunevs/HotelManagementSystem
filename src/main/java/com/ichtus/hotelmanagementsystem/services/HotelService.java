@@ -37,7 +37,7 @@ public class HotelService {
                 .collect(Collectors.toSet());
     }
 
-    public Hotel addHotel(RequestHotelChange hotelChange, String creatorName) {
+    public ResponseHotelData addHotel(RequestHotelChange hotelChange, String creatorName) {
         Account creator = accountService.findAccountByName(creatorName);
         Hotel newHotel = new Hotel()
                 .setHotelName(hotelChange.getHotelName())
@@ -45,7 +45,7 @@ public class HotelService {
                 .setHotelCity(hotelChange.getHotelCity())
                 .setRoomsList(Collections.emptyList())
                 .setHotelAdmin(creator);
-        return hotelRepository.save(newHotel);
+        return ResponseHotelData.of(hotelRepository.save(newHotel));
     }
 
     public Hotel findHotelById(Long id) throws HotelNotFoundException {
