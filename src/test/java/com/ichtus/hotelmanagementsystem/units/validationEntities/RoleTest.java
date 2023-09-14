@@ -1,6 +1,6 @@
-package com.ichtus.hotelmanagementsystem.validationEntities;
+package com.ichtus.hotelmanagementsystem.units.validationEntities;
 
-import com.ichtus.hotelmanagementsystem.model.anotations.WithMockAdmin;
+import com.ichtus.hotelmanagementsystem.utils.anotations.WithMockAdmin;
 import com.ichtus.hotelmanagementsystem.model.entities.Role;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;

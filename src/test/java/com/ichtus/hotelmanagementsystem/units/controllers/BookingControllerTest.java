@@ -1,12 +1,10 @@
-package com.ichtus.hotelmanagementsystem.controllers;
+package com.ichtus.hotelmanagementsystem.units.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ichtus.hotelmanagementsystem.exceptions.FreeDatesForRoomNotFountException;
-import com.ichtus.hotelmanagementsystem.model.anotations.WithMockAdmin;
+import com.ichtus.hotelmanagementsystem.utils.anotations.WithMockAdmin;
 import com.ichtus.hotelmanagementsystem.model.dto.booking.RequestNewBooking;
 import com.ichtus.hotelmanagementsystem.model.dto.booking.ResponseBooking;
 import com.ichtus.hotelmanagementsystem.services.BookingService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

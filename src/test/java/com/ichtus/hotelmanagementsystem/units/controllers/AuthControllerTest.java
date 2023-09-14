@@ -1,4 +1,4 @@
-package com.ichtus.hotelmanagementsystem.controllers;
+package com.ichtus.hotelmanagementsystem.units.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ichtus.hotelmanagementsystem.model.dto.account.RequestAccountChange;

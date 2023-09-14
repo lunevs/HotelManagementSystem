@@ -1,4 +1,4 @@
-package com.ichtus.hotelmanagementsystem.services;
+package com.ichtus.hotelmanagementsystem.units.services;
 
 import com.ichtus.hotelmanagementsystem.model.entities.Role;
 import com.ichtus.hotelmanagementsystem.repository.AccountRepository;
@@ -6,6 +6,8 @@ import com.ichtus.hotelmanagementsystem.exceptions.AccountNotFoundException;
 import com.ichtus.hotelmanagementsystem.model.dto.account.RequestAccountChange;
 import com.ichtus.hotelmanagementsystem.model.dto.account.ResponseAccountData;
 import com.ichtus.hotelmanagementsystem.model.entities.Account;
+import com.ichtus.hotelmanagementsystem.services.AccountService;
+import com.ichtus.hotelmanagementsystem.services.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,6 +1,5 @@
-package com.ichtus.hotelmanagementsystem.controllers;
+package com.ichtus.hotelmanagementsystem.units.controllers;
 
-import com.ichtus.hotelmanagementsystem.model.dto.amenity.RequestAmenityChange;
 import com.ichtus.hotelmanagementsystem.model.dto.search.RequestHotelsSearch;
 import com.ichtus.hotelmanagementsystem.model.dto.search.ResponseSearchResults;
 import com.ichtus.hotelmanagementsystem.services.SearchService;

@@ -1,6 +1,6 @@
-package com.ichtus.hotelmanagementsystem.controllers;
+package com.ichtus.hotelmanagementsystem.units.controllers;
 
-import com.ichtus.hotelmanagementsystem.model.anotations.WithMockAdmin;
+import com.ichtus.hotelmanagementsystem.utils.anotations.WithMockAdmin;
 import com.ichtus.hotelmanagementsystem.model.entities.Role;
 import com.ichtus.hotelmanagementsystem.services.RoleService;
 import org.junit.jupiter.api.Test;

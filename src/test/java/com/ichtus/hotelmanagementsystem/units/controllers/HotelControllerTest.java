@@ -1,17 +1,13 @@
-package com.ichtus.hotelmanagementsystem.controllers;
+package com.ichtus.hotelmanagementsystem.units.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ichtus.hotelmanagementsystem.exceptions.HotelNotFoundException;
-import com.ichtus.hotelmanagementsystem.model.anotations.WithMockAdmin;
+import com.ichtus.hotelmanagementsystem.utils.anotations.WithMockAdmin;
 import com.ichtus.hotelmanagementsystem.model.dto.hotels.RequestHotelChange;
 import com.ichtus.hotelmanagementsystem.model.dto.hotels.ResponseHotelData;
-import com.ichtus.hotelmanagementsystem.model.entities.Hotel;
 import com.ichtus.hotelmanagementsystem.services.HotelService;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

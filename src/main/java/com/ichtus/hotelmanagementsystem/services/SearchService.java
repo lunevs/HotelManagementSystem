@@ -25,8 +25,6 @@ public class SearchService {
     private final RoomRepository roomRepository;
     private final BookingRepository bookingRepository;
 
-
-
     // find  freeRooms with capacity more or equal getNeededCapacity
     // and with room price between min and max
     private List<Room> findAllRoomsByCapacityAndPrice(int roomCapacity, BigDecimal minPrice, BigDecimal maxPrice) {
@@ -78,46 +76,12 @@ public class SearchService {
                 searchParameters.getEndDate()
         );
 
-//        System.out.println("BOOKINGS:");
-//        bookings.forEach(el -> System.out.println(el.getRoom().getRoomName() + ": " + el.getStartDate() + " - " + el.getEndDate()));
-//
-//        System.out.println("FREE ROOMS 1:");
-//        freeRooms.forEach(el -> System.out.println(el.getRoomName()));
-
         Set<Long> bookedRoomsIds = bookings.stream().map(booking -> booking.getRoom().getId()).collect(Collectors.toSet());
         freeRooms = freeRooms.stream()
                 .filter(room -> hotelIds.contains(room.getHotel().getId()))
                 .filter(room -> !bookedRoomsIds.contains(room.getId()))
                 .toList();
 
-//        System.out.println("BOOKED ROOMS:");
-//        System.out.println(bookedRoomsIds);
-//
-//        System.out.println("FREE ROOMS 2:");
-//        freeRooms.forEach(el -> System.out.println(el.getRoomName() + " id=" + el.getId()));
-
-//        List<ResponseSearchResults> results = new ArrayList<>();
-//
-//        List<Room> finalFreeRooms = freeRooms;
-//        hotels.forEach(hotel -> {
-//            List<Room> curHotelFreeRooms = finalFreeRooms.stream()
-//                    .filter(room -> room.getHotel().getId() == hotel.getId()).toList();
-//            if (curHotelFreeRooms.size() > 0) {
-//                ResponseSearchResults curHotel = ResponseSearchResults.of(hotel);
-//                curHotel.setFreeRoomsList(curHotelFreeRooms.stream().map(ResponseRoomData::of).toList());
-//                results.add(curHotel);
-//            }
-//        });
-
-//        System.out.println("RESULT:");
-//        results.forEach(el -> {
-//            System.out.println("------" + el.getHotelName());
-//            el.getFreeRoomsList().forEach(r -> System.out.println("--------------" + r.getRoomName()));
-//        });
-
         return constructSearchResults(hotels, freeRooms);
     }
-
-
-
 }

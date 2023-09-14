@@ -1,6 +1,6 @@
-package com.ichtus.hotelmanagementsystem.validationEntities;
+package com.ichtus.hotelmanagementsystem.units.validationEntities;
 
-import com.ichtus.hotelmanagementsystem.model.anotations.WithMockAdmin;
+import com.ichtus.hotelmanagementsystem.utils.anotations.WithMockAdmin;
 import com.ichtus.hotelmanagementsystem.model.dictionaries.BookingStatus;
 import com.ichtus.hotelmanagementsystem.model.entities.Account;
 import com.ichtus.hotelmanagementsystem.model.entities.Booking;

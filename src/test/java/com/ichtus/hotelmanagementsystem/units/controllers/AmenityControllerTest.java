@@ -1,7 +1,7 @@
-package com.ichtus.hotelmanagementsystem.controllers;
+package com.ichtus.hotelmanagementsystem.units.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ichtus.hotelmanagementsystem.model.anotations.WithMockAdmin;
+import com.ichtus.hotelmanagementsystem.utils.anotations.WithMockAdmin;
 import com.ichtus.hotelmanagementsystem.model.dictionaries.AmenityType;
 import com.ichtus.hotelmanagementsystem.model.dto.amenity.RequestAmenityChange;
 import com.ichtus.hotelmanagementsystem.model.entities.Amenity;

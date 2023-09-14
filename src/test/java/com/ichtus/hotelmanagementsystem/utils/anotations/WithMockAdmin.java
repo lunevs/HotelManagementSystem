@@ -1,4 +1,4 @@
-package com.ichtus.hotelmanagementsystem.model.anotations;
+package com.ichtus.hotelmanagementsystem.utils.anotations;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.security.test.context.support.TestExecutionEvent;

@@ -1,28 +1,19 @@
-package com.ichtus.hotelmanagementsystem.controllers;
+package com.ichtus.hotelmanagementsystem.units.controllers;
 
 import com.ichtus.hotelmanagementsystem.exceptions.HotelNotFoundException;
-import com.ichtus.hotelmanagementsystem.model.anotations.IsModerator;
-import com.ichtus.hotelmanagementsystem.model.anotations.WithMockAdmin;
-import com.ichtus.hotelmanagementsystem.model.dto.amenity.RequestAmenityChange;
+import com.ichtus.hotelmanagementsystem.utils.anotations.WithMockAdmin;
 import com.ichtus.hotelmanagementsystem.model.dto.room.RequestRoomCreate;
 import com.ichtus.hotelmanagementsystem.model.dto.room.ResponseRoomData;
 import com.ichtus.hotelmanagementsystem.services.RoomService;
-import jakarta.validation.Valid;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 

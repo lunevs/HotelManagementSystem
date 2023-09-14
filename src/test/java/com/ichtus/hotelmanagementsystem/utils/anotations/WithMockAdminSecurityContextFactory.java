@@ -1,4 +1,4 @@
-package com.ichtus.hotelmanagementsystem.model.anotations;
+package com.ichtus.hotelmanagementsystem.utils.anotations;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

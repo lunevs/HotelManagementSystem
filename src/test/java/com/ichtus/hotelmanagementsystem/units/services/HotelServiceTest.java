@@ -1,5 +1,6 @@
-package com.ichtus.hotelmanagementsystem.services;
+package com.ichtus.hotelmanagementsystem.units.services;
 
+import com.ichtus.hotelmanagementsystem.services.HotelService;
 import org.springframework.beans.factory.annotation.Value;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
