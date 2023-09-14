@@ -1,6 +1,10 @@
 package com.ichtus.hotelmanagementsystem.model.entities;
 
+import com.ichtus.hotelmanagementsystem.model.anotations.ValidRoomCapacity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,12 +27,16 @@ public class Room {
     @Column(name = "id")
     private long id;
 
+    @NotBlank
+    @Size(min = 5)
     @Column(name = "name")
     private String roomName;
 
+    @Positive
     @Column(name = "price")
     private BigDecimal roomPrice;
 
+    @ValidRoomCapacity
     @Column(name = "capacity")
     private int roomCapacity;
 

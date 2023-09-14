@@ -2,6 +2,7 @@ package com.ichtus.hotelmanagementsystem.model.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class Hotel {
     private long id;
 
     @NotBlank
+    @Size(min = 5)
     @Column(name = "name", unique = true)
     private String hotelName;
 
@@ -31,6 +33,7 @@ public class Hotel {
     private String hotelDescription;
 
     @NotBlank
+    @Size(min = 5)
     @Column(name = "city")
     private String hotelCity;
 

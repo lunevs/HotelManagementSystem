@@ -5,6 +5,7 @@ import com.ichtus.hotelmanagementsystem.model.entities.Amenity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Value;
 
 import java.math.BigDecimal;
@@ -13,10 +14,11 @@ import java.util.List;
 @Value
 public class RequestRoomCreate {
 
-    @NotBlank
+    @Positive
     Long hotelId;
 
-    @NotEmpty
+    @NotBlank
+    @Size(min = 5)
     String roomName;
 
     @Positive

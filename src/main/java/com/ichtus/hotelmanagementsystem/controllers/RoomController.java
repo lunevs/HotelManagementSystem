@@ -23,6 +23,7 @@ public class RoomController {
     }
 
     @PutMapping("/{roomId}")
+    @IsModerator
     ResponseEntity<?> updateRoom(@Valid @RequestBody RequestRoomCreate roomRequestDto, @PathVariable Long roomId) {
         return new ResponseEntity<>(roomService.updateRoom(roomId, roomRequestDto), HttpStatus.OK);
     }
