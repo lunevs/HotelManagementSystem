@@ -63,13 +63,12 @@ public class BookingService {
 
     public boolean roomIsAvailable(RequestNewBooking booking) {
 
-        int existingBookings = bookingRepository.checkBookingsForRoom(
+        List<Booking> existingBookings = bookingRepository.checkBookingsForRoom(
                 booking.getRoomId(),
                 booking.getStartDate(),
-                booking.getEndDate()
-        ).size();
+                booking.getEndDate());
 
-        return !(existingBookings > 0);
+        return !(existingBookings.size() > 0);
     }
 
 }

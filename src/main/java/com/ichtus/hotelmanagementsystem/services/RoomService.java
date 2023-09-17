@@ -26,26 +26,26 @@ public class RoomService {
 
     public ResponseRoomData addRoom(RequestRoomCreate roomRequestDto) {
         Hotel currentHotel = hotelService.findHotelById(roomRequestDto.getHotelId());
-        Room newRoom = new Room()
-                .setRoomName(roomRequestDto.getRoomName())
-                .setRoomPrice(roomRequestDto.getRoomPrice())
-                .setRoomCapacity(roomRequestDto.getRoomMaxCapacity())
-                .setHotel(currentHotel)
-                .setAmenities(roomRequestDto.getAmenitiesList() == null ? Collections.emptyList() : roomRequestDto.getAmenitiesList());
+        Room newRoom = getRoomFrom(roomRequestDto, new Room()).setHotel(currentHotel);
         return ResponseRoomData.of(roomRepository.save(newRoom));
     }
 
     public ResponseRoomData updateRoom(Long roomId, RequestRoomCreate roomRequestDto) {
         Room roomToUpdate = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RoomNotFoundException(roomRequestDto.getRoomName()))
-                .setRoomName(roomRequestDto.getRoomName())
-                .setRoomCapacity(roomRequestDto.getRoomMaxCapacity())
-                .setRoomPrice(roomRequestDto.getRoomPrice())
-                .setAmenities(roomRequestDto.getAmenitiesList() == null
+                .orElseThrow(() -> new RoomNotFoundException(roomRequestDto.getRoomName()));
+        Room newRoom = getRoomFrom(roomRequestDto, roomToUpdate);
+        return ResponseRoomData.of(roomRepository.save(newRoom));
+    }
+
+    private Room getRoomFrom(RequestRoomCreate from, Room initialRoom) {
+        return initialRoom
+                .setRoomName(from.getRoomName())
+                .setRoomPrice(from.getRoomPrice())
+                .setRoomCapacity(from.getRoomMaxCapacity())
+                .setAmenities(from.getAmenitiesList() == null
                         ? Collections.emptyList()
-                        : roomRequestDto.getAmenitiesList()
+                        : from.getAmenitiesList()
                 );
-        return ResponseRoomData.of(roomRepository.save(roomToUpdate));
     }
 
 }

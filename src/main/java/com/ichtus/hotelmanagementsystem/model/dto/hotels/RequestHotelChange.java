@@ -2,9 +2,12 @@ package com.ichtus.hotelmanagementsystem.model.dto.hotels;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Value;
+import lombok.experimental.Accessors;
 
-@Value
+@Data
+@Accessors(chain = true)
 public class RequestHotelChange {
 
     @NotBlank

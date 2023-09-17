@@ -1,26 +1,20 @@
 package com.ichtus.hotelmanagementsystem.units.services;
 
-import com.ichtus.hotelmanagementsystem.exceptions.RoomNotFoundException;
-import com.ichtus.hotelmanagementsystem.model.dictionaries.BookingStatus;
 import com.ichtus.hotelmanagementsystem.model.dto.room.RequestRoomCreate;
 import com.ichtus.hotelmanagementsystem.model.dto.room.ResponseRoomData;
 import com.ichtus.hotelmanagementsystem.model.entities.Account;
-import com.ichtus.hotelmanagementsystem.model.entities.Booking;
 import com.ichtus.hotelmanagementsystem.model.entities.Hotel;
 import com.ichtus.hotelmanagementsystem.model.entities.Room;
 import com.ichtus.hotelmanagementsystem.repository.RoomRepository;
 import com.ichtus.hotelmanagementsystem.services.HotelService;
 import com.ichtus.hotelmanagementsystem.services.RoomService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.*;
@@ -55,6 +49,13 @@ public class RoomServiceTest {
             .setRoomName("test room")
             .setRoomPrice(BigDecimal.valueOf(100))
             .setHotel(hotel);
+    RequestRoomCreate roomCreate = new RequestRoomCreate(
+            hotel.getId(),
+            room.getRoomName(),
+            room.getRoomPrice(),
+            room.getRoomCapacity(),
+            Collections.emptyList()
+    );
 
     @Test
     void whenFindById() {
@@ -67,18 +68,22 @@ public class RoomServiceTest {
         given(hotelService.findHotelById(1L)).willReturn(hotel);
         given(roomRepository.save(any())).willReturn(room);
 
-        RequestRoomCreate roomCreate = new RequestRoomCreate(
-                hotel.getId(),
-                room.getRoomName(),
-                room.getRoomPrice(),
-                room.getRoomCapacity(),
-                Collections.emptyList()
-        );
-
         ResponseRoomData resultRoom = roomService.addRoom(roomCreate);
+
         assertThat(resultRoom.getRoomName()).isEqualTo(roomCreate.getRoomName());
         assertThat(resultRoom.getRoomPrice()).isEqualTo(roomCreate.getRoomPrice());
         assertThat(resultRoom.getRoomCapacity()).isEqualTo(roomCreate.getRoomMaxCapacity());
     }
 
+    @Test
+    void whenUpdateRoom() {
+        given(roomRepository.findById(1L)).willReturn(Optional.of(room));
+        given(roomRepository.save(any())).willReturn(room);
+
+        ResponseRoomData resultRoom = roomService.updateRoom(1L, roomCreate);
+
+        assertThat(resultRoom.getRoomName()).isEqualTo(roomCreate.getRoomName());
+        assertThat(resultRoom.getRoomPrice()).isEqualTo(roomCreate.getRoomPrice());
+        assertThat(resultRoom.getRoomCapacity()).isEqualTo(roomCreate.getRoomMaxCapacity());
+    }
 }
