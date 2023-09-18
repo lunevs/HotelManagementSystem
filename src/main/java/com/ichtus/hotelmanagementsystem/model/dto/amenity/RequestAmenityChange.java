@@ -16,12 +16,12 @@ public class RequestAmenityChange {
     @NotBlank
     @Size(min = 3)
     String amenityName;
+
     String amenityDescription;
 
     @Positive
     float amenityPrice;
 
-    @NotBlank
     AmenityType amenityType;
 
 }

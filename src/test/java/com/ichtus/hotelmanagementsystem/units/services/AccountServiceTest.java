@@ -1,5 +1,6 @@
 package com.ichtus.hotelmanagementsystem.units.services;
 
+import com.ichtus.hotelmanagementsystem.exceptions.AccountAlreadyExists;
 import com.ichtus.hotelmanagementsystem.model.entities.Role;
 import com.ichtus.hotelmanagementsystem.repository.AccountRepository;
 import com.ichtus.hotelmanagementsystem.exceptions.AccountNotFoundException;
@@ -15,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,10 +72,22 @@ public class AccountServiceTest {
                 .setAccountEmail(account.getAccountEmail());
         ResponseAccountData savedAccount = accountService.createNewAccount(request);
 
-        then(savedAccount).should().getAccountName().equals(account.getAccountName());
-
+        assertThat(savedAccount.getAccountName()).isEqualTo(account.getAccountName());
         assertThat(savedAccount).isNotNull();
         assertThat(savedAccount.getAccountName()).isEqualTo(account.getAccountName());
+    }
+
+    @Test
+    void whenCreateNewAccount_AlreadyExist_thenException() {
+
+        given(accountRepository.findByAccountName(any())).willReturn(Optional.of(account));
+
+        RequestAccountChange request = new RequestAccountChange()
+                .setAccountName(account.getAccountName())
+                .setAccountPassword(account.getAccountPassword())
+                .setAccountEmail(account.getAccountEmail());
+
+        assertThrows(AccountAlreadyExists.class, () -> accountService.createNewAccount(request));
     }
 
     @Test

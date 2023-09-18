@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import HotelService from "../../services/HotelService";
 import ErrorsHandler from "../utils/Utils";
 import {useNavigate} from "react-router-dom";
-import HotelItem from "./HotelItem";
+import BoxDiv from "../utils/style/BoxDiv";
 
 const HotelsTable = ({token, changeStatusHandler}) => {
 
@@ -24,9 +24,28 @@ const HotelsTable = ({token, changeStatusHandler}) => {
     }, [token]);
 
     return (
-        <div className="row">
-            {hotels.map(el => <HotelItem hotelElement={el} key={el.id} />)}
-        </div>
+        <BoxDiv>
+            <table className="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Rooms number</th>
+                </tr>
+                </thead>
+                <tbody>
+                {hotels.map(el =>
+                    <tr key={el.id}>
+                        <td>{el.hotelName}</td>
+                        <td>{el.hotelCity}</td>
+                        <td>{el.hotelDescription}</td>
+                        <td>{el.roomsList.length}</td>
+                    </tr>)}
+                </tbody>
+            </table>
+
+        </BoxDiv>
     );
 }
 

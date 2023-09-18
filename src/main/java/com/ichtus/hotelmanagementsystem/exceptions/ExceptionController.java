@@ -44,6 +44,19 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<?> bookingNotFound(BookingNotFoundException ex) {
+        return badRequestTemplateResponse(
+                "Booking not found",
+                ex,
+                HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> badBookingDates(IncorrectDateForBookingException exception) {
+        return badRequestTemplateResponse("Incorrect period for booking", exception, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<?> noFreeDatesHandler(FreeDatesForRoomNotFountException exception) {
         return badRequestTemplateResponse("Room already booked for this period", exception, HttpStatus.METHOD_NOT_ALLOWED);
     }

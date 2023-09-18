@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 public class RequestAccountRoleChange {
 
-    @NotBlank
     private AccountRole role;
 
     private String description;

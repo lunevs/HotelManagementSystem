@@ -3,6 +3,7 @@ package com.ichtus.hotelmanagementsystem.model.dto.search;
 import com.ichtus.hotelmanagementsystem.model.anotations.ValidRoomCapacity;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -23,10 +24,10 @@ public class RequestHotelsSearch {
     @ValidRoomCapacity
     private int neededCapacity;
 
-    @Positive
+    @PositiveOrZero
     private float minPrice;
 
-    @Positive
+    @PositiveOrZero
     private float maxPrice;
 
 }

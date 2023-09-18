@@ -2,6 +2,7 @@ package com.ichtus.hotelmanagementsystem.services;
 
 import com.ichtus.hotelmanagementsystem.exceptions.HotelNotFoundException;
 import com.ichtus.hotelmanagementsystem.model.entities.Account;
+import com.ichtus.hotelmanagementsystem.model.entities.Booking;
 import com.ichtus.hotelmanagementsystem.model.entities.Hotel;
 import com.ichtus.hotelmanagementsystem.model.dto.hotels.ResponseHotelData;
 import com.ichtus.hotelmanagementsystem.model.dto.room.ResponseRoomData;
@@ -9,12 +10,16 @@ import com.ichtus.hotelmanagementsystem.model.dto.hotels.RequestHotelChange;
 import com.ichtus.hotelmanagementsystem.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -24,11 +29,21 @@ public class HotelService {
 
     private final HotelRepository hotelRepository;
     private final AccountService accountService;
+//    private final BookingService bookingService;
 
     public List<ResponseHotelData> getHotelsList() {
-        return hotelRepository.findAllByDeleted(false).stream()
-                .map(ResponseHotelData::of)
-                .toList();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String accountName = auth.getName();
+        Stream<Hotel> hotelStream = hotelRepository.findAllByDeleted(false).stream();
+        Stream<? extends GrantedAuthority> authStream = auth.getAuthorities().stream();
+
+        if (authStream.anyMatch(el -> !el.getAuthority().contains("ADMIN"))) {
+            hotelStream = hotelStream
+                    .filter(
+                            el -> el.getHotelAdmin().getAccountName().equals(accountName)
+                    );
+        }
+        return hotelStream.map(ResponseHotelData::of).toList();
     }
 
     public Set<String> getHotelsCities() {
@@ -65,9 +80,13 @@ public class HotelService {
         return ResponseHotelData.of(hotelRepository.save(currentHotel));
     }
 
-    public void deleteHotel(Long id) {
+    public boolean deleteHotel(Long id) {
+//        List<Booking> bookings = bookingService.findAllByHotel(id);
+//        bookings.forEach(booking -> bookingService.cancelBooking(booking.getId()));
         Hotel hotel = findHotelById(id).setDeleted(true);
         hotelRepository.save(hotel);
+        System.out.println("DELETE " + id);
+        return hotelRepository.deleteHotelById(id);
     }
 
     public List<ResponseRoomData> getRoomsList(Long hotelId) {

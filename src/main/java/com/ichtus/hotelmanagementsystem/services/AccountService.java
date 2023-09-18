@@ -6,6 +6,7 @@ import com.ichtus.hotelmanagementsystem.model.dto.account.*;
 import com.ichtus.hotelmanagementsystem.model.entities.Account;
 import com.ichtus.hotelmanagementsystem.repository.AccountRepository;
 import jakarta.validation.Valid;
+import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -59,6 +60,7 @@ public class AccountService implements UserDetailsService  {
     }
 
     @Override
+    @Generated
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = findAccountByName(username);

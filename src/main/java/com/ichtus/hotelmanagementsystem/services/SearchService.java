@@ -36,9 +36,9 @@ public class SearchService {
 
     private List<Hotel> findAllHotelsByCity(String cityName) {
         if (cityName.length() > 0) {
-            return hotelRepository.findAllByHotelCity(cityName);
+            return hotelRepository.findAllByHotelCityAndDeleted(cityName, false);
         }
-        return hotelRepository.findAll();
+        return hotelRepository.findAllByDeleted(false);
     }
 
     private List<Booking> findAllBookingsForPeriod(Date start, Date end) {

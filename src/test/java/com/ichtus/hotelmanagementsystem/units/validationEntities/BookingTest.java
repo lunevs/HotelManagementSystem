@@ -44,7 +44,6 @@ public class BookingTest {
     Room room = new Room()
             .setRoomName("test room")
             .setRoomPrice(BigDecimal.valueOf(100))
-            .setRoomCapacity(5)
             .setHotel(hotel);
     Booking baseBooking = new Booking()
             .setStartDate(Date.from(Instant.now().plusMillis(MILLS_IN_5_DAYS)))

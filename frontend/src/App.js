@@ -20,6 +20,8 @@ import UserChangeRole from "./components/users/UserChangeRole";
 import AmenityAddForm from "./components/amenities/AmenityAddForm";
 import AmenityListAndUpdate from "./components/amenities/AmenityListAndUpdate";
 import BoxDiv from "./components/utils/style/BoxDiv";
+import RoomDelete from "./components/hotels/RoomDelete";
+import HotelDelete from "./components/hotels/HotelDelete";
 
 function App() {
 
@@ -66,9 +68,11 @@ function App() {
                               <Route path='/myhotels' element={<HotelsTable token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/addhotel' element={<HotelCreateForm token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/edithotel' element={<HotelEditForm token={token} changeStatusHandler={changeStatusHandler} />} />
+                              <Route path='/deletehotel' element={<HotelDelete token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/hoteldetails/:id' element={<HotelDetails token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/addroom' element={<HotelAddRoomForm token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/editroom' element={<HotelEditRoomForm token={token} changeStatusHandler={changeStatusHandler} />} />
+                              <Route path='/deleteroom' element={<RoomDelete token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/addaccount' element={<UserCreateForm token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/editaccount' element={<UserEditForm token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/editaccountrole' element={<UserChangeRole token={token} changeStatusHandler={changeStatusHandler} />} />

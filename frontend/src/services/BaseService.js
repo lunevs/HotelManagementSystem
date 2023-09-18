@@ -58,6 +58,23 @@ const postRequest = async (token, elementToCreate, url) => {
     return request.data;
 }
 
+const deleteRequest = async (token, url) => {
+    const request = await axios.delete(
+        `${baseUrl}/${url}`,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+    console.log({
+        method: 'DELETE',
+        body: null,
+        url: `${baseUrl}/${url}`,
+        headers: {...request.headers, 'Authorization': `Bearer ${token}`}
+    });
+    console.log(request);
+    return request.data;
+}
 
 const authRequest = async (authObject, url) => {
     const request = await axios.post
@@ -75,5 +92,5 @@ const authRequest = async (authObject, url) => {
     return request.data;
 }
 
-const BaseService = {getRequest, putRequest, postRequest, authRequest};
+const BaseService = {getRequest, putRequest, postRequest, authRequest, deleteRequest};
 export default BaseService;

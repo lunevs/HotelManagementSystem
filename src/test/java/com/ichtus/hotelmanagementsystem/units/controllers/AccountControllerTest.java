@@ -1,6 +1,7 @@
 package com.ichtus.hotelmanagementsystem.units.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ichtus.hotelmanagementsystem.model.entities.Account;
 import com.ichtus.hotelmanagementsystem.utils.anotations.WithMockAdmin;
 import com.ichtus.hotelmanagementsystem.model.dto.account.RequestAccountChange;
 import com.ichtus.hotelmanagementsystem.model.dto.account.ResponseAccountData;
@@ -13,11 +14,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -65,7 +69,6 @@ public class AccountControllerTest {
                 .andExpect(status().isForbidden());
     }
 
-
     @Test
     @WithMockAdmin
     void whenCreateNewAccount_UsernameIsInvalid_thenReturnsStatus400() throws Exception {
@@ -76,6 +79,53 @@ public class AccountControllerTest {
                 .andExpect(jsonPath("$.errors.accountName").exists())
                 .andExpect(jsonPath("$.errors.accountPassword").exists())
                 .andExpect(jsonPath("$.errors.accountEmail").exists());
+    }
+
+    @Test
+    @WithMockAdmin
+    void whenCreateNewAccount_thenOk() throws Exception {
+
+        given(accountService.createNewAccount(any())).willReturn(responseAccountData);
+
+        mockMvc.perform(post(basePath)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(correctRequestAccountChange)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accountName").value(responseAccountData.getAccountName()));
+    }
+
+    @Test
+    @WithMockAdmin
+    void whenGetUserInfo() throws Exception {
+        UserDetails userDetails = new User(
+                correctRequestAccountChange.getAccountName(),
+                correctRequestAccountChange.getAccountPassword(),
+                Collections.emptyList()
+        );
+
+        given(accountService.loadUserByUsername(any())).willReturn(userDetails);
+
+        mockMvc.perform(get(basePath + "/userinfo"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value(correctRequestAccountChange.getAccountName()));
+    }
+
+    @Test
+    @WithMockAdmin
+    void whenGetAccountDetails() throws Exception {
+
+        given(accountService.findAccountById(any())).willReturn(
+                new Account()
+                        .setAccountName(responseAccountData.getAccountName())
+                        .setAccountPassword(correctRequestAccountChange.getAccountPassword())
+                        .setAccountEmail(responseAccountData.getAccountEmail())
+                        .setId(responseAccountData.getId())
+                        .setRole(responseAccountData.getRole())
+        );
+
+        mockMvc.perform(get(basePath + "/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accountName").value(correctRequestAccountChange.getAccountName()));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.ichtus.hotelmanagementsystem.utils.anotations;
 
+import lombok.Generated;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +22,7 @@ final class WithMockAdminSecurityContextFactory implements WithSecurityContextFa
     private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
 
     @Override
+    @Generated
     public SecurityContext createSecurityContext(WithMockAdmin withMockAdmin) {
         String username = StringUtils.hasLength(withMockAdmin.username()) ? withMockAdmin.username() : withMockAdmin.value();
         Assert.notNull(username, () -> withMockAdmin + " cannot have null username on both username and value properties");

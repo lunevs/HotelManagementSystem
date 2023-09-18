@@ -5,19 +5,20 @@ import com.ichtus.hotelmanagementsystem.model.dictionaries.BookingStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.Date;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@ToString
 public class Booking {
 
     @Id
@@ -34,9 +35,10 @@ public class Booking {
     @NotNull
     @Future
     private Date endDate;
+
     private BookingStatus bookingStatus;
 
-    @ValidRoomCapacity
+    @PositiveOrZero
     private int numberOfGuests;
 
     @ManyToOne

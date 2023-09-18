@@ -46,8 +46,8 @@ public class SearchControllerTest {
         mockMvc.perform(post(basePath)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"searchCity\":\"Barcelona\"," +
-                                "\"startDate\":\"2023-09-18\"," +
-                                "\"endDate\":\"2023-09-23\"," +
+                                "\"startDate\":\"2026-09-18\"," +
+                                "\"endDate\":\"2026-09-23\"," +
                                 "\"neededCapacity\":\"1\"," +
                                 "\"minPrice\":\"1\"," +
                                 "\"maxPrice\":\"10\"}"))

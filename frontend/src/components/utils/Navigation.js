@@ -32,11 +32,13 @@ const Navigation = ({isAuth}) => {
                                     </li>
                                     <li><Link className="dropdown-item" to={"/addhotel"}>Add Hotel</Link></li>
                                     <li><Link className="dropdown-item" to={"/edithotel"}>Edit Hotel</Link></li>
+                                    <li><Link className="dropdown-item" to={"/deletehotel"}>Delete Hotel</Link></li>
                                     <li>
                                         <hr className="dropdown-divider" />
                                     </li>
                                     <li><Link className="dropdown-item" to={"/addroom"}>Add room</Link></li>
                                     <li><Link className="dropdown-item" to={"/editroom"}>Edit room</Link></li>
+                                    <li><Link className="dropdown-item" to={"/deleteroom"}>Delete room</Link></li>
                                 </ul>
                             </li>
                             <li className="nav-item dropdown">

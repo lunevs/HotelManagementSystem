@@ -6,7 +6,7 @@ target/
 
 ### LOG ###
 *.log
-*.log.tar.gz
+*.gz
 
 
 ### STS ###
@@ -42,4 +42,3 @@ build/
 /src/main/resources/application.properties
 /frontend/node_modules/
 /frontend/package-lock.json
-/file_hotels.log

@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React, {useEffect, useState} from "react";
 import HotelService from "../../services/HotelService";
-import HotelItem from "../hotels/HotelItem";
 import {useNavigate} from "react-router-dom";
 import ErrorsHandler from "../utils/Utils";
 import BoxDiv from "../utils/style/BoxDiv";
@@ -76,7 +75,12 @@ const MainSearch = ({token, changeStatusHandler}) => {
 
                         <div className="input-group mb-3">
                             <label className="input-group-text" htmlFor="inputGroupSelect04">Room capacity</label>
-                            <input type="number" step="1" min="1" max="6" className="form-control me-2" id="inputGroupSelect04" name="filterCapacity" />
+                            <input type="number" step="1" min="1" max="6"
+                                   className="form-control me-2"
+                                   id="inputGroupSelect04"
+                                   name="filterCapacity"
+                                   defaultValue="1"
+                            />
 
                             <label className="input-group-text" htmlFor="inputGroupSelect05">Min Room price</label>
                             <input type="number" className="form-control" id="inputGroupSelect05" name="filterFromPrice" />

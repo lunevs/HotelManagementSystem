@@ -7,14 +7,15 @@ import com.ichtus.hotelmanagementsystem.model.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.List;
 
 @Accessors(chain = true)
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class ResponseAccountData {
 
     private long id;

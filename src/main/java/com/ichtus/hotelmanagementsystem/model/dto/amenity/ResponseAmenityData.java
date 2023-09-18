@@ -3,6 +3,7 @@ package com.ichtus.hotelmanagementsystem.model.dto.amenity;
 import com.ichtus.hotelmanagementsystem.model.dictionaries.AmenityType;
 import com.ichtus.hotelmanagementsystem.model.entities.Amenity;
 import lombok.Data;
+import lombok.Generated;
 import lombok.experimental.Accessors;
 
 @Data
@@ -14,6 +15,7 @@ public class ResponseAmenityData {
     float amenityPrice;
     AmenityType amenityType;
 
+    @Generated
     public static ResponseAmenityData of(Amenity amenity) {
         return new ResponseAmenityData()
                 .setId(amenity.getId())

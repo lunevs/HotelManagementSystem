@@ -1,6 +1,8 @@
 package com.ichtus.hotelmanagementsystem.services;
 
+import com.ichtus.hotelmanagementsystem.exceptions.BookingNotFoundException;
 import com.ichtus.hotelmanagementsystem.exceptions.FreeDatesForRoomNotFountException;
+import com.ichtus.hotelmanagementsystem.exceptions.IncorrectDateForBookingException;
 import com.ichtus.hotelmanagementsystem.model.dictionaries.BookingStatus;
 import com.ichtus.hotelmanagementsystem.model.dto.booking.RequestNewBooking;
 import com.ichtus.hotelmanagementsystem.model.dto.booking.ResponseBooking;
@@ -16,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
@@ -32,7 +35,7 @@ public class BookingService {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String accountName = auth.getName();
-        Stream<Booking> bookingStream = bookingRepository.findAll().stream();
+        Stream<Booking> bookingStream = bookingRepository.findAllByDeleted(false).stream();
         Stream<? extends GrantedAuthority> authStream = auth.getAuthorities().stream();
 
         if (authStream.anyMatch(el -> !el.getAuthority().contains("ADMIN"))) {
@@ -47,6 +50,9 @@ public class BookingService {
     public ResponseBooking doBooking(RequestNewBooking requestDto, String accountName) {
         if (!roomIsAvailable(requestDto)) {
             throw new FreeDatesForRoomNotFountException();
+        }
+        if (requestDto.getStartDate().after(requestDto.getEndDate())) {
+            throw new IncorrectDateForBookingException();
         }
         Room room = roomService.findById(requestDto.getRoomId());
         Account account = accountService.findAccountByName(accountName);
@@ -69,6 +75,21 @@ public class BookingService {
                 booking.getEndDate());
 
         return !(existingBookings.size() > 0);
+    }
+
+    public void cancelBooking(Long bookingId) {
+        Optional<Booking> bookingToDelete = bookingRepository.findById(bookingId);
+        if (bookingToDelete.isPresent()) {
+            bookingRepository.save(
+                    bookingToDelete.get().setDeleted(true)
+            );
+        } else {
+            throw new BookingNotFoundException(bookingId);
+        }
+    }
+
+    public List<Booking> findAllByHotel(Long id) {
+        return bookingRepository.findAllByHotelId(id);
     }
 
 }

@@ -3,10 +3,12 @@ package com.ichtus.hotelmanagementsystem.configuration;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
+import lombok.Generated;
 import org.springframework.util.StreamUtils;
 
 import java.io.*;
 
+@Generated
 public class CachedHttpServletRequest extends HttpServletRequestWrapper {
 
     private final byte[] cachedPayload;

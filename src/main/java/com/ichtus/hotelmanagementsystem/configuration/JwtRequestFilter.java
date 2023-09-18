@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
+import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,12 +31,23 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final HandlerExceptionResolver exceptionResolver;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) {
-        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String username = null;
-        String jwtToken;
+    @Generated
+    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) {
 
         try {
+            if (request.getServletPath().contains("/api/v1/auth")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+            if (request.getServletPath().contains("/api-docs") || request.getServletPath().contains("/swagger-ui")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            String username = null;
+            String jwtToken;
+
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 jwtToken = authHeader.substring(7);
                 username = jwtTokenService.validateTokenAndGetUsername(jwtToken);

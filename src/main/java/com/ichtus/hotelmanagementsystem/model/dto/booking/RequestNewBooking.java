@@ -12,13 +12,12 @@ import java.util.Date;
 @Accessors(chain = true)
 public class RequestNewBooking {
 
-    @Positive
+    @PositiveOrZero
     private long roomId;
 
-    @Positive
+    @PositiveOrZero
     private long hotelId;
 
-    @Positive
     @ValidRoomCapacity
     private int numberOfGuests;
 
