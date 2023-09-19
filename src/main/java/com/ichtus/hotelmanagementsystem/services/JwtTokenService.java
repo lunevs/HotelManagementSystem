@@ -1,5 +1,6 @@
 package com.ichtus.hotelmanagementsystem.services;
 
+import com.ichtus.hotelmanagementsystem.exceptions.DefaultBadRequestException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -50,16 +51,10 @@ public class JwtTokenService {
                     .parseClaimsJws(token)
                     .getBody()
                     .getSubject();
-        } catch (SignatureException ex) {
-            throw new SignatureException(token);
-        } catch (MalformedJwtException ex) {
-            throw new MalformedJwtException(token);
+        } catch (SignatureException | UnsupportedJwtException | IllegalArgumentException | MalformedJwtException ex) {
+            throw new DefaultBadRequestException("Invalid token: " + token);
         } catch (ExpiredJwtException ex) {
             throw new ExpiredJwtException(ex.getHeader(), ex.getClaims(), token);
-        } catch (UnsupportedJwtException ex) {
-            throw new UnsupportedJwtException(token);
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException(token);
         }
     }
 }

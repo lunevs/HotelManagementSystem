@@ -12,6 +12,4 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
     List<Hotel> findAllByDeleted(boolean deleted);
 
     List<Hotel> findAllByHotelCityAndDeleted(String hotelCity, boolean deleted);
-
-    boolean deleteHotelById(Long id);
 }

@@ -1,11 +1,12 @@
 package com.ichtus.hotelmanagementsystem.units.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ichtus.hotelmanagementsystem.exceptions.HotelNotFoundException;
+import com.ichtus.hotelmanagementsystem.model.entities.Hotel;
 import com.ichtus.hotelmanagementsystem.utils.anotations.WithMockAdmin;
 import com.ichtus.hotelmanagementsystem.model.dto.hotels.RequestHotelChange;
 import com.ichtus.hotelmanagementsystem.model.dto.hotels.ResponseHotelData;
 import com.ichtus.hotelmanagementsystem.services.HotelService;
+import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,7 @@ public class HotelControllerTest {
     @WithMockUser
     void whenGetHotelInfo_IncorrectInput() throws Exception {
         given(hotelService.getHotelInfo(ArgumentMatchers.any(Long.class)))
-                .willThrow(new HotelNotFoundException(1L));
+                .willThrow(new ObjectNotFoundException(1L, Hotel.class.getName()));
         mockMvc.perform(get(basePath + "/1"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("Hotel not found"));
@@ -111,7 +112,7 @@ public class HotelControllerTest {
     @WithMockAdmin
     void whenUpdateHotelInfo_IncorrectId() throws Exception {
         given(hotelService.updateHotelInfo(ArgumentMatchers.any(), ArgumentMatchers.any()))
-                .willThrow(new HotelNotFoundException(1L));
+                .willThrow(new ObjectNotFoundException(1L, Hotel.class.getName()));
         mockMvc.perform(put(basePath + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"hotelName\":\"Отель в горах\",\"hotelDescription\":\"описание нашего классного отеля в горах\",\"hotelCity\":\"Milan\"}"))
@@ -141,7 +142,8 @@ public class HotelControllerTest {
     @Test
     @WithMockAdmin
     void whenDeleteHotel_IncorrectId() throws Exception {
-        willThrow(new HotelNotFoundException(155L)).given(hotelService).deleteHotel(ArgumentMatchers.any());
+        willThrow(new ObjectNotFoundException(155L, Hotel.class.getName()))
+                .given(hotelService).deleteHotel(ArgumentMatchers.any());
         mockMvc.perform(delete(basePath + "/155"))
                 .andExpect(status().isNotFound());
     }
@@ -159,7 +161,7 @@ public class HotelControllerTest {
     @Test
     @WithMockUser
     void whenGetHotelRoomsList_IncorrectId() throws Exception {
-        willThrow(new HotelNotFoundException(155L))
+        willThrow(new ObjectNotFoundException(155L, Hotel.class.getName()))
                 .given(hotelService).getRoomsList(ArgumentMatchers.any());
         mockMvc.perform(get(basePath + "/155/rooms"))
                 .andExpect(status().isNotFound());

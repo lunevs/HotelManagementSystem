@@ -28,4 +28,14 @@ public class RoomController {
         return new ResponseEntity<>(roomService.updateRoom(roomId, roomRequestDto), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    @IsModerator
+    public ResponseEntity<?> deleteRoom(@PathVariable Long id) {
+        if (roomService.deleteRoom(id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

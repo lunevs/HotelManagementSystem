@@ -1,10 +1,11 @@
 package com.ichtus.hotelmanagementsystem.units.controllers;
 
-import com.ichtus.hotelmanagementsystem.exceptions.HotelNotFoundException;
+import com.ichtus.hotelmanagementsystem.model.entities.Room;
 import com.ichtus.hotelmanagementsystem.utils.anotations.WithMockAdmin;
 import com.ichtus.hotelmanagementsystem.model.dto.room.RequestRoomCreate;
 import com.ichtus.hotelmanagementsystem.model.dto.room.ResponseRoomData;
 import com.ichtus.hotelmanagementsystem.services.RoomService;
+import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -110,7 +111,7 @@ public class RoomControllerTest {
     @Test
     @WithMockAdmin
     void whenUpdateRoom_asAdmin_IncorrectId() throws Exception {
-        willThrow(new HotelNotFoundException(155L)).given(roomService).updateRoom(any(), any());
+        willThrow(new ObjectNotFoundException(155L, Room.class.getName())).given(roomService).updateRoom(any(), any());
         mockMvc.perform(put(basePath + "/155")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(correctInput))

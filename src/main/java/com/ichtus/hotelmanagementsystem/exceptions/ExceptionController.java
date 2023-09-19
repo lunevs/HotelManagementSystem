@@ -6,17 +6,19 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.persistence.EntityExistsException;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.ObjectDeletedException;
 import org.springframework.context.MessageSource;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,6 +29,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -36,91 +39,55 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     private final MessageSource messageSource;
 
     @ExceptionHandler
-    public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex) {
-        return badRequestTemplateResponse(
-                "Authentication failed at controller advice",
-                ex,
-                HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<?> deletedObject(ObjectDeletedException exception) {
+        return templateResponseException(exception, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> bookingNotFound(BookingNotFoundException ex) {
-        return badRequestTemplateResponse(
-                "Booking not found",
-                ex,
-                HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> notFoundObject(org.hibernate.ObjectNotFoundException exception) {
+        return templateResponseException(exception, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> badAuth(BadCredentialsException exception) {
+        return templateResponseException(exception, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> alreadyExists(EntityExistsException exception) {
+        return templateResponseException(
+                "Object " + exception.getMessage() + " with such name already exists",
+                exception,
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> badBookingDates(IncorrectDateForBookingException exception) {
-        return badRequestTemplateResponse("Incorrect period for booking", exception, HttpStatus.BAD_REQUEST);
+        return templateResponseException("Incorrect period for booking", exception, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> noFreeDatesHandler(FreeDatesForRoomNotFountException exception) {
-        return badRequestTemplateResponse("Room already booked for this period", exception, HttpStatus.METHOD_NOT_ALLOWED);
+        return templateResponseException("Room already booked for this period", exception, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> signatureExceptionHandler(SignatureException exception) {
-        return badRequestTemplateResponse("Invalid token", exception, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> invalidToken(DefaultBadRequestException exception) {
+        return templateResponseException(exception, HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler
-    public ResponseEntity<?> malformedJwtExceptionHandler(MalformedJwtException exception) {
-        return badRequestTemplateResponse("Invalid token", exception, HttpStatus.BAD_REQUEST);
-    }
+
     @ExceptionHandler
     public ResponseEntity<?> expiredJwtExceptionHandler(ExpiredJwtException exception) {
-        return badRequestTemplateResponse("Token expired", exception, HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler
-    public ResponseEntity<?> unsupportedJwtExceptionHandler(UnsupportedJwtException exception) {
-        return badRequestTemplateResponse("Invalid token", exception, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> illegalArgumentExceptionHandler(IllegalArgumentException exception) {
-        return badRequestTemplateResponse("Invalid token", exception, HttpStatus.BAD_REQUEST);
+        return templateResponseException(exception, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> accessDenied(AccessDeniedException exception) {
-        return badRequestTemplateResponse("Access Denied", exception, HttpStatus.FORBIDDEN);
+        return templateResponseException(exception, HttpStatus.FORBIDDEN);
     }
-
-    @ExceptionHandler
-    public ResponseEntity<?> hotelNotFound(HotelNotFoundException exception) {
-        return badRequestTemplateResponse("Hotel not found", exception, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> roleNotFound(RoleNotFoundException exception) {
-        return badRequestTemplateResponse("Role not found", exception, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> accountNotFound(AccountNotFoundException exception) {
-        return badRequestTemplateResponse("User not found", exception, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> notUniqField(DataIntegrityViolationException exception) {
-        return badRequestTemplateResponse("Duplicate name found", exception, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> badAuth(BadAuthException exception) {
-        return badRequestTemplateResponse("Incorrect login or password", exception, HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> userAlreadyExists(AccountAlreadyExists exception) {
-        return badRequestTemplateResponse("User with such name already exists", exception, HttpStatus.BAD_REQUEST);
-    }
-
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, @NotNull HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail()
                                         .setTitle("Message Not Readable")
                                         .setStatus(status.value())
@@ -131,7 +98,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, @NotNull HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail()
                                         .setTitle("Validation failed")
                                         .setStatus(status.value())
@@ -144,7 +111,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
             List<ValidationError> validationErrorList = errorDetail.getErrors().computeIfAbsent(fe.getField(), k -> new ArrayList<>());
             ValidationError validationError = new ValidationError()
                     .setCode(fe.getCode())
-                    .setMessage(messageSource.getMessage(fe, null));
+                    .setMessage(messageSource.getMessage(fe, Locale.getDefault()));
             validationErrorList.add(validationError);
         }
 
@@ -152,7 +119,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     }
 
 
-    private ResponseEntity<?> badRequestTemplateResponse(String message, Exception exception, HttpStatus status) {
+    private ResponseEntity<?> templateResponseException(String message, Exception exception, HttpStatus status) {
         return ResponseEntity.status(status.value())
                 .body(
                         new ErrorDetail()
@@ -164,5 +131,8 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
                 );
     }
 
+    private ResponseEntity<?> templateResponseException(Exception exception, HttpStatus status) {
+        return templateResponseException(exception.getMessage(), exception, status);
+    }
 
 }

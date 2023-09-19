@@ -29,9 +29,9 @@ public class SearchService {
     // and with room price between min and max
     private List<Room> findAllRoomsByCapacityAndPrice(int roomCapacity, BigDecimal minPrice, BigDecimal maxPrice) {
         if (maxPrice == null) {
-            return roomRepository.findAllByRoomCapacityGreaterThanEqualAndRoomPriceGreaterThanEqual(roomCapacity, minPrice);
+            return roomRepository.findAllByRoomCapacityGreaterThanEqualAndRoomPriceGreaterThanEqualAndDeleted(roomCapacity, minPrice, false);
         }
-        return roomRepository.findAllByRoomCapacityGreaterThanEqualAndRoomPriceBetween(roomCapacity, minPrice, maxPrice);
+        return roomRepository.findAllByRoomCapacityGreaterThanEqualAndRoomPriceBetweenAndDeleted(roomCapacity, minPrice, maxPrice, false);
     }
 
     private List<Hotel> findAllHotelsByCity(String cityName) {

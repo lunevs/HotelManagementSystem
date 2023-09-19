@@ -1,6 +1,5 @@
 package com.ichtus.hotelmanagementsystem.services;
 
-import com.ichtus.hotelmanagementsystem.exceptions.BookingNotFoundException;
 import com.ichtus.hotelmanagementsystem.exceptions.FreeDatesForRoomNotFountException;
 import com.ichtus.hotelmanagementsystem.exceptions.IncorrectDateForBookingException;
 import com.ichtus.hotelmanagementsystem.model.dictionaries.BookingStatus;
@@ -12,6 +11,7 @@ import com.ichtus.hotelmanagementsystem.model.entities.Room;
 import com.ichtus.hotelmanagementsystem.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,7 +44,9 @@ public class BookingService {
                             el -> el.getAccount().getAccountName().equals(accountName)
                     );
         }
-        return bookingStream.map(ResponseBooking::of).toList();
+        return bookingStream
+                .filter(booking -> !booking.getRoom().isDeleted())
+                .map(ResponseBooking::of).toList();
     }
 
     public ResponseBooking doBooking(RequestNewBooking requestDto, String accountName) {
@@ -84,12 +86,8 @@ public class BookingService {
                     bookingToDelete.get().setDeleted(true)
             );
         } else {
-            throw new BookingNotFoundException(bookingId);
+            throw new ObjectNotFoundException(bookingId, Booking.class.getName());
         }
-    }
-
-    public List<Booking> findAllByHotel(Long id) {
-        return bookingRepository.findAllByHotelId(id);
     }
 
 }

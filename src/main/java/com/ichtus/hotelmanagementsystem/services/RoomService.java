@@ -1,6 +1,5 @@
 package com.ichtus.hotelmanagementsystem.services;
 
-import com.ichtus.hotelmanagementsystem.exceptions.RoomNotFoundException;
 import com.ichtus.hotelmanagementsystem.model.dto.room.RequestRoomCreate;
 import com.ichtus.hotelmanagementsystem.model.dto.room.ResponseRoomData;
 import com.ichtus.hotelmanagementsystem.model.entities.Hotel;
@@ -8,6 +7,8 @@ import com.ichtus.hotelmanagementsystem.model.entities.Room;
 import com.ichtus.hotelmanagementsystem.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.ObjectDeletedException;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -21,7 +22,18 @@ public class RoomService {
     private final HotelService hotelService;
 
     public Room findById(Long id) {
-        return roomRepository.findById(id).orElseThrow(() -> new RoomNotFoundException(id.toString()));
+        Room findedRoom = roomRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new ObjectNotFoundException(id, Room.class.getName())
+                );
+        if (findedRoom.isDeleted()) {
+            throw new ObjectDeletedException(
+                    "Room deleted",
+                    id,
+                    Room.class.getName());
+        }
+        return findedRoom;
     }
 
     public ResponseRoomData addRoom(RequestRoomCreate roomRequestDto) {
@@ -31,8 +43,7 @@ public class RoomService {
     }
 
     public ResponseRoomData updateRoom(Long roomId, RequestRoomCreate roomRequestDto) {
-        Room roomToUpdate = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RoomNotFoundException(roomRequestDto.getRoomName()));
+        Room roomToUpdate = findById(roomId);
         Room newRoom = getRoomFrom(roomRequestDto, roomToUpdate);
         return ResponseRoomData.of(roomRepository.save(newRoom));
     }
@@ -46,6 +57,12 @@ public class RoomService {
                         ? Collections.emptyList()
                         : from.getAmenitiesList()
                 );
+    }
+
+    public boolean deleteRoom(Long roomId) {
+        Integer res = roomRepository.updateRoomByIdAndDeleted(roomId, true);
+        System.out.println(res);
+        return true;
     }
 
 }

@@ -1,6 +1,5 @@
 package com.ichtus.hotelmanagementsystem.services;
 
-import com.ichtus.hotelmanagementsystem.exceptions.BadAuthException;
 import com.ichtus.hotelmanagementsystem.model.dto.auth.RequestAuthorization;
 import com.ichtus.hotelmanagementsystem.model.dto.auth.ResponseAuthorization;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ public class   AuthService {
                     )
             );
         }  catch (BadCredentialsException exception) {
-            throw new BadAuthException();
+            throw new BadCredentialsException("Login/password incorrect");
         }
 
         UserDetails userDetails = accountService.loadUserByUsername(requestAuthorization.getAccountName());

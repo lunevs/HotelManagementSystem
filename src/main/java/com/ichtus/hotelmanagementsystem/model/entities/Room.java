@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Accessors(chain = true)
 @Table(name = "rooms")
+@ToString
 public class Room {
 
     @Id

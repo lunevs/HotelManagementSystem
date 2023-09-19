@@ -1,14 +1,14 @@
 package com.ichtus.hotelmanagementsystem.units.services;
 
-import com.ichtus.hotelmanagementsystem.exceptions.AccountAlreadyExists;
 import com.ichtus.hotelmanagementsystem.model.entities.Role;
 import com.ichtus.hotelmanagementsystem.repository.AccountRepository;
-import com.ichtus.hotelmanagementsystem.exceptions.AccountNotFoundException;
 import com.ichtus.hotelmanagementsystem.model.dto.account.RequestAccountChange;
 import com.ichtus.hotelmanagementsystem.model.dto.account.ResponseAccountData;
 import com.ichtus.hotelmanagementsystem.model.entities.Account;
 import com.ichtus.hotelmanagementsystem.services.AccountService;
 import com.ichtus.hotelmanagementsystem.services.RoleService;
+import jakarta.persistence.EntityExistsException;
+import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,14 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,7 +54,7 @@ public class AccountServiceTest {
 
     @Test
     void whenLoadUserByUsername_UsernameIsInvalid_thenThrowsException() {
-        assertThrows(AccountNotFoundException.class, () -> accountService.loadUserByUsername(null));
+        assertThrows(ObjectNotFoundException.class, () -> accountService.loadUserByUsername(null));
     }
 
     @Test
@@ -87,7 +85,7 @@ public class AccountServiceTest {
                 .setAccountPassword(account.getAccountPassword())
                 .setAccountEmail(account.getAccountEmail());
 
-        assertThrows(AccountAlreadyExists.class, () -> accountService.createNewAccount(request));
+        assertThrows(EntityExistsException.class, () -> accountService.createNewAccount(request));
     }
 
     @Test

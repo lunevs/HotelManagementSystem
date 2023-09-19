@@ -1,8 +1,6 @@
 package com.ichtus.hotelmanagementsystem.services;
 
-import com.ichtus.hotelmanagementsystem.exceptions.HotelNotFoundException;
 import com.ichtus.hotelmanagementsystem.model.entities.Account;
-import com.ichtus.hotelmanagementsystem.model.entities.Booking;
 import com.ichtus.hotelmanagementsystem.model.entities.Hotel;
 import com.ichtus.hotelmanagementsystem.model.dto.hotels.ResponseHotelData;
 import com.ichtus.hotelmanagementsystem.model.dto.room.ResponseRoomData;
@@ -10,6 +8,7 @@ import com.ichtus.hotelmanagementsystem.model.dto.hotels.RequestHotelChange;
 import com.ichtus.hotelmanagementsystem.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +28,6 @@ public class HotelService {
 
     private final HotelRepository hotelRepository;
     private final AccountService accountService;
-//    private final BookingService bookingService;
 
     public List<ResponseHotelData> getHotelsList() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -63,9 +61,9 @@ public class HotelService {
         return ResponseHotelData.of(hotelRepository.save(newHotel));
     }
 
-    public Hotel findHotelById(Long id) throws HotelNotFoundException {
+    public Hotel findHotelById(Long id) throws ObjectNotFoundException {
         return hotelRepository.findById(id)
-                .orElseThrow(() -> new HotelNotFoundException(id));
+                .orElseThrow(() -> new ObjectNotFoundException(id, Hotel.class.getName()));
     }
 
     public ResponseHotelData getHotelInfo(Long id) {
@@ -81,19 +79,16 @@ public class HotelService {
     }
 
     public boolean deleteHotel(Long id) {
-//        List<Booking> bookings = bookingService.findAllByHotel(id);
-//        bookings.forEach(booking -> bookingService.cancelBooking(booking.getId()));
         Hotel hotel = findHotelById(id).setDeleted(true);
-        hotelRepository.save(hotel);
-        System.out.println("DELETE " + id);
-        return hotelRepository.deleteHotelById(id);
+        return hotelRepository.save(hotel).isDeleted();
     }
 
     public List<ResponseRoomData> getRoomsList(Long hotelId) {
         Hotel currentHotel = findHotelById(hotelId);
         return currentHotel.getRoomsList().stream()
-                        .map(ResponseRoomData::of)
-                        .toList();
+                .filter(room -> !room.isDeleted())
+                .map(ResponseRoomData::of)
+                .toList();
     }
 
 }

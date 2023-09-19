@@ -1,10 +1,10 @@
 package com.ichtus.hotelmanagementsystem.services;
 
-import com.ichtus.hotelmanagementsystem.exceptions.AmenityNotFoundException;
 import com.ichtus.hotelmanagementsystem.model.dto.amenity.RequestAmenityChange;
 import com.ichtus.hotelmanagementsystem.model.entities.Amenity;
 import com.ichtus.hotelmanagementsystem.repository.AmenityRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class AmenityService {
 
     public Amenity updateAmenity(Long id, RequestAmenityChange amenityRequest) {
         Amenity amenity = amenityRepository.findById(id)
-                .orElseThrow(() -> new AmenityNotFoundException(id))
+                .orElseThrow(() -> new ObjectNotFoundException(id, Amenity.class.getName()))
                 .setAmenityName(amenityRequest.getAmenityName())
                 .setAmenityDescription(amenityRequest.getAmenityDescription())
                 .setAmenityPrice(amenityRequest.getAmenityPrice())

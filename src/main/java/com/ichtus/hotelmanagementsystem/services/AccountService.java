@@ -1,14 +1,14 @@
 package com.ichtus.hotelmanagementsystem.services;
 
-import com.ichtus.hotelmanagementsystem.exceptions.AccountAlreadyExists;
-import com.ichtus.hotelmanagementsystem.exceptions.AccountNotFoundException;
 import com.ichtus.hotelmanagementsystem.model.dto.account.*;
 import com.ichtus.hotelmanagementsystem.model.entities.Account;
 import com.ichtus.hotelmanagementsystem.repository.AccountRepository;
+import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
 import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -38,11 +37,19 @@ public class AccountService implements UserDetailsService  {
     }
 
     public Account findAccountByName(String name) {
-        return accountRepository.findByAccountName(name).orElseThrow(() -> new AccountNotFoundException(name));
+        return accountRepository
+                .findByAccountName(name)
+                .orElseThrow(
+                        () -> new org.hibernate.ObjectNotFoundException((Object) name, Account.class.getName())
+                );
     }
 
     public Account findAccountById(Long id) {
-        return accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
+        return accountRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new ObjectNotFoundException(id, Account.class.getName())
+                );
     }
 
     public ResponseAccountData accountUpdateInfo(Long id, RequestAccountChange updateRequest) {
@@ -79,7 +86,7 @@ public class AccountService implements UserDetailsService  {
 
     public ResponseAccountData createNewAccount(@Valid RequestAccountChange requestAccountChange) {
         if (accountRepository.findByAccountName(requestAccountChange.getAccountName()).isPresent()) {
-            throw new AccountAlreadyExists(requestAccountChange.getAccountName());
+            throw new EntityExistsException(requestAccountChange.getAccountName());
         }
         Account newAccount = new Account()
                 .setAccountName(requestAccountChange.getAccountName())

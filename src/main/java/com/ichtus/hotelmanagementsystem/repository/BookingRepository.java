@@ -28,7 +28,4 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("select b from Booking b where b.deleted = ?1 and b.room.hotel.deleted = false")
     List<Booking> findAllByDeleted(Boolean deleted);
 
-    @Query("select b from Booking b where b.room.hotel.id = ?1")
-    List<Booking> findAllByHotelId(Long id);
-
 }
