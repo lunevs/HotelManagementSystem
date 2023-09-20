@@ -38,4 +38,8 @@ public class AmenityService {
                 .setAmenityType(amenityRequest.getAmenityType());
         return amenityRepository.save(amenity);
     }
+
+    public void deleteAmenity(Long id) {
+        amenityRepository.deleteById(id);
+    }
 }

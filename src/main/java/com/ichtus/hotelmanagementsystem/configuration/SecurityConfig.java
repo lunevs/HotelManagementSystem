@@ -1,7 +1,6 @@
 package com.ichtus.hotelmanagementsystem.configuration;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +27,6 @@ import java.util.List;
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
-@Slf4j
 public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
@@ -66,7 +64,6 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(false);
         configuration.setMaxAge(1000000L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

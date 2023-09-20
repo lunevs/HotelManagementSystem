@@ -6,7 +6,6 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -24,7 +23,6 @@ import java.nio.charset.StandardCharsets;
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 @Component
 @WebFilter(filterName = "RequestCachingFilter", urlPatterns = "/*")
-@Slf4j
 public class RequestCachingFilter extends OncePerRequestFilter {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(RequestCachingFilter.class);

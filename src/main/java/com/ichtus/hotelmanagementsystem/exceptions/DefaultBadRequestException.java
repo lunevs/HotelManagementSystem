@@ -1,12 +1,10 @@
 package com.ichtus.hotelmanagementsystem.exceptions;
 
-import java.io.Serial;
-
-@SuppressWarnings("serial")
+/**
+ * Custom exception class for handle bad requests exceptions
+ * @author smlunev
+ */
 public class DefaultBadRequestException extends RuntimeException {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     public DefaultBadRequestException(String message) {
         super(message);

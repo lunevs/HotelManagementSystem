@@ -11,9 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
-import java.security.Principal;
-
+/**
+ * Controller allows to manage accounts
+ *
+ * @author smlunev
+ */
 @RestController
 @RequestMapping("/accounts")
 @RequiredArgsConstructor
@@ -21,43 +25,67 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @GetMapping("/userinfo")
-    @IsAdministrator
-    public ResponseEntity<?> userInfo(Principal principal) {
-        return ResponseEntity.ok(accountService.loadUserByUsername(principal.getName()));
-    }
-
-
+    /**
+     * Endpoint to create new account
+     * @param requestAccountChange request with new account parameters
+     * @return ResponseAccountData
+     */
     @PostMapping
     @IsAdministrator
-    public ResponseEntity<?> createNewUserAccount(@Valid @RequestBody RequestAccountChange requestAccountChange) {
+    public ResponseEntity<ResponseAccountData> createNewUserAccount(@Valid @RequestBody RequestAccountChange requestAccountChange) {
         return ResponseEntity.ok(accountService.createNewAccount(requestAccountChange));
     }
 
+    /**
+     * Endpoint to get all non deleted accounts list
+     * @return list of ResponseAccountData
+     */
     @GetMapping
     @IsAdministrator
-    public ResponseEntity<?> getAllAccounts() {
+    public ResponseEntity<List<ResponseAccountData>> getAllAccounts() {
         return ResponseEntity.ok(accountService.findAll());
     }
 
+    /**
+     * Endpoint to get one Account details
+     * @param id account id
+     * @return ResponseAccountData
+     */
     @GetMapping("/{id}")
     @IsAdministrator
-    public ResponseEntity<?> getAccountDetails(@PathVariable Long id) {
+    public ResponseEntity<ResponseAccountData> getAccountDetails(@PathVariable Long id) {
         return ResponseEntity.ok(ResponseAccountData.of(accountService.findAccountById(id)));
     }
 
+    /**
+     * Endpoint to update common Account information
+     * @param id updated account id
+     * @param accountUpdateRequest new account parameters
+     * @return ResponseAccountData
+     */
     @PutMapping("/{id}/info")
     @IsAdministrator
-    public ResponseEntity<?> updateAccountInfo(@PathVariable Long id, @Valid @RequestBody RequestAccountChange accountUpdateRequest) {
+    public ResponseEntity<ResponseAccountData> updateAccountInfo(@PathVariable Long id, @Valid @RequestBody RequestAccountChange accountUpdateRequest) {
         return ResponseEntity.ok(accountService.accountUpdateInfo(id, accountUpdateRequest));
     }
 
+    /**
+     * Endpoint to change Account Role
+     * @param id updated Account id
+     * @param roleChange dto of new Account role
+     * @return ResponseAccountData
+     */
     @PutMapping("/{id}/role")
     @IsAdministrator
-    public ResponseEntity<?> updateAccountRole(@PathVariable Long id, @Valid @RequestBody RequestAccountRoleChange roleChange) {
+    public ResponseEntity<ResponseAccountData> updateAccountRole(@PathVariable Long id, @Valid @RequestBody RequestAccountRoleChange roleChange) {
         return ResponseEntity.ok(accountService.accountUpdateRole(id, roleChange.getRole().name()));
     }
 
+    /**
+     * Endpoint to delete Account.
+     * @param id deleted Account id
+     * @return empty response with status 200
+     */
     @DeleteMapping("/{id}")
     @IsAdministrator
     public ResponseEntity<?> deleteAccount(@PathVariable Long id) {

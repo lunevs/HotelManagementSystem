@@ -3,7 +3,6 @@ package com.ichtus.hotelmanagementsystem.configuration;
 import io.swagger.v3.oas.models.*;
 import io.swagger.v3.oas.models.info.*;
 import io.swagger.v3.oas.models.security.*;
-import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,22 +12,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class OpenApiConfig {
-
-    @Bean
-    public GroupedOpenApi publicApi() {
-        return GroupedOpenApi.builder()
-                .group("Public")
-                .pathsToMatch("/public/**")
-                .build();
-    }
-
-    @Bean
-    public GroupedOpenApi privateApi() {
-        return GroupedOpenApi.builder()
-                .group("Private")
-                .pathsToMatch("/private/**")
-                .build();
-    }
 
     @Bean
     public OpenAPI customOpenAPI() {
