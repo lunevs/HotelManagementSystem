@@ -20,6 +20,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * Spring Security configuration file
+ *
+ * @author smlunev
+ */
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -28,6 +33,12 @@ public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
 
+    /**
+     * Defines rules for security filter
+     * @param http - incoming http request
+     * @return chain builder of security filter
+     * @throws Exception if can't build http parameters
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -44,6 +55,11 @@ public class SecurityConfig {
                 .build();
     }
 
+    /**
+     * Creates Bean CorsConfigurationSource <br />
+     * Defines CORS rules for REST API requests. Allows all requests
+     * @return Bean with cors configuration
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -57,12 +73,21 @@ public class SecurityConfig {
         return source;
     }
 
+    /**
+     * Creates Bean for default password encoder. It uses BSCrypt
+     * @return password encoder Bean
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-
+    /**
+     * Creates Bean for Authentication Manager. It uses default parameters
+     * @param configuration spring authentication manager configuration
+     * @return authentication manager Bean
+     * @throws Exception if can't create configuration
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();

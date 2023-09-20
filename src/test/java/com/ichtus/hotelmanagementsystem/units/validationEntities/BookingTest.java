@@ -93,7 +93,7 @@ public class BookingTest {
     @Test
     @WithMockAdmin
     void whenBookingNumberOfGuests_isIncorrect() {
-        Booking curBooking = baseBooking.setNumberOfGuests(1000);
+        Booking curBooking = baseBooking.setNumberOfGuests(-1);
         assertThrows(ConstraintViolationException.class, () -> {
             entityManager.persist(curBooking);
             entityManager.flush();

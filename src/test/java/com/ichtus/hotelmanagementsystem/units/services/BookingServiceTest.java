@@ -72,7 +72,7 @@ public class BookingServiceTest {
     @Test
     @WithMockAdmin
     void whenGetMyBookings() {
-        given(bookingRepository.findAll()).willReturn(Collections.singletonList(baseBooking));
+        given(bookingRepository.findAllByDeleted(false)).willReturn(Collections.singletonList(baseBooking));
 
         List<ResponseBooking> responseBookings = bookingService.getMyBookings();
 

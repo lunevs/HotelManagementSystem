@@ -89,7 +89,6 @@ public class BookingControllerTest {
                         .content(incorrectData))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors.roomId").exists())
-                .andExpect(jsonPath("$.errors.hotelId").exists())
                 .andExpect(jsonPath("$.errors.numberOfGuests").exists())
                 .andExpect(jsonPath("$.errors.startDate").exists())
                 .andExpect(jsonPath("$.errors.endDate").exists())

@@ -8,7 +8,6 @@ import com.ichtus.hotelmanagementsystem.model.dto.account.RequestAccountRoleChan
 import com.ichtus.hotelmanagementsystem.services.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/accounts")
 @RequiredArgsConstructor
-@Slf4j
 public class AccountController {
 
     private final AccountService accountService;

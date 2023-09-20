@@ -10,9 +10,15 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Logging configuration file. Defines Logger and override methods for ServletInputStream
+ */
 @Generated
 public class CachedServletInputStream extends ServletInputStream {
 
+    /**
+     * Defines SLF4J Logger factory
+     */
     private final static Logger LOGGER = LoggerFactory.getLogger(CachedServletInputStream.class);
     private final InputStream cachedInputStream;
 

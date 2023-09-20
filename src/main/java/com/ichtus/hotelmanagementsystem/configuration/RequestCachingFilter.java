@@ -17,6 +17,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Logging filter configuration file. Write each request to LOGGER.
+ * Logger file defines in application.properties
+ */
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 @Component
 @WebFilter(filterName = "RequestCachingFilter", urlPatterns = "/*")

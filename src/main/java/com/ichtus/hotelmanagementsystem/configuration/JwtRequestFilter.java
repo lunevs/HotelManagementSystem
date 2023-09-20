@@ -19,6 +19,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+/**
+ * Configuration for Security filter
+ *
+ * @author smlunev
+ */
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
@@ -30,12 +35,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Qualifier("handlerExceptionResolver")
     private final HandlerExceptionResolver exceptionResolver;
 
+    /**
+     * Filter realization. Call authentication for User
+     */
     @Override
     @Generated
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) {
 
         try {
-            if (request.getServletPath().contains("/api/v1/auth")) {
+            if (request.getServletPath().contains("/login") || request.getServletPath().contains("/register")) {
                 filterChain.doFilter(request, response);
                 return;
             }

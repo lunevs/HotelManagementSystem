@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.BDDMockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -67,18 +68,19 @@ public class SearchServiceTest {
     @BeforeEach
     void setup() {
         hotel.setRoomsList(List.of(room));
-        given(roomRepository.findAllByRoomCapacityGreaterThanEqualAndRoomPriceBetween(anyInt(), any(), any()))
+
+        given(roomRepository.findAllByRoomCapacityGreaterThanEqualAndRoomPriceBetweenAndDeleted(anyInt(), any(), any(), anyBoolean()))
                 .willReturn(Collections.singletonList(room));
-        given(roomRepository.findAllByRoomCapacityGreaterThanEqualAndRoomPriceGreaterThanEqual(anyInt(), any()))
+        given(roomRepository.findAllByRoomCapacityGreaterThanEqualAndRoomPriceGreaterThanEqualAndDeleted(anyInt(), any(), anyBoolean()))
                 .willReturn(Collections.singletonList(room));
     }
 
     @Test
-    void findAllRoomsByCapacityAndPriceTest() {
+    void findAllHotelsByParametersTest() {
 
         given(bookingRepository.findAllByParameters(any(), any())).willReturn(Collections.emptyList());
-        given(hotelRepository.findAllByHotelCity(any())).willReturn(Collections.singletonList(hotel));
-        given(hotelRepository.findAll()).willReturn(Collections.singletonList(hotel));
+        given(hotelRepository.findAllByHotelCityAndDeleted(any(), anyBoolean())).willReturn(Collections.singletonList(hotel));
+        given(hotelRepository.findAllByDeleted(false)).willReturn(Collections.singletonList(hotel));
 
         RequestHotelsSearch hotelsSearch = new RequestHotelsSearch()
                 .setStartDate(Date.from(Instant.now().plusMillis(MILLS_IN_5_DAYS)))
@@ -90,11 +92,11 @@ public class SearchServiceTest {
     }
 
     @Test
-    void findAllRoomsByCapacityAndPriceTest_NoFreeRooms() {
+    void findAllHotelsByParametersTest_NoFreeRooms() {
 
         given(bookingRepository.findAllByParameters(any(), any())).willReturn(Collections.singletonList(booking));
-        given(hotelRepository.findAllByHotelCity(any())).willReturn(Collections.singletonList(hotel));
-        given(hotelRepository.findAll()).willReturn(Collections.singletonList(hotel));
+        given(hotelRepository.findAllByHotelCityAndDeleted(any(), anyBoolean())).willReturn(Collections.singletonList(hotel));
+        given(hotelRepository.findAllByDeleted(false)).willReturn(Collections.singletonList(hotel));
 
         RequestHotelsSearch hotelsSearch = new RequestHotelsSearch()
                 .setStartDate(Date.from(Instant.now().plusMillis(MILLS_IN_5_DAYS)))
@@ -106,11 +108,11 @@ public class SearchServiceTest {
     }
 
     @Test
-    void findAllRoomsByCapacityAndPriceTest_NoCity() {
+    void findAllHotelsByParametersTest_NoCity() {
 
         given(bookingRepository.findAllByParameters(any(), any())).willReturn(Collections.emptyList());
-        given(hotelRepository.findAllByHotelCity(any())).willReturn(Collections.emptyList());
-        given(hotelRepository.findAll()).willReturn(Collections.emptyList());
+        given(hotelRepository.findAllByHotelCityAndDeleted(any(), anyBoolean())).willReturn(Collections.emptyList());
+        given(hotelRepository.findAllByDeleted(false)).willReturn(Collections.emptyList());
 
         RequestHotelsSearch hotelsSearch = new RequestHotelsSearch()
                 .setStartDate(Date.from(Instant.now().plusMillis(MILLS_IN_5_DAYS)))

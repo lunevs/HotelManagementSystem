@@ -7,6 +7,10 @@ import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Swagger configuration file.
+ * Defines security parameters for swagger
+ */
 @Configuration
 public class OpenApiConfig {
 

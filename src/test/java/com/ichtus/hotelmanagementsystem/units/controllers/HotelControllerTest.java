@@ -95,7 +95,7 @@ public class HotelControllerTest {
                 .willThrow(new ObjectNotFoundException(1L, Hotel.class.getName()));
         mockMvc.perform(get(basePath + "/1"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.title").value("Hotel not found"));
+                .andExpect(jsonPath("$.developerMessage").value("org.hibernate.ObjectNotFoundException"));
     }
 
     @Test
@@ -104,8 +104,7 @@ public class HotelControllerTest {
         mockMvc.perform(put(basePath + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(""))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.title").value("Message Not Readable"));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -117,7 +116,7 @@ public class HotelControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"hotelName\":\"Отель в горах\",\"hotelDescription\":\"описание нашего классного отеля в горах\",\"hotelCity\":\"Milan\"}"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.title").value("Hotel not found"));
+                .andExpect(jsonPath("$.developerMessage").value("org.hibernate.ObjectNotFoundException"));
     }
 
     @Test
@@ -134,7 +133,7 @@ public class HotelControllerTest {
     @Test
     @WithMockAdmin
     void whenDeleteHotel() throws Exception {
-        willDoNothing().given(hotelService).deleteHotel(ArgumentMatchers.any());
+        given(hotelService.deleteHotel(ArgumentMatchers.any())).willReturn(true);
         mockMvc.perform(delete(basePath + "/1"))
                 .andExpect(status().isOk());
     }

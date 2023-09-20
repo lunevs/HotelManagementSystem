@@ -103,9 +103,9 @@ public class ManageHotelTest {
                         .content(objectMapper.writeValueAsString(mockHotel)))
                 .andExpect(status().isOk());
 
-        List<ResponseHotelData> hotelAfterUpdate = hotelService.getHotelsList();
+        Hotel hotelAfterUpdate = hotelRepository.findById(hotelId).get();
 
-        assertThat(hotelAfterUpdate.stream().filter(el -> el.getId() == hotelId).toList()).isEmpty();
+        assertThat(hotelAfterUpdate.isDeleted()).isTrue();
     }
 
 }
