@@ -7,6 +7,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation for Spring security. Defines Moderator flag
+ * @author smlunev
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @PreAuthorize("hasAnyRole(@AccountRole.MODERATOR, @AccountRole.ADMIN)")

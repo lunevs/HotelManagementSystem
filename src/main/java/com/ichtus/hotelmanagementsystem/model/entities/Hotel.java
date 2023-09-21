@@ -8,7 +8,10 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
-
+/**
+ * Hotel entity. Defines table and fields for all application hotels
+ * @author smlunev
+ */
 @Entity
 @Getter
 @Setter

@@ -4,6 +4,10 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Value;
 
+/**
+ * Constraint validation class for annotation @ValidRoomCapacity. Read values from application.properties
+ * @author smlunev
+ */
 public class ValidRoomCapacityValidator implements ConstraintValidator<ValidRoomCapacity, Integer> {
 
     @Value("${custom.room.capacity.min}")

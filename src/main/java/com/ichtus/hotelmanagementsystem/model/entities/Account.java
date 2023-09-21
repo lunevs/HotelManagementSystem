@@ -9,6 +9,10 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
+/**
+ * Account entity. Defines table and fields for all application users
+ * @author smlunev
+ */
 @Entity
 @Getter
 @Setter

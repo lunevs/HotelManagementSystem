@@ -20,7 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 /**
- * Spring Security configuration file
+ * Spring Security configuration file. It bases on method security configuration
  *
  * @author smlunev
  */
@@ -32,7 +32,7 @@ public class SecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
 
     /**
-     * Defines rules for security filter
+     * Defines rules for security filter.
      * @param http - incoming http request
      * @return chain builder of security filter
      * @throws Exception if can't build http parameters
@@ -42,12 +42,6 @@ public class SecurityConfig {
         return http
                 .cors(cors -> corsConfigurationSource())
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/login", "/api/v1/register").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/api/v1/api-docs/**").permitAll()
-                        .anyRequest().authenticated()
-                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

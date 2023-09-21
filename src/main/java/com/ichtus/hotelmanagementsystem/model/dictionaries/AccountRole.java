@@ -3,6 +3,10 @@ package com.ichtus.hotelmanagementsystem.model.dictionaries;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
+/**
+ * Defines account role types
+ * @author smlunev
+ */
 public enum AccountRole {
 
     USER,

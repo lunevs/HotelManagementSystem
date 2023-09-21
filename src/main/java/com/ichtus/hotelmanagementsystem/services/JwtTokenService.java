@@ -15,6 +15,10 @@ import java.security.Key;
 import java.time.Duration;
 import java.util.Date;
 
+/**
+ * Defines services to interact with authentication token
+ * @author smlunev
+ */
 @Service
 @Slf4j
 public class JwtTokenService {
@@ -25,11 +29,20 @@ public class JwtTokenService {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
+    /**
+     * Internal method for creating HMAC Key for given JWT secret
+     * @return Key
+     */
     private Key getKey() {
             byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
             return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    /**
+     * Generate JWT token for given user
+     * @param userDetails user information
+     * @return string with token
+     */
     public String generateToken(UserDetails userDetails) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtLifetime.toMillis());
@@ -42,6 +55,11 @@ public class JwtTokenService {
                 .compact();
     }
 
+    /**
+     * Check token's validity and return username if token correct
+     * @param token string with token
+     * @return string with username
+     */
     @Generated
     public String validateTokenAndGetUsername(String token) {
         try {

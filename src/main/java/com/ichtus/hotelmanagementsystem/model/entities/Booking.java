@@ -1,6 +1,5 @@
 package com.ichtus.hotelmanagementsystem.model.entities;
 
-import com.ichtus.hotelmanagementsystem.model.anotations.ValidRoomCapacity;
 import com.ichtus.hotelmanagementsystem.model.dictionaries.BookingStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
@@ -11,14 +10,16 @@ import lombok.experimental.Accessors;
 
 import java.util.Date;
 
-
+/**
+ * Booking entity. Defines table and fields for rooms bookings
+ * @author smlunev
+ */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@ToString
 public class Booking {
 
     @Id

@@ -17,6 +17,10 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Defines services to interact with hotels and rooms search
+ * @author smlunev
+ */
 @Service
 @RequiredArgsConstructor
 public class SearchService {
@@ -25,8 +29,14 @@ public class SearchService {
     private final RoomRepository roomRepository;
     private final BookingRepository bookingRepository;
 
-    // find  freeRooms with capacity more or equal getNeededCapacity
-    // and with room price between min and max
+    /**
+     * find free Rooms with capacity more or equal getNeededCapacity
+     * and with room price between minPrice and maxPrice
+     * @param roomCapacity max required room capacity
+     * @param minPrice min required price
+     * @param maxPrice max required price
+     * @return list of rooms found
+     */
     private List<Room> findAllRoomsByCapacityAndPrice(int roomCapacity, BigDecimal minPrice, BigDecimal maxPrice) {
         if (maxPrice == null) {
             return roomRepository.findAllByRoomCapacityGreaterThanEqualAndRoomPriceGreaterThanEqualAndDeleted(roomCapacity, minPrice, false);
@@ -34,6 +44,11 @@ public class SearchService {
         return roomRepository.findAllByRoomCapacityGreaterThanEqualAndRoomPriceBetweenAndDeleted(roomCapacity, minPrice, maxPrice, false);
     }
 
+    /**
+     * find all non deleted hotels in a given city
+     * @param cityName required city name
+     * @return list of hotels found
+     */
     private List<Hotel> findAllHotelsByCity(String cityName) {
         if (cityName.length() > 0) {
             return hotelRepository.findAllByHotelCityAndDeleted(cityName, false);
@@ -41,6 +56,12 @@ public class SearchService {
         return hotelRepository.findAllByDeleted(false);
     }
 
+    /**
+     * find all bookings in a given time period
+     * @param start period start date
+     * @param end period end date
+     * @return list of bookings found
+     */
     private List<Booking> findAllBookingsForPeriod(Date start, Date end) {
         if (start != null && end != null) {
             return bookingRepository.findAllByParameters(start, end);
@@ -48,6 +69,12 @@ public class SearchService {
         return Collections.emptyList();
     }
 
+    /**
+     * internal method to construct object with search results
+     * @param hotels hotels list
+     * @param freeRooms free rooms list
+     * @return list of ResponseSearchResults
+     */
     private List<ResponseSearchResults> constructSearchResults(List<Hotel> hotels, List<Room> freeRooms) {
         List<ResponseSearchResults> results = new ArrayList<>();
         hotels.forEach(hotel -> {
@@ -62,6 +89,11 @@ public class SearchService {
         return results;
     }
 
+    /**
+     * search hotels and rooms by given parameters.
+     * @param searchParameters hotels and rooms filter
+     * @return list of ResponseSearchResults with free rooms
+     */
     public List<ResponseSearchResults> findAllHotelsByParameters(RequestHotelsSearch searchParameters) {
 
         List<Hotel> hotels = findAllHotelsByCity(searchParameters.getSearchCity());

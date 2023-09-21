@@ -9,14 +9,25 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+/**
+ * Logging aspect. It logs each controller call
+ * @author smlunev
+ */
 @Component
 @Aspect
 @Slf4j
 public class LoggerHandler {
 
+    /**
+     * Pointcut defining rules for selecting controllers
+     */
     @Pointcut("execution(public org.springframework.http.ResponseEntity *(..))")
     protected void logAnyControllerPointcut() {}
 
+    /**
+     * Logs response statuses
+     * @param result controller's response result data
+     */
     @AfterReturning(pointcut = "logAnyControllerPointcut()", returning = "result")
     private void logAnyController(ResponseEntity<?> result) {
         log.info("Result status: " + result.getStatusCode());
@@ -27,6 +38,12 @@ public class LoggerHandler {
         }
     }
 
+    /**
+     * Calculate methods executing time
+     * @param joinPoint controller join point
+     * @return controllers's response result data
+     * @throws Throwable controller result exception
+     */
     @Around("logAnyControllerPointcut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
 
@@ -41,7 +58,7 @@ public class LoggerHandler {
 
             return result;
         } catch (IllegalArgumentException e) {
-            log.error("Illegal argument " + Arrays.toString(joinPoint.getArgs()) + " in "
+            log.info("Illegal argument " + Arrays.toString(joinPoint.getArgs()) + " in "
                     + joinPoint.getSignature().getName() + "()");
             throw e;
         }

@@ -11,6 +11,10 @@ import lombok.experimental.Accessors;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Room entity. Defines table and fields for all hotel's rooms
+ * @author smlunev
+ */
 @Entity
 @Getter
 @Setter
@@ -18,7 +22,6 @@ import java.util.List;
 @NoArgsConstructor
 @Accessors(chain = true)
 @Table(name = "rooms")
-@ToString
 public class Room {
 
     @Id

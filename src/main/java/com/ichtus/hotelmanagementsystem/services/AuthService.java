@@ -10,15 +10,23 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+/**
+ * Defines authentication services
+ * @author smlunev
+ */
 @Service
-@Slf4j
 @RequiredArgsConstructor
-public class   AuthService {
+public class AuthService {
 
     private final AccountService accountService;
     private final JwtTokenService jwtTokenService;
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * Create authentication user token
+     * @param requestAuthorization dto with user login and password
+     * @return dto ResponseAuthorization with user token
+     */
     public ResponseAuthorization createNewToken(RequestAuthorization requestAuthorization) {
         try {
             authenticationManager.authenticate(

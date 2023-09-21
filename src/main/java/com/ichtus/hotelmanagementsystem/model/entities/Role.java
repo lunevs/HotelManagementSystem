@@ -8,6 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+/**
+ * Role entity. Defines table and fields for all account roles
+ * @author smlunev
+ */
 @Entity
 @Getter
 @Setter

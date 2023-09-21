@@ -5,6 +5,10 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
+/**
+ * Annotation for validation Entities. Defines borders for room capacity
+ * @author smlunev
+ */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

@@ -8,6 +8,10 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+/**
+ * Amenity entity. Defines table and field for all types of amenities
+ * @author smlunev
+ */
 @Getter
 @Setter
 @Entity
