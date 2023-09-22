@@ -1,9 +1,21 @@
 import React from "react";
 import BoxDiv from "../utils/style/BoxDiv";
 import RoomLineItem from "./RoomLineItem";
+import ImagesCarousel from "../utils/ImagesCarousel";
 
 const SearchResultItem = ({hotelElement, token, changeStatusHandler}) => {
 
+    const images = [
+        {
+            id: 0,
+            url: 'images/1_1.jpeg',
+            alt: 'seaside hotel 1'
+        },{
+            id: 1,
+            url: 'images/1_2.jpeg',
+            alt: 'seaside hotel 2'
+        }
+    ];
 
     return (
         <BoxDiv>
@@ -13,16 +25,14 @@ const SearchResultItem = ({hotelElement, token, changeStatusHandler}) => {
                     <div className="row g-0">
                         <div className="col-md-4">
                             <div className="card m-2" >
-                                <img src="hotel_default_pict.jpeg" className="img-fluid rounded-start m-4" alt="..." width="200px" />
+                                <ImagesCarousel images={images} hotelId={hotelElement.hotelId} />
                                 <div className="card-body">
                                     <h5 className="card-title">{hotelElement.hotelName}</h5>
                                     <h6 className="card-subtitle mb-2 text-body-secondary">{hotelElement.hotelCity}</h6>
                                     <p className="card-text">{hotelElement.hotelDescription}</p>
                                 </div>
                                 <ul className="list-group list-group-flush">
-                                    <li className="list-group-item">Amenity 1</li>
-                                    <li className="list-group-item">Amenity 2</li>
-                                    <li className="list-group-item">Amenity 3</li>
+                                    {hotelElement.hotelAmenities.map(el => <li className="list-group-item" key={el.id}>{el.amenityName}</li>)}
                                 </ul>
                             </div>
                         </div>

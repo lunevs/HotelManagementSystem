@@ -50,8 +50,11 @@ const Navigation = ({isAuth}) => {
                                     <li><Link className="dropdown-item" to={`/addaccount`}>Add new account</Link></li>
                                     <li><Link className="dropdown-item" to={`/editaccount`}>Edit account</Link></li>
                                     <li><Link className="dropdown-item" to={`/editaccountrole`}>Edit account's role</Link></li>
+                                    <li><hr className="dropdown-divider" /></li>
                                     <li><Link className="dropdown-item" to={`/addamenity`}>Add new amenity</Link></li>
                                     <li><Link className="dropdown-item" to={`/editamenity`}>Edit amenity</Link></li>
+                                    <li><hr className="dropdown-divider" /></li>
+                                    <li><Link className="dropdown-item" to={`/upload`}>Upload file</Link></li>
                                 </ul>
                             </li>
                         </ul>

@@ -21,7 +21,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -40,12 +43,17 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
     private final MessageSource messageSource;
 
-    @ExceptionHandler({ObjectDeletedException.class, DefaultBadRequestException.class, ExpiredJwtException.class})
+    @ExceptionHandler({ObjectDeletedException.class, DefaultBadRequestException.class})
     public ResponseEntity<?> deletedObject(Exception exception) {
         return templateResponseException(exception, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ChangeSetPersister.NotFoundException.class, ObjectNotFoundException.class})
+    @ExceptionHandler({ExpiredJwtException.class})
+    public ResponseEntity<?> tokenExpired(Exception exception) {
+        return templateResponseException("Token expired", exception, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ChangeSetPersister.NotFoundException.class, ObjectNotFoundException.class, HttpClientErrorException.NotFound.class})
     public ResponseEntity<?> notFoundObject(Exception exception) {
         return templateResponseException(exception, HttpStatus.NOT_FOUND);
     }
@@ -58,6 +66,16 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<?> accessDenied(AccessDeniedException exception) {
         return templateResponseException(exception, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException exception) {
+        return templateResponseException("File size exceeds the limit", exception, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleMultipartException(MultipartException exception) {
+        return templateResponseException("Error occurred during file upload", exception, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler

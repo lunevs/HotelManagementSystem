@@ -1,4 +1,4 @@
-package com.ichtus.hotelmanagementsystem.logconfig;
+package com.ichtus.hotelmanagementsystem.configuration;
 
 import com.ichtus.hotelmanagementsystem.model.dto.error.ErrorDetail;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +25,16 @@ public class LoggerHandler {
     protected void logAnyControllerPointcut() {}
 
     /**
+     * Pointcut defining rules for selecting async controllers
+     */
+    @Pointcut("execution(public java.util.concurrent.CompletableFuture *(..))")
+    protected void logAnyAsyncControllerPointcut() {}
+
+    /**
      * Logs response statuses
      * @param result controller's response result data
      */
-    @AfterReturning(pointcut = "logAnyControllerPointcut()", returning = "result")
+    @AfterReturning(pointcut = "logAnyControllerPointcut() || logAnyAsyncControllerPointcut()", returning = "result")
     private void logAnyController(ResponseEntity<?> result) {
         log.info("Result status: " + result.getStatusCode());
         if (result.getStatusCode().isError()) {
@@ -44,7 +50,7 @@ public class LoggerHandler {
      * @return controllers's response result data
      * @throws Throwable controller result exception
      */
-    @Around("logAnyControllerPointcut()")
+    @Around("logAnyControllerPointcut() || logAnyAsyncControllerPointcut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
 
         long start = System.currentTimeMillis();

@@ -92,5 +92,24 @@ const authRequest = async (authObject, url) => {
     return request.data;
 }
 
-const BaseService = {getRequest, putRequest, postRequest, authRequest, deleteRequest};
+const sendFile = async (formData) => {
+    const request = await axios.post(
+        `${baseUrl}/upload`,
+        formData,
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+    )
+    console.log({
+        method: 'POST',
+        body: 'file',
+        url: `${baseUrl}/upload`,
+        headers: {...request.headers, 'Content-Type': 'application/json'}
+    });
+    return request.data;
+}
+
+const BaseService = {getRequest, putRequest, postRequest, authRequest, deleteRequest, sendFile};
 export default BaseService;

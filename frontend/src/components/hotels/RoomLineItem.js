@@ -36,25 +36,33 @@ const RoomLineItem = ({token, roomElement, changeStatusHandler}) => {
                 roomElement === undefined ? <div />
                     :
                     <div className="row g-0">
-                        <div className="col-6">
-                            <img src="room_default_photo.jpeg" className="img-fluid rounded-start mt-2 ms-2" alt="..." width="200px" />
-                            <div className="card-body">
-                                <h5 className="card-title">{roomElement.roomName}</h5>
-                                <table>
-                                    <tbody>
-                                    <tr>
-                                        <td>room capacity:</td>
-                                        <td><p className="card-text">{roomElement.roomCapacity}</p></td>
-                                    </tr>
-                                    <tr>
-                                        <td>price for 1 night: </td>
-                                        <td><p className="card-text">{roomElement.roomPrice}$</p></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                        <div className="col-5">
+                            <div className="m-2">
+                                <div className="card-body">
+                                    <h5 className="card-title">{roomElement.roomName}</h5>
+                                    <table>
+                                        <tbody>
+                                        <tr>
+                                            <td>room capacity:</td>
+                                            <td><p className="card-text">{roomElement.roomCapacity}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td>price for 1 night: </td>
+                                            <td><p className="card-text">{roomElement.roomPrice}$</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td>amenities: </td>
+                                            <td></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <ul>
+                                        {roomElement.amenities.map(a => <li key={a.id}>{a.amenityName}</li>)}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                        <div className="col-6">
+                        <div className="col-7">
                             <div className="m-2">
                                 <form onSubmit={doBook}>
                                     <div className="input-group mb-3">

@@ -30,6 +30,11 @@ public class RequestCachingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        if (request.getServletPath().contains("/upload")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         CachedHttpServletRequest cachedHttpServletRequest = new CachedHttpServletRequest(request);
         String s = new String(cachedHttpServletRequest.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
         LOGGER.info(request.getMethod() + " " + request.getRequestURI() + " " + s.replaceAll("\n", ""));

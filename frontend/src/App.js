@@ -22,6 +22,7 @@ import AmenityListAndUpdate from "./components/amenities/AmenityListAndUpdate";
 import BoxDiv from "./components/utils/style/BoxDiv";
 import RoomDelete from "./components/hotels/RoomDelete";
 import HotelDelete from "./components/hotels/HotelDelete";
+import UploadForm from "./components/utils/UploadForm";
 
 function App() {
 
@@ -78,6 +79,7 @@ function App() {
                               <Route path='/editaccountrole' element={<UserChangeRole token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/addamenity' element={<AmenityAddForm token={token} changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/editamenity' element={<AmenityListAndUpdate token={token} changeStatusHandler={changeStatusHandler} />} />
+                              <Route path='/upload' element={<UploadForm changeStatusHandler={changeStatusHandler} />} />
                               <Route path='/logout' element={<LogoutBox changeTokenHandler={setToken} />} />
                               <Route path='/login' element={<LoginBox changeTokenHandler={setToken} changeStatusHandler={changeStatusHandler} />} />
                           </Routes>
