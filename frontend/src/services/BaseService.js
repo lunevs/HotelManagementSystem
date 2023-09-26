@@ -16,6 +16,7 @@ const getRequest = async (token, url) => {
         url: `${baseUrl}/${url}`,
         headers: {...request.headers, 'Authorization': `Bearer ${token}`}
     });
+    console.log(request);
     return request.data;
 }
 
@@ -36,6 +37,7 @@ const putRequest = async (token, id, elementToUpdate, mainUrl, secondUrl) => {
         url: url,
         headers: {...request.headers, 'Authorization': `Bearer ${token}`}
     });
+    console.log(request);
     return request.data;
 }
 
@@ -89,12 +91,13 @@ const authRequest = async (authObject, url) => {
         url: `${baseUrl}/${url}`,
         headers: {...request.headers, 'Content-Type': 'application/json'}
     });
+    console.log(request);
     return request.data;
 }
 
 const sendFile = async (formData) => {
     const request = await axios.post(
-        `${baseUrl}/upload`,
+        `${baseUrl}/images`,
         formData,
         {
             headers: {
@@ -105,9 +108,10 @@ const sendFile = async (formData) => {
     console.log({
         method: 'POST',
         body: 'file',
-        url: `${baseUrl}/upload`,
-        headers: {...request.headers, 'Content-Type': 'application/json'}
+        url: `${baseUrl}/images`,
+        headers: {...request.headers, 'Content-Type': 'multipart/form-data'}
     });
+    console.log(request);
     return request.data;
 }
 

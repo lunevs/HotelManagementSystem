@@ -38,7 +38,6 @@ public class Room {
     @Column(name = "price")
     private BigDecimal roomPrice;
 
-    @ValidRoomCapacity
     @Column(name = "capacity")
     private int roomCapacity;
 

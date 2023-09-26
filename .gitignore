@@ -42,3 +42,4 @@ build/
 /src/main/resources/application.properties
 /frontend/node_modules/
 /frontend/package-lock.json
+/app/

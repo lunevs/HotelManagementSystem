@@ -4,8 +4,6 @@ import ImageLink from "./ImageLink";
 
 const ImagesCarousel = ({images, hotelId}) => {
     const imagesId = "carouselExampleIndicators" + hotelId;
-    console.log(imagesId)
-
     return (
         <div id={imagesId} className="carousel slide">
             <div className="carousel-indicators">

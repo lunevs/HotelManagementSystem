@@ -41,7 +41,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) {
 
         try {
-            if (request.getServletPath().contains("/upload")) {
+            if (request.getServletPath().contains("/upload") || request.getServletPath().contains("/images")) {
                 filterChain.doFilter(request, response);
                 return;
             }

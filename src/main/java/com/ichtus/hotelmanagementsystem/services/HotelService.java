@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.stream.*;
 
 /**
- * Defines services to interact with hotels
+ * Defines services to7 interact with hotels
  * @author smlunev
  */
 @Service

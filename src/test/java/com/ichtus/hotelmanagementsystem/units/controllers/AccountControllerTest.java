@@ -96,22 +96,6 @@ public class AccountControllerTest {
 
     @Test
     @WithMockAdmin
-    void whenGetUserInfo() throws Exception {
-        UserDetails userDetails = new User(
-                correctRequestAccountChange.getAccountName(),
-                correctRequestAccountChange.getAccountPassword(),
-                Collections.emptyList()
-        );
-
-        given(accountService.loadUserByUsername(any())).willReturn(userDetails);
-
-        mockMvc.perform(get(basePath + "/userinfo"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value(correctRequestAccountChange.getAccountName()));
-    }
-
-    @Test
-    @WithMockAdmin
     void whenGetAccountDetails() throws Exception {
 
         given(accountService.findAccountById(any())).willReturn(

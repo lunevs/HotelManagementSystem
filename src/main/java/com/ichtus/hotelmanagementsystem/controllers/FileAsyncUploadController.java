@@ -16,7 +16,7 @@ public class FileAsyncUploadController {
 
     private final FileStorageManager storageManager;
 
-    @PostMapping("/upload")
+    @PostMapping("/upload222")
     public CompletableFuture<?> handleFileUploadUsingCurl(@RequestParam("file") MultipartFile file) {
         storageManager.save(file);
         return CompletableFuture.completedFuture(

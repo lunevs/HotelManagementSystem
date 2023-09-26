@@ -4,6 +4,7 @@ import com.ichtus.hotelmanagementsystem.model.dto.error.ErrorDetail;
 import com.ichtus.hotelmanagementsystem.model.dto.error.ValidationError;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityExistsException;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.ObjectDeletedException;
@@ -76,6 +77,11 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<?> handleMultipartException(MultipartException exception) {
         return templateResponseException("Error occurred during file upload", exception, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> constraintViolationException(ConstraintViolationException exception) {
+        return templateResponseException(exception, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler

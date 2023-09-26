@@ -30,7 +30,7 @@ public class RequestCachingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        if (request.getServletPath().contains("/upload")) {
+        if (request.getServletPath().contains("/upload") || request.getServletPath().contains("/images")) {
             filterChain.doFilter(request, response);
             return;
         }
