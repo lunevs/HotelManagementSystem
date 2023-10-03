@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  hotel-service:
+    build:
+      context: back
+    container_name: hotel-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/hotel_db
+      - SPRING_DATASOURCE_USERNAME=hotel_db_admin
+      - SPRING_DATASOURCE_PASSWORD=admin_123456
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+      - SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION=true
+      - SPRING_SQL_INIT_MODE=always
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    volumes:
+      - ./sql-dump/hotel.db.sql:/docker-entrypoint-initdb.d/hotel.db.sql
+    environment:
+      - POSTGRES_DB=hotel_db
+      - POSTGRES_USER=hotel_db_admin
+      - POSTGRES_PASSWORD=admin_123456
+  front:
+    build:
+      context: front
+    container_name: hotel-frontend
+    ports:
+      - '80:3000'
